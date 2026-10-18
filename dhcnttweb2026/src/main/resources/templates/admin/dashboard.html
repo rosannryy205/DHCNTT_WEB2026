@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+  <title>Bảng Điều Khiển - Admin Console</title>
+</head>
+<body>
+  <div layout:fragment="content">
+    
+    <!-- Page Header & Action Buttons -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4 gap-3">
+      <div>
+        <h3 class="fw-semibold text-dark mb-1" style="font-size: 24px; letter-spacing: -0.2px;">Bảng Điều Khiển Tổng Quan</h3>
+        <p class="text-secondary small mb-0">Theo dõi hiệu suất kinh doanh, đơn hàng và khách hàng theo thời gian thực.</p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+          <i class="bi bi-download me-1"></i> Xuất Excel
+        </button>
+        <button class="btn-apple-primary btn-apple-sm-pill">
+          <i class="bi bi-plus-lg me-1"></i> Thêm sản phẩm
+        </button>
+      </div>
+    </div>
+
+    <!-- 1. KPI Metric Cards -->
+    <div class="row g-3 mb-4">
+      
+      <!-- Metric 1: Doanh thu -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="admin-kpi-card">
+          <div>
+            <p class="admin-kpi-label">Doanh thu tháng này</p>
+            <h4 class="admin-kpi-value">328.500.000đ</h4>
+            <span class="text-success small fw-medium">
+              <i class="bi bi-arrow-up-right"></i> +14.2% so với tháng trước
+            </span>
+          </div>
+          <div class="admin-kpi-icon">
+            <i class="bi bi-currency-dollar"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric 2: Đơn hàng -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="admin-kpi-card">
+          <div>
+            <p class="admin-kpi-label">Tổng đơn hàng</p>
+            <h4 class="admin-kpi-value">1,482</h4>
+            <span class="text-success small fw-medium">
+              <i class="bi bi-arrow-up-right"></i> +8.5% tuần này
+            </span>
+          </div>
+          <div class="admin-kpi-icon">
+            <i class="bi bi-cart-check"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric 3: Khách hàng mới -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="admin-kpi-card">
+          <div>
+            <p class="admin-kpi-label">Khách hàng mới</p>
+            <h4 class="admin-kpi-value">394</h4>
+            <span class="text-success small fw-medium">
+              <i class="bi bi-arrow-up-right"></i> +5.1% tháng này
+            </span>
+          </div>
+          <div class="admin-kpi-icon">
+            <i class="bi bi-person-check"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metric 4: Tồn kho sản phẩm -->
+      <div class="col-12 col-sm-6 col-xl-3">
+        <div class="admin-kpi-card">
+          <div>
+            <p class="admin-kpi-label">Sản phẩm đang bán</p>
+            <h4 class="admin-kpi-value">128</h4>
+            <span class="text-secondary small fw-medium">
+              12 sản phẩm sắp hết hàng
+            </span>
+          </div>
+          <div class="admin-kpi-icon">
+            <i class="bi bi-box"></i>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 2. Recent Orders Table & Top Categories -->
+    <div class="row g-4 mb-4">
+      
+      <!-- Recent Orders List (8 Cols) -->
+      <div class="col-12 col-xl-8">
+        <div class="card border-0 rounded-4 p-4 shadow-none" style="background-color: var(--apple-canvas); border: 1px solid var(--apple-hairline) !important;">
+          
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h5 class="fw-semibold text-dark mb-0" style="font-size: 17px;">Đơn Hàng Gần Đây</h5>
+              <small class="text-secondary">Danh sách các giao dịch phát sinh trong 24 giờ qua</small>
+            </div>
+            <a href="#" class="apple-link small fw-medium">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+          </div>
+
+          <div class="table-responsive">
+            <table class="apple-table">
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Khách hàng</th>
+                  <th>Sản phẩm</th>
+                  <th>Tổng tiền</th>
+                  <th>Trạng thái</th>
+                  <th class="text-end">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="fw-semibold">#DH-1094</td>
+                  <td>Nguyễn Văn An</td>
+                  <td>iPhone 16 Pro 128GB</td>
+                  <td class="fw-semibold">28.990.000đ</td>
+                  <td><span class="badge-apple-pill badge-apple-success">Đã giao</span></td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-light rounded-circle" title="Xem chi tiết"><i class="bi bi-eye"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="fw-semibold">#DH-1093</td>
+                  <td>Trần Thị Mai</td>
+                  <td>MacBook Pro 14" M4</td>
+                  <td class="fw-semibold">49.990.000đ</td>
+                  <td><span class="badge-apple-pill badge-apple-warning">Đang xử lý</span></td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-light rounded-circle" title="Xem chi tiết"><i class="bi bi-eye"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="fw-semibold">#DH-1092</td>
+                  <td>Lê Hoàng Long</td>
+                  <td>AirPods 4 ANC</td>
+                  <td class="fw-semibold">4.790.000đ</td>
+                  <td><span class="badge-apple-pill badge-apple-primary">Đang giao</span></td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-light rounded-circle" title="Xem chi tiết"><i class="bi bi-eye"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="fw-semibold">#DH-1091</td>
+                  <td>Phạm Minh Đức</td>
+                  <td>Apple Watch Series 10</td>
+                  <td class="fw-semibold">10.990.000đ</td>
+                  <td><span class="badge-apple-pill badge-apple-success">Đã giao</span></td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-light rounded-circle" title="Xem chi tiết"><i class="bi bi-eye"></i></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="fw-semibold">#DH-1090</td>
+                  <td>Hoàng Thu Trang</td>
+                  <td>Cáp sạc MagSafe 3</td>
+                  <td class="fw-semibold">990.000đ</td>
+                  <td><span class="badge-apple-pill badge-apple-danger">Đã hủy</span></td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-light rounded-circle" title="Xem chi tiết"><i class="bi bi-eye"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Quick Management / Status Summary (4 Cols) -->
+      <div class="col-12 col-xl-4">
+        
+        <!-- Store Status Card -->
+        <div class="card border-0 rounded-4 p-4 mb-4 shadow-none" style="background-color: var(--apple-canvas); border: 1px solid var(--apple-hairline) !important;">
+          <h5 class="fw-semibold text-dark mb-3" style="font-size: 17px;">Tỷ Lệ Danh Mục Bán Chạy</h5>
+          
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small mb-1">
+              <span>iPhone</span>
+              <span class="fw-semibold">48%</span>
+            </div>
+            <div class="progress" style="height: 6px; border-radius: var(--apple-radius-pill);">
+              <div class="progress-bar" style="width: 48%; background-color: var(--apple-primary);"></div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small mb-1">
+              <span>Mac & MacBook</span>
+              <span class="fw-semibold">27%</span>
+            </div>
+            <div class="progress" style="height: 6px; border-radius: var(--apple-radius-pill);">
+              <div class="progress-bar" style="width: 27%; background-color: #34c759;"></div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small mb-1">
+              <span>iPad & Phụ kiện</span>
+              <span class="fw-semibold">15%</span>
+            </div>
+            <div class="progress" style="height: 6px; border-radius: var(--apple-radius-pill);">
+              <div class="progress-bar" style="width: 15%; background-color: #ff9500;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="d-flex justify-content-between small mb-1">
+              <span>Apple Watch & AirPods</span>
+              <span class="fw-semibold">10%</span>
+            </div>
+            <div class="progress" style="height: 6px; border-radius: var(--apple-radius-pill);">
+              <div class="progress-bar" style="width: 10%; background-color: #af52de;"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Quick Actions Card -->
+        <div class="card border-0 rounded-4 p-4 shadow-none" style="background-color: var(--apple-canvas); border: 1px solid var(--apple-hairline) !important;">
+          <h5 class="fw-semibold text-dark mb-3" style="font-size: 17px;">Lối Tắt Quản Trị</h5>
+          <div class="d-grid gap-2">
+            <a href="#" class="btn btn-light rounded-pill text-start px-3 py-2 text-dark" style="font-size: 14px;">
+              <i class="bi bi-tag text-primary me-2"></i> Tạo mã giảm giá mới
+            </a>
+            <a href="#" class="btn btn-light rounded-pill text-start px-3 py-2 text-dark" style="font-size: 14px;">
+              <i class="bi bi-images text-success me-2"></i> Cập nhật banner trang chủ
+            </a>
+            <a th:href="@{/}" target="_blank" class="btn btn-light rounded-pill text-start px-3 py-2 text-dark" style="font-size: 14px;">
+              <i class="bi bi-shop text-warning me-2"></i> Mở trang chủ cửa hàng
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- Apple Parchment Footer (4-5 Dense Link Columns with relaxed leading 2.41) -->
+  <footer th:fragment="footer" class="apple-footer">
+    <div class="container-xl">
+      <div class="row g-4">
+        
+        <!-- Column 1: Mua sắm & Học hỏi -->
+        <div class="col-6 col-md-3">
+          <h6>Mua sắm & Tìm hiểu</h6>
+          <ul>
+            <li><a th:href="@{/}">Cửa hàng</a></li>
+            <li><a th:href="@{/}">MacBook Pro</a></li>
+            <li><a th:href="@{/}">iPad Air / Pro</a></li>
+            <li><a th:href="@{/}">iPhone 16 Series</a></li>
+            <li><a th:href="@{/}">Apple Watch Ultra</a></li>
+            <li><a th:href="@{/}">AirPods Max</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 2: Tài khoản & Dịch vụ -->
+        <div class="col-6 col-md-3">
+          <h6>Tài khoản & Dịch vụ</h6>
+          <ul>
+            <li><a th:href="@{/}">Quản lý Apple ID</a></li>
+            <li><a th:href="@{/}">Tài khoản Apple Store</a></li>
+            <li><a th:href="@{/}">iCloud+</a></li>
+            <li><a th:href="@{/}">Apple Music</a></li>
+            <li><a th:href="@{/}">Apple TV+</a></li>
+            <li><a th:href="@{/}">Apple Arcade</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Cho doanh nghiệp & Giáo dục -->
+        <div class="col-6 col-md-3">
+          <h6>Doanh nghiệp & Giáo dục</h6>
+          <ul>
+            <li><a th:href="@{/}">Apple và Doanh nghiệp</a></li>
+            <li><a th:href="@{/}">Mua sắm cho Doanh nghiệp</a></li>
+            <li><a th:href="@{/}">Apple và Giáo dục</a></li>
+            <li><a th:href="@{/}">Mua sắm cho Sinh viên</a></li>
+            <li><a th:href="@{/}">Chương trình Đổi cũ lấy mới</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Giá trị cốt lõi & Giới thiệu -->
+        <div class="col-6 col-md-3">
+          <h6>Giá trị Apple & Về chúng tôi</h6>
+          <ul>
+            <li><a th:href="@{/}">Trách nhiệm Môi trường 2030</a></li>
+            <li><a th:href="@{/}">Trợ năng & Hòa nhập</a></li>
+            <li><a th:href="@{/}">Bảo vệ Quyền riêng tư</a></li>
+            <li><a th:href="@{/}">Phòng thông cáo báo chí</a></li>
+            <li><a th:href="@{/}">Cơ hội nghề nghiệp</a></li>
+            <li><a th:href="@{/}">Liên hệ Apple Store</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Legal Row at Bottom (12px SF Pro, #7a7a7a) -->
+      <div class="apple-footer-legal d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+        <div>
+          Bản quyền © 2026 DHCNTT Store Inc. Mọi quyền được bảo lưu.
+        </div>
+        <div class="d-flex gap-3">
+          <a th:href="@{/}" class="text-secondary text-decoration-none">Chính sách quyền riêng tư</a>
+          <span class="text-secondary">|</span>
+          <a th:href="@{/}" class="text-secondary text-decoration-none">Điều khoản sử dụng</a>
+          <span class="text-secondary">|</span>
+          <a th:href="@{/}" class="text-secondary text-decoration-none">Bán hàng và Hoàn tiền</a>
+          <span class="text-secondary">|</span>
+          <a th:href="@{/}" class="text-secondary text-decoration-none">Sơ đồ trang web</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+</body>
+</html>

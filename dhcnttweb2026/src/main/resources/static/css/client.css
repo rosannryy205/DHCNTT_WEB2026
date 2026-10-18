@@ -1,0 +1,214 @@
+/**
+ * Client Styles - Apple E-commerce Theme
+ * Following DESIGN.md specs for global-nav, sub-nav, product tiles, cards, and footer.
+ */
+
+/* 1. Global Navigation Bar (44px, pure black) */
+.apple-global-nav {
+  height: 44px;
+  background-color: var(--apple-surface-black);
+  color: var(--apple-on-dark);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.12px;
+  position: sticky;
+  top: 0;
+  z-index: 1050;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.apple-global-nav .nav-link {
+  color: #d6d6d6 !important;
+  font-size: 12px;
+  padding: 0 14px !important;
+  line-height: 44px;
+  transition: color 0.2s ease;
+}
+
+.apple-global-nav .nav-link:hover {
+  color: #ffffff !important;
+}
+
+.apple-global-nav .nav-brand-logo {
+  font-size: 16px;
+  color: #ffffff !important;
+  line-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+/* 2. Sub-Nav Frosted Glass (52px, sticky below global-nav) */
+.apple-sub-nav {
+  height: 52px;
+  background-color: var(--apple-frosted-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  position: sticky;
+  top: 44px;
+  z-index: 1040;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+}
+
+.apple-sub-nav .sub-nav-title {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.19;
+  letter-spacing: 0.231px;
+  color: var(--apple-ink);
+  text-decoration: none;
+}
+
+.apple-sub-nav .sub-nav-links .nav-link {
+  font-size: 14px;
+  color: var(--apple-ink-muted-80);
+  padding: 6px 12px;
+  transition: color 0.15s ease;
+}
+
+.apple-sub-nav .sub-nav-links .nav-link:hover {
+  color: var(--apple-primary);
+}
+
+/* Search input full-pill */
+.apple-search-pill {
+  height: 40px;
+  border-radius: var(--apple-radius-pill);
+  border: 1px solid var(--apple-hairline);
+  background-color: var(--apple-canvas);
+  padding: 0 16px;
+  font-size: 14px;
+  color: var(--apple-ink);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.apple-search-pill:focus {
+  border-color: var(--apple-primary-focus);
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.15);
+}
+
+/* 3. Product Tiles: Alternating Full-Bleed Sections */
+.apple-tile {
+  padding: var(--apple-space-section) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.apple-tile-light {
+  background-color: var(--apple-canvas);
+  color: var(--apple-ink);
+}
+
+.apple-tile-parchment {
+  background-color: var(--apple-canvas-parchment);
+  color: var(--apple-ink);
+}
+
+.apple-tile-dark {
+  background-color: var(--apple-surface-tile-1);
+  color: var(--apple-on-dark);
+}
+
+.apple-tile-dark h1,
+.apple-tile-dark h2,
+.apple-tile-dark h3,
+.apple-tile-dark p {
+  color: var(--apple-on-dark);
+}
+
+.apple-tile-dark .text-muted-dark {
+  color: var(--apple-body-muted) !important;
+}
+
+/* 4. Product Gallery Cards (Store Utility Cards) */
+.apple-product-card {
+  background-color: var(--apple-canvas);
+  border: 1px solid var(--apple-hairline);
+  border-radius: var(--apple-radius-lg);
+  padding: var(--apple-space-lg);
+  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.apple-product-card:hover {
+  border-color: #c7c7cc;
+  transform: translateY(-2px);
+}
+
+.apple-product-img-wrap {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--apple-space-md);
+}
+
+.apple-product-img-wrap img {
+  max-height: 180px;
+  object-fit: contain;
+}
+
+.apple-badge-category {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #bf4800; /* Apple store eyebrow orange */
+  margin-bottom: 6px;
+}
+
+/* 5. Footer (Parchment, Dense Link Columns with relaxed leading 2.41) */
+.apple-footer {
+  background-color: var(--apple-canvas-parchment);
+  color: var(--apple-ink-muted-80);
+  font-size: 14px;
+  padding: 64px 0 32px 0;
+  border-top: 1px solid var(--apple-hairline);
+}
+
+.apple-footer h6 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.08px;
+  color: var(--apple-ink);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.apple-footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.apple-footer ul li {
+  line-height: 2.41; /* The relaxed Apple dense-link line-height */
+}
+
+.apple-footer ul li a {
+  color: var(--apple-ink-muted-80);
+  text-decoration: none;
+  font-size: 12px;
+  transition: color 0.15s ease;
+}
+
+.apple-footer ul li a:hover {
+  color: var(--apple-primary);
+  text-decoration: underline;
+}
+
+.apple-footer-legal {
+  border-top: 1px solid var(--apple-hairline);
+  padding-top: 20px;
+  margin-top: 32px;
+  font-size: 12px;
+  color: var(--apple-ink-muted-48);
+}

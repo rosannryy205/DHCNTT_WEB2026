@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- 2. Apple Frosted Sub-Nav (52px, frosted blur backdrop) -->
+  <div th:fragment="sub-nav" class="apple-sub-nav">
+    <div class="container-xl d-flex align-items-center justify-content-between h-100">
+      
+      <!-- Category Title (21px Tagline, weight 600) -->
+      <a th:href="@{/}" class="sub-nav-title">
+        Cửa Hàng Công Nghệ
+      </a>
+
+      <!-- Sub Links & Action CTA -->
+      <div class="d-flex align-items-center gap-3 sub-nav-links">
+        <div class="d-none d-md-flex align-items-center gap-2">
+          <a class="nav-link" th:href="@{/}">Tổng quan</a>
+          <a class="nav-link" th:href="@{/}">Khuyến mãi</a>
+          <a class="nav-link" th:href="@{/}">Sản phẩm mới</a>
+          <a class="nav-link" th:href="@{/}">Thông số kỹ thuật</a>
+        </div>
+        <!-- Persistent Apple Primary Pill CTA -->
+        <a th:href="@{/#shop-section}" class="btn-apple-primary btn-apple-sm-pill">
+          Mua ngay
+        </a>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

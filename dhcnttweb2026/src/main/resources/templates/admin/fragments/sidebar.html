@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- macOS Dark Sidebar (#1d1d1f) with Collapsible State -->
+  <aside th:fragment="sidebar" id="adminSidebar" class="admin-sidebar">
+    
+    <!-- Sidebar Header / Brand -->
+    <div class="sidebar-header">
+      <a th:href="@{/admin}" class="brand-title">
+        <i class="bi bi-apple fs-4 text-white"></i>
+        <span>Admin Console</span>
+      </a>
+    </div>
+
+    <!-- Sidebar Menu Items -->
+    <ul class="sidebar-menu">
+      
+      <!-- Section: TỔNG QUAN -->
+      <li class="menu-section-label">Tổng quan</li>
+      
+      <li class="menu-item" th:classappend="${activeMenu == 'dashboard' or activeMenu == null} ? 'active' : ''">
+        <a th:href="@{/admin}" class="menu-link" title="Bảng điều khiển">
+          <i class="bi bi-grid-1x2"></i>
+          <span>Bảng điều khiển</span>
+        </a>
+      </li>
+
+      <!-- Section: QUẢN LÝ BÁN HÀNG -->
+      <li class="menu-section-label">Bán hàng & Kho</li>
+
+      <li class="menu-item" th:classappend="${activeMenu == 'products'} ? 'active' : ''">
+        <a th:href="@{/admin}" class="menu-link" title="Sản phẩm">
+          <i class="bi bi-box-seam"></i>
+          <span>Sản phẩm</span>
+        </a>
+      </li>
+
+      <li class="menu-item" th:classappend="${activeMenu == 'categories'} ? 'active' : ''">
+        <a th:href="@{/admin}" class="menu-link" title="Danh mục & Thương hiệu">
+          <i class="bi bi-tags"></i>
+          <span>Danh mục & Hiệu</span>
+        </a>
+      </li>
+
+      <li class="menu-item" th:classappend="${activeMenu == 'orders'} ? 'active' : ''">
+        <a th:href="@{/admin}" class="menu-link d-flex justify-content-between align-items-center" title="Đơn hàng">
+          <div>
+            <i class="bi bi-receipt"></i>
+            <span>Đơn hàng</span>
+          </div>
+          <span class="badge rounded-pill bg-danger" style="font-size: 10px;">12</span>
+        </a>
+      </li>
+
+      <!-- Section: KHÁCH HÀNG & TIẾP THỊ -->
+      <li class="menu-section-label">Khách hàng & Marketing</li>
+
+      <li class="menu-item" th:classappend="${activeMenu == 'users'} ? 'active' : ''">
+        <a th:href="@{/admin}" class="menu-link" title="Người dùng & Phân quyền">
+          <i class="bi bi-people"></i>
+          <span>Người dùng & Roles</span>
+        </a>
+      </li>
+
+      <li class="menu-item" th:classappend="${activeMenu == 'coupons'} ? 'active' : ''">
+        <a th:href="@{/admin}" class="menu-link" title="Khuyến mãi & Voucher">
+          <i class="bi bi-ticket-perforated"></i>
+          <span>Mã giảm giá</span>
+        </a>
+      </li>
+
+      <li class="menu-item" th:classappend="${activeMenu == 'reviews'} ? 'active' : ''">
+        <a th:href="@{/admin}" class="menu-link" title="Đánh giá & Bình luận">
+          <i class="bi bi-chat-left-quote"></i>
+          <span>Đánh giá của khách</span>
+        </a>
+      </li>
+
+      <!-- Section: CÀI ĐẶT -->
+      <li class="menu-section-label">Hệ thống</li>
+
+      <li class="menu-item" th:classappend="${activeMenu == 'banners'} ? 'active' : ''">
+        <a th:href="@{/admin}" class="menu-link" title="Banner & Cài đặt trang chủ">
+          <i class="bi bi-sliders"></i>
+          <span>Banner & Cài đặt</span>
+        </a>
+      </li>
+
+      <li class="menu-item mt-4 border-top border-secondary pt-2">
+        <a th:href="@{/}" class="menu-link text-info" title="Xem trang bán hàng Client">
+          <i class="bi bi-arrow-up-right-square"></i>
+          <span>Xem cửa hàng</span>
+        </a>
+      </li>
+
+    </ul>
+
+  </aside>
+</body>
+</html>

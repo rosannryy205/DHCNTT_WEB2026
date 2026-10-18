@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- Admin Topbar Navigation -->
+  <header th:fragment="topbar" class="admin-topbar">
+    
+    <!-- Left: Sidebar Toggle + Breadcrumb -->
+    <div class="d-flex align-items-center gap-3">
+      <button type="button" id="sidebarToggleBtn" class="toggle-btn" title="Thu gọn/Mở rộng Sidebar">
+        <i class="bi bi-list"></i>
+      </button>
+
+      <nav aria-label="breadcrumb" class="d-none d-sm-block">
+        <ol class="breadcrumb admin-breadcrumb">
+          <li class="breadcrumb-item"><a th:href="@{/admin}">Admin</a></li>
+          <li class="breadcrumb-item active" aria-current="page" th:text="${pageTitle ?: 'Bảng điều khiển'}">Bảng điều khiển</li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- Right: Search, Notifications & User Dropdown -->
+    <div class="admin-topbar-actions">
+      
+      <!-- Quick Search Bar -->
+      <div class="position-relative d-none d-md-block" style="width: 220px;">
+        <input type="text" class="form-control form-control-sm rounded-pill ps-4" 
+               placeholder="Tìm kiếm nhanh..." style="border-color: var(--apple-hairline); font-size: 13px;">
+        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-2 text-secondary" style="font-size: 11px;"></i>
+      </div>
+
+      <!-- Notification Bell -->
+      <div class="dropdown">
+        <button class="btn btn-sm btn-light rounded-circle position-relative p-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-bell text-secondary"></i>
+          <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm" style="border-radius: var(--apple-radius-md); font-size: 13px; min-width: 240px;">
+          <li class="dropdown-header fw-semibold text-dark">Thông báo mới (3)</li>
+          <li><hr class="dropdown-divider my-1"></li>
+          <li><a class="dropdown-item py-2" href="#">📦 Đơn hàng #DH1094 vừa được tạo</a></li>
+          <li><a class="dropdown-item py-2" href="#">⭐ Có 1 đánh giá mới 5 sao</a></li>
+          <li><a class="dropdown-item py-2" href="#">⚠️ Sản phẩm iPhone 16 Pro sắp hết hàng</a></li>
+        </ul>
+      </div>
+
+      <!-- User Profile Dropdown -->
+      <div class="dropdown">
+        <button class="btn btn-sm p-0 d-flex align-items-center gap-2 border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" 
+               alt="Admin Avatar" class="admin-avatar">
+          <div class="text-start d-none d-lg-block">
+            <div class="fw-semibold text-dark lh-1" style="font-size: 13px;">Quản Trị Viên</div>
+            <small class="text-secondary" style="font-size: 11px;">admin@dhstore.vn</small>
+          </div>
+          <i class="bi bi-chevron-down text-secondary ms-1" style="font-size: 11px;"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm mt-2" style="border-radius: var(--apple-radius-md); font-size: 13px; min-width: 180px;">
+          <li><a class="dropdown-item py-2" href="#"><i class="bi bi-person me-2"></i> Hồ sơ cá nhân</a></li>
+          <li><a class="dropdown-item py-2" href="#"><i class="bi bi-gear me-2"></i> Cài đặt tài khoản</a></li>
+          <li><hr class="dropdown-divider my-1"></li>
+          <li><a class="dropdown-item py-2 text-danger" th:href="@{/}"><i class="bi bi-box-arrow-right me-2"></i> Đăng xuất</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+  </header>
+</body>
+</html>
