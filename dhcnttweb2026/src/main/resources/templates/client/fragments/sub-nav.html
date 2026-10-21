@@ -5,24 +5,52 @@
   <div th:fragment="sub-nav" class="apple-sub-nav">
     <div class="container-xl d-flex align-items-center justify-content-between h-100">
       
-      <!-- Category Title (21px Tagline, weight 600) -->
-      <a th:href="@{/}" class="sub-nav-title">
-        Cửa Hàng Công Nghệ
-      </a>
-
-      <!-- Sub Links & Action CTA -->
-      <div class="d-flex align-items-center gap-3 sub-nav-links">
-        <div class="d-none d-md-flex align-items-center gap-2">
-          <a class="nav-link" th:href="@{/}">Tổng quan</a>
-          <a class="nav-link" th:href="@{/}">Khuyến mãi</a>
-          <a class="nav-link" th:href="@{/}">Sản phẩm mới</a>
-          <a class="nav-link" th:href="@{/}">Thông số kỹ thuật</a>
+      <!-- Branch A: Product Detail Sticky Sub-Nav -->
+      <th:block th:if="${isProductDetailPage}">
+        <div class="d-flex align-items-center gap-3">
+          <a th:href="@{/}" class="sub-nav-title mb-0" th:text="${productName}">iPhone 16 Pro</a>
+          <span class="text-secondary small d-none d-lg-inline" th:text="${tagline}">Titanium. Vô cùng mạnh mẽ.</span>
         </div>
-        <!-- Persistent Apple Primary Pill CTA -->
-        <a th:href="@{/#shop-section}" class="btn-apple-primary btn-apple-sm-pill">
-          Mua ngay
+
+        <div class="d-flex align-items-center gap-2 sub-nav-links">
+          <div class="d-none d-md-flex align-items-center gap-2">
+            <a class="nav-link" href="#configurator">Cấu hình</a>
+            <a class="nav-link" href="#in-the-box">Trong hộp</a>
+            <a class="nav-link" href="#tech-specs">Thông số</a>
+            <a class="nav-link" href="#accessories">Phụ kiện</a>
+            <a class="nav-link" href="#related-products">Liên quan</a>
+          </div>
+          <!-- Live dynamic price & buy button -->
+          <div class="d-flex align-items-center gap-2 ms-2 ps-2 border-start">
+            <span id="subnavPrice" class="fw-semibold text-dark fs-6" th:text="${startingPriceFormatted}">28.990.000đ</span>
+            <button id="subnavBuyBtn" class="btn-apple-primary btn-apple-sm-pill px-3" style="font-size: 13px;">
+              Mua ngay
+            </button>
+          </div>
+        </div>
+      </th:block>
+
+      <!-- Branch B: Default Store Sub-Nav -->
+      <th:block th:unless="${isProductDetailPage}">
+        <!-- Category Title (21px Tagline, weight 600) -->
+        <a th:href="@{/}" class="sub-nav-title">
+          Cửa Hàng Công Nghệ
         </a>
-      </div>
+
+        <!-- Sub Links & Action CTA -->
+        <div class="d-flex align-items-center gap-3 sub-nav-links">
+          <div class="d-none d-md-flex align-items-center gap-2">
+            <a class="nav-link" th:href="@{/}">Tổng quan</a>
+            <a class="nav-link" th:href="@{/}">Khuyến mãi</a>
+            <a class="nav-link" th:href="@{/}">Sản phẩm mới</a>
+            <a class="nav-link" th:href="@{/}">Thông số kỹ thuật</a>
+          </div>
+          <!-- Persistent Apple Primary Pill CTA -->
+          <a th:href="@{/#shop-section}" class="btn-apple-primary btn-apple-sm-pill">
+            Mua ngay
+          </a>
+        </div>
+      </th:block>
 
     </div>
   </div>

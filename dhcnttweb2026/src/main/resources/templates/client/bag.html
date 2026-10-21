@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout}">
+<head>
+  <title th:text="${pageTitle}">Túi hàng của bạn - DH Store</title>
+
+  <!-- Page-specific styles -->
+  <th:block layout:fragment="styles">
+    <link rel="stylesheet" th:href="@{/css/bag.css}">
+  </th:block>
+</head>
+<body>
+  <div layout:fragment="content">
+
+    <!-- 1. Banner vận chuyển miễn phí chuẩn Apple -->
+    <div class="bag-announcement-banner text-center">
+      <div class="container-xl">
+        <i class="bi bi-truck text-primary me-2"></i>
+        <span>Giao hàng tiêu chuẩn <strong>miễn phí</strong> cho mọi đơn hàng. Đổi trả miễn phí trong 14 ngày.</span>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container-xl py-4">
+
+      <!-- 2. Trạng thái có sản phẩm (Active View) -->
+      <div id="bagActiveView" th:classappend="${isBagEmpty} ? 'd-none' : ''">
+
+        <!-- Header -->
+        <div class="bag-header-section">
+          <h1 class="bag-header-title">Túi hàng của bạn.</h1>
+          <p class="bag-header-subtitle">Xem lại các sản phẩm bạn đã chọn trước khi tiến hành thanh toán an toàn.</p>
+        </div>
+
+        <!-- 2 Columns Layout (7 : 5) -->
+        <div class="row g-5">
+
+          <!-- Cột trái (7 cột): Danh sách Bag Items -->
+          <div class="col-12 col-lg-7">
+            <div id="bagItemsContainer" class="bag-item-list">
+
+              <div th:each="item : ${bagItems}" 
+                   class="bag-item-row"
+                   th:data-id="${item.id()}"
+                   th:data-sku="${item.sku()}"
+                   th:data-unit-price="${item.unitPrice()}"
+                   th:data-stock="${item.stockQuantity()}">
+                
+                <!-- Ảnh biến thể -->
+                <div class="bag-item-image-wrapper">
+                  <img th:src="${item.imageUrl()}" th:alt="${item.productName()}" class="bag-item-image">
+                </div>
+
+                <!-- Chi tiết sản phẩm -->
+                <div class="bag-item-details">
+                  <div class="bag-item-header">
+                    <a th:href="@{${item.productDetailUrl()}}" class="bag-item-title" th:text="${item.productName()}">
+                      iPhone 16 Pro 256GB
+                    </a>
+                    <div class="bag-item-price-col">
+                      <div class="bag-item-line-total" th:text="${item.formattedLineTotal()}">31.990.000đ</div>
+                      <div class="bag-item-unit-price" th:text="'Đơn giá: ' + ${item.formattedUnitPrice()}">Đơn giá: 31.990.000đ</div>
+                    </div>
+                  </div>
+
+                  <!-- Thông số cấu hình đã chọn -->
+                  <div class="bag-item-specs">
+                    <span class="bag-item-spec-badge" th:if="${item.colorName() != null}">
+                      <span class="bag-item-color-dot" th:style="'background-color: ' + ${item.colorHex()}"></span>
+                      <span th:text="${item.colorName()}">Titan Sa Mạc</span>
+                    </span>
+                    <span class="bag-item-spec-badge" th:if="${item.storageCapacity() != null and item.storageCapacity() != 'Tiêu chuẩn'}">
+                      <i class="bi bi-hdd me-1"></i>
+                      <span th:text="${item.storageCapacity()}">256GB</span>
+                    </span>
+                    <span class="bag-item-spec-badge text-success">
+                      <i class="bi bi-check-circle-fill me-1"></i> Còn hàng
+                    </span>
+                  </div>
+
+                  <!-- Tương tác: Stepper số lượng & Nút Xóa / Sửa -->
+                  <div class="bag-item-actions">
+                    <div class="bag-stepper">
+                      <button type="button" class="bag-stepper-btn btn-qty-minus" title="Giảm số lượng">
+                        <i class="bi bi-dash"></i>
+                      </button>
+                      <span class="bag-stepper-val" th:text="${item.quantity()}">1</span>
+                      <button type="button" class="bag-stepper-btn btn-qty-plus" title="Tăng số lượng">
+                        <i class="bi bi-plus"></i>
+                      </button>
+                    </div>
+
+                    <div class="bag-action-links">
+                      <a th:href="@{${item.productDetailUrl()}}" class="bag-link-edit" title="Đổi màu sắc hoặc dung lượng">
+                        <i class="bi bi-sliders"></i> Cấu hình lại
+                      </a>
+                      <button type="button" class="bag-link-remove" title="Xóa khỏi túi hàng">
+                        <i class="bi bi-trash3"></i> Xóa
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Cột phải (5 cột): Tóm tắt đơn hàng (Sticky Order Summary) -->
+          <div class="col-12 col-lg-5">
+            <div class="bag-summary-sticky">
+              <h3 class="bag-summary-title">Tóm tắt đơn hàng</h3>
+
+              <div class="bag-summary-line">
+                <span>Tạm tính</span>
+                <span id="bagSubtotal" class="fw-semibold text-dark" th:text="${formattedSubtotal}">33.419.000đ</span>
+              </div>
+
+              <div class="bag-summary-line">
+                <span>Vận chuyển</span>
+                <span class="text-success fw-medium">Miễn phí</span>
+              </div>
+
+              <!-- Dòng giảm giá (ẩn mặc định, hiện khi áp dụng promo code) -->
+              <div id="discountRow" class="bag-summary-line text-danger d-none">
+                <span>Mã ưu đãi (APPLEVIP)</span>
+                <span id="discountVal" class="fw-semibold">-500.000đ</span>
+              </div>
+
+              <!-- Accordion Nhập mã ưu đãi -->
+              <div class="mt-3">
+                <button type="button" id="promoAccordionBtn" class="promo-accordion-trigger">
+                  <i class="bi bi-tag"></i> Bạn có mã giảm giá?
+                </button>
+                <div id="promoInputCollapse" class="promo-input-group d-none">
+                  <input type="text" id="promoInput" class="promo-input" placeholder="Nhập mã (thử: APPLEVIP)">
+                  <button type="button" id="promoApplyBtn" class="promo-apply-btn">Áp dụng</button>
+                </div>
+              </div>
+
+              <div class="bag-summary-divider"></div>
+
+              <div class="bag-summary-total">
+                <span class="bag-summary-total-label">Tổng thanh toán</span>
+                <span id="bagTotal" class="bag-summary-total-val" th:text="${formattedTotal}">33.419.000đ</span>
+              </div>
+
+              <!-- CTA Button Thanh toán -->
+              <div class="d-grid gap-2">
+                <a th:href="@{/checkout}" class="btn-apple-primary btn-apple-lg-pill py-3 text-center text-decoration-none">
+                  <i class="bi bi-lock me-2"></i> Thanh toán
+                </a>
+              </div>
+
+              <!-- Huy hiệu bảo mật & Phương thức thanh toán -->
+              <div class="payment-trust-cluster">
+                <div class="payment-trust-title">Thanh toán bảo mật & Đa dạng phương thức</div>
+                <div class="payment-badges-row">
+                  <span class="payment-badge-chip"><i class="bi bi-apple"></i> Apple Pay</span>
+                  <span class="payment-badge-chip"><i class="bi bi-credit-card-2-front"></i> Visa / Master</span>
+                  <span class="payment-badge-chip"><i class="bi bi-qr-code"></i> VNPAY-QR</span>
+                  <span class="payment-badge-chip"><i class="bi bi-wallet2"></i> MoMo</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- 3. Trạng thái túi hàng trống (Empty Bag State) -->
+      <div id="bagEmptyView" class="empty-bag-container" th:classappend="${!isBagEmpty} ? 'd-none' : ''">
+        <div class="empty-bag-icon">
+          <i class="bi bi-bag"></i>
+        </div>
+        <h2 class="empty-bag-title">Túi của bạn đang trống.</h2>
+        <p class="empty-bag-text">
+          Đăng nhập để xem lại các sản phẩm bạn đã lưu trước đó, hoặc tiếp tục khám phá các thiết bị công nghệ mới nhất.
+        </p>
+        <div class="empty-bag-cta-group">
+          <a th:href="@{/}" class="btn-apple-primary btn-apple-lg-pill py-2 px-4 text-decoration-none">
+            <i class="bi bi-arrow-left me-1"></i> Tiếp tục mua sắm
+          </a>
+          <a th:href="@{/login}" class="btn-apple-secondary btn-apple-lg-pill py-2 px-4 text-decoration-none">
+            <i class="bi bi-person me-1"></i> Đăng nhập
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 4. Khối Phụ kiện tương thích (Compatible Accessories Upsell) -->
+    <section class="bag-accessories-section">
+      <div class="container-xl">
+        <div class="mb-4">
+          <span class="apple-badge-category">Gợi ý mua kèm</span>
+          <h2 class="apple-display-lg" style="font-size: 28px;">Phụ kiện bạn có thể cần.</h2>
+        </div>
+
+        <div class="row g-4">
+          <div th:each="acc : ${compatibleAccessories}" class="col-12 col-sm-6 col-lg-3">
+            <div class="accessory-card">
+              <div class="accessory-img-wrap">
+                <img th:src="${acc.imageUrl()}" th:alt="${acc.name()}">
+              </div>
+              <div class="accessory-category" th:text="${acc.category()}">Nguồn điện</div>
+              <h4 class="accessory-name" th:text="${acc.name()}">Củ sạc nhanh USB-C 30W</h4>
+              <div class="accessory-price" th:text="${acc.formattedPrice()}">1.090.000đ</div>
+              
+              <button type="button" 
+                      class="btn-quick-add"
+                      th:data-id="${acc.id()}"
+                      th:data-sku="${acc.sku()}"
+                      th:data-name="${acc.name()}"
+                      th:data-price="${acc.price()}"
+                      th:data-img="${acc.imageUrl()}"
+                      th:data-url="${acc.productDetailUrl()}">
+                <i class="bi bi-bag-plus"></i> Thêm vào túi
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Page-specific scripts -->
+  <th:block layout:fragment="scripts">
+    <script th:src="@{/js/bag.js}"></script>
+  </th:block>
+</body>
+</html>

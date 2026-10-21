@@ -1,0 +1,518 @@
+/**
+ * Apple Store Bag (Túi hàng) Styles
+ * Photography-first, clean dividers, generous whitespace, Action Blue accent.
+ */
+
+/* Banner thông báo vận chuyển */
+.bag-announcement-banner {
+  background-color: var(--apple-canvas-parchment);
+  border-bottom: 1px solid var(--apple-hairline);
+  padding: 14px 20px;
+  font-size: 14px;
+  color: var(--apple-ink-muted-80);
+}
+
+.bag-announcement-banner a {
+  color: var(--apple-primary);
+  text-decoration: none;
+}
+
+.bag-announcement-banner a:hover {
+  text-decoration: underline;
+}
+
+/* Header trang Túi hàng */
+.bag-header-section {
+  padding: 48px 0 24px;
+}
+
+.bag-header-title {
+  font-family: var(--apple-font-family);
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--apple-ink);
+  margin-bottom: 8px;
+}
+
+.bag-header-subtitle {
+  font-size: 17px;
+  color: var(--apple-ink-muted-48);
+}
+
+/* Danh sách Bag Item */
+.bag-item-list {
+  border-top: 1px solid var(--apple-hairline);
+}
+
+.bag-item-row {
+  display: flex;
+  gap: 24px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--apple-hairline);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.bag-item-row.removing {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.bag-item-image-wrapper {
+  width: 140px;
+  min-width: 140px;
+  height: 140px;
+  background-color: var(--apple-canvas-parchment);
+  border-radius: var(--apple-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 8px;
+}
+
+.bag-item-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.bag-item-image-wrapper:hover .bag-item-image {
+  transform: scale(1.05);
+}
+
+.bag-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.bag-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.bag-item-title {
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--apple-ink);
+  text-decoration: none;
+  line-height: 1.3;
+}
+
+.bag-item-title:hover {
+  color: var(--apple-primary);
+}
+
+.bag-item-price-col {
+  text-align: right;
+  min-width: 120px;
+}
+
+.bag-item-line-total {
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--apple-ink);
+}
+
+.bag-item-unit-price {
+  font-size: 13px;
+  color: var(--apple-ink-muted-48);
+}
+
+.bag-item-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--apple-ink-muted-48);
+  margin-bottom: 16px;
+}
+
+.bag-item-spec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--apple-canvas-parchment);
+  padding: 4px 10px;
+  border-radius: var(--apple-radius-pill);
+}
+
+.bag-item-color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* Stepper tương tác số lượng */
+.bag-item-actions {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+}
+
+.bag-stepper {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--apple-canvas-parchment);
+  border-radius: var(--apple-radius-pill);
+  padding: 4px;
+  border: 1px solid var(--apple-hairline);
+}
+
+.bag-stepper-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: #ffffff;
+  color: var(--apple-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+.bag-stepper-btn:hover:not(:disabled) {
+  background-color: var(--apple-primary);
+  color: #ffffff;
+}
+
+.bag-stepper-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.bag-stepper-val {
+  width: 40px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--apple-ink);
+  user-select: none;
+}
+
+.bag-action-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bag-link-remove {
+  color: #dc3545;
+  font-size: 14px;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bag-link-remove:hover {
+  color: #bd2130;
+  text-decoration: underline;
+}
+
+.bag-link-edit {
+  color: var(--apple-primary);
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bag-link-edit:hover {
+  text-decoration: underline;
+}
+
+/* Sticky Order Summary Card */
+.bag-summary-sticky {
+  position: sticky;
+  top: 72px;
+  background-color: var(--apple-surface-pearl);
+  border: 1px solid var(--apple-hairline);
+  border-radius: var(--apple-radius-lg);
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+}
+
+.bag-summary-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--apple-ink);
+  margin-bottom: 24px;
+}
+
+.bag-summary-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  font-size: 15px;
+  color: var(--apple-ink-muted-80);
+}
+
+.bag-summary-divider {
+  height: 1px;
+  background-color: var(--apple-hairline);
+  margin: 20px 0;
+}
+
+.bag-summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24px;
+}
+
+.bag-summary-total-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--apple-ink);
+}
+
+.bag-summary-total-val {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--apple-ink);
+  letter-spacing: -0.02em;
+}
+
+/* Accordion Mã ưu đãi */
+.promo-accordion-trigger {
+  font-size: 14px;
+  color: var(--apple-primary);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.promo-accordion-trigger:hover {
+  text-decoration: underline;
+}
+
+.promo-input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.promo-input {
+  flex: 1;
+  border: 1px solid var(--apple-hairline);
+  border-radius: var(--apple-radius-pill);
+  padding: 8px 16px;
+  font-size: 14px;
+  outline: none;
+  background: #ffffff;
+}
+
+.promo-input:focus {
+  border-color: var(--apple-primary);
+}
+
+.promo-apply-btn {
+  background-color: var(--apple-ink);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--apple-radius-pill);
+  padding: 8px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.promo-apply-btn:hover {
+  opacity: 0.85;
+}
+
+/* Trust Badges */
+.payment-trust-cluster {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--apple-hairline);
+  text-align: center;
+}
+
+.payment-trust-title {
+  font-size: 12px;
+  color: var(--apple-ink-muted-48);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.payment-badges-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.payment-badge-chip {
+  background: #ffffff;
+  border: 1px solid var(--apple-hairline);
+  border-radius: var(--apple-radius-xs);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--apple-ink-muted-80);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Khối Phụ kiện tương thích */
+.bag-accessories-section {
+  padding: 64px 0 32px;
+  background-color: var(--apple-canvas-parchment);
+  border-top: 1px solid var(--apple-hairline);
+  margin-top: 64px;
+}
+
+.accessory-card {
+  background: #ffffff;
+  border-radius: var(--apple-radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.accessory-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.06);
+}
+
+.accessory-img-wrap {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.accessory-img-wrap img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.accessory-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--apple-ink);
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+
+.accessory-category {
+  font-size: 13px;
+  color: var(--apple-ink-muted-48);
+  margin-bottom: 12px;
+}
+
+.accessory-price {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--apple-ink);
+  margin-top: auto;
+  margin-bottom: 16px;
+}
+
+.btn-quick-add {
+  border: 1px solid var(--apple-primary);
+  background: transparent;
+  color: var(--apple-primary);
+  border-radius: var(--apple-radius-pill);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-quick-add:hover {
+  background: var(--apple-primary);
+  color: #ffffff;
+}
+
+/* Empty State */
+.empty-bag-container {
+  padding: 80px 20px;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.empty-bag-icon {
+  font-size: 72px;
+  color: #d2d2d7;
+  margin-bottom: 24px;
+}
+
+.empty-bag-title {
+  font-size: 34px;
+  font-weight: 600;
+  color: var(--apple-ink);
+  margin-bottom: 12px;
+}
+
+.empty-bag-text {
+  font-size: 17px;
+  color: var(--apple-ink-muted-48);
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.empty-bag-cta-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Mobile responsive */
+@media (max-width: 991.98px) {
+  .bag-item-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .bag-item-image-wrapper {
+    width: 100%;
+    height: 180px;
+  }
+  .bag-summary-sticky {
+    position: static;
+    margin-top: 32px;
+  }
+}
