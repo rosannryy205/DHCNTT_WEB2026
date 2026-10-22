@@ -1,19 +1,22 @@
 package com.example.dhcnttweb2026.controller;
 
+import com.example.dhcnttweb2026.service.ProductCatalogService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.NumberFormat;
 import java.util.*;
 
 @Controller
-@RequestMapping("/product")
 public class ClientProductController {
 
-    private final Locale vnLocale = Locale.of("vi", "VN");
+    private final ProductCatalogService catalogService;
+
+    public ClientProductController(ProductCatalogService catalogService) {
+        this.catalogService = catalogService;
+    }
 
     public record ProductVariantDto(
             String sku,
@@ -59,13 +62,67 @@ public class ClientProductController {
             String linkUrl
     ) {}
 
-    @GetMapping("/{slug}")
+    @GetMapping("/category/{category}")
+    public String categoryRedirect(@PathVariable("category") String category) {
+        return "redirect:/products?category=" + category;
+    }
+
+    @GetMapping("/products")
+    public String listProducts(
+            @RequestParam(value = "category", required = false) List<String> categories,
+            @RequestParam(value = "minPrice", required = false) Long minPrice,
+            @RequestParam(value = "maxPrice", required = false) Long maxPrice,
+            @RequestParam(value = "storage", required = false) List<String> storages,
+            @RequestParam(value = "color", required = false) List<String> colors,
+            @RequestParam(value = "sort", required = false, defaultValue = "newest") String sort,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            Model model
+    ) {
+        ProductCatalogService.CatalogPageResult catalogResult = catalogService.filterProducts(
+                categories, minPrice, maxPrice, storages, colors, sort, page, 12
+        );
+
+        model.addAttribute("pageTitle", "Cửa hàng sản phẩm Apple - DH Store");
+        model.addAttribute("isProductsCatalogPage", true);
+        model.addAttribute("filterOptions", catalogService.getFilterOptions());
+        model.addAttribute("catalogResult", catalogResult);
+        model.addAttribute("selectedCategories", categories != null ? categories : Collections.emptyList());
+        model.addAttribute("selectedMinPrice", minPrice);
+        model.addAttribute("selectedMaxPrice", maxPrice);
+        model.addAttribute("selectedStorages", storages != null ? storages : Collections.emptyList());
+        model.addAttribute("selectedColors", colors != null ? colors : Collections.emptyList());
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentPage", page);
+
+        return "client/products";
+    }
+
+    @GetMapping("/products/filter")
+    public String filterProductsFragment(
+            @RequestParam(value = "category", required = false) List<String> categories,
+            @RequestParam(value = "minPrice", required = false) Long minPrice,
+            @RequestParam(value = "maxPrice", required = false) Long maxPrice,
+            @RequestParam(value = "storage", required = false) List<String> storages,
+            @RequestParam(value = "color", required = false) List<String> colors,
+            @RequestParam(value = "sort", required = false, defaultValue = "newest") String sort,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            Model model
+    ) {
+        ProductCatalogService.CatalogPageResult catalogResult = catalogService.filterProducts(
+                categories, minPrice, maxPrice, storages, colors, sort, page, 12
+        );
+
+        model.addAttribute("catalogResult", catalogResult);
+        model.addAttribute("currentSort", sort);
+
+        return "client/fragments/product-grid :: product-grid";
+    }
+
+    @GetMapping("/product/{slug}")
     public String productDetail(@PathVariable("slug") String slug, Model model) {
         // Mặc định hỗ trợ hiển thị chi tiết iPhone 16 Pro với đầy đủ dữ liệu cấu hình
         String productName = "iPhone 16 Pro";
         String tagline = "Được tiện từ titan. Sức mạnh bứt phá cùng chip A18 Pro.";
-
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(vnLocale);
 
         // 1. Danh sách màu sắc
         List<ProductColorDto> colors = List.of(

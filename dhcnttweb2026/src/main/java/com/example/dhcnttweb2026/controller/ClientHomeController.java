@@ -12,10 +12,4 @@ public class ClientHomeController {
         model.addAttribute("pageTitle", "Trang Chủ");
         return "client/index";
     }
-
-    @GetMapping("/cart")
-    public String cart(Model model) {
-        model.addAttribute("pageTitle", "Giỏ Hàng");
-        return "client/index";
-    }
 }

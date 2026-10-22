@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <div th:fragment="product-grid" id="product-grid-root" th:attr="data-total-items=${catalogResult.totalItems}">
+    
+    <!-- Top Bar: Result Count & Active Filter Chips -->
+    <div class="catalog-top-bar d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4 pb-3 border-bottom">
+      <div class="result-summary mb-2 mb-md-0">
+        <span class="fs-5 fw-semibold text-dark" th:text="${catalogResult.activeCategoryTitle}">Tất cả sản phẩm</span>
+        <span class="text-secondary ms-2 small">
+          (<span id="product-count-number" th:text="${catalogResult.totalItems}">18</span> sản phẩm)
+        </span>
+      </div>
+
+      <!-- Active Filter Chips -->
+      <div class="active-chips-wrapper d-flex flex-wrap align-items-center gap-2" th:if="${!catalogResult.activeChips.isEmpty()}">
+        <span class="text-secondary small me-1">Đang lọc:</span>
+        <th:block th:each="chip : ${catalogResult.activeChips}">
+          <span class="badge bg-light text-dark border d-inline-flex align-items-center gap-1 py-1 px-2 rounded-pill font-monospace" style="font-size: 12px; font-weight: 500;">
+            <span th:text="${chip.label}">iPhone</span>
+            <button type="button" class="btn-close ms-1 btn-remove-chip" th:attr="data-chip-type=${chip.type},data-chip-value=${chip.value}" aria-label="Xóa" style="font-size: 8px;"></button>
+          </span>
+        </th:block>
+        <button type="button" class="btn btn-link btn-sm text-decoration-none text-danger p-0 ms-2 small" id="clearAllFiltersBtn">
+          Xóa tất cả
+        </button>
+      </div>
+    </div>
+
+    <!-- Case A: Has Products -->
+    <div th:if="${!catalogResult.products.isEmpty()}" class="product-grid-container">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4" id="products-cards-row">
+        
+        <th:block th:each="product : ${catalogResult.products}">
+          <div class="col">
+            <div class="apple-product-card h-100 d-flex flex-column" th:attr="data-product-id=${product.id},data-category=${product.category}">
+              
+              <!-- Card Header: Category & Badge -->
+              <div class="card-header-meta d-flex align-items-center justify-content-between mb-2">
+                <span class="product-category-label text-secondary small fw-medium" th:text="${product.categoryName}">iPhone</span>
+                <span th:if="${product.badge != null}" class="badge rounded-pill apple-badge" th:text="${product.badge}"
+                      th:classappend="${product.badge == 'Mới' ? 'apple-badge-new' : (product.badge == 'Bán chạy' ? 'apple-badge-hot' : 'apple-badge-highlight')}">
+                  Mới
+                </span>
+              </div>
+
+              <!-- Product Image Showcase with drop-shadow & smooth color preview switch -->
+              <div class="product-image-container text-center my-3">
+                <a th:href="@{'/product/' + ${product.slug}}" class="text-decoration-none">
+                  <img class="product-preview-img img-fluid"
+                       th:src="${product.defaultImage}"
+                       th:alt="${product.name}"
+                       th:attr="data-default-img=${product.defaultImage}"
+                       loading="lazy">
+                </a>
+              </div>
+
+              <!-- Color Swatches Row (Finish Dots) -->
+              <div class="product-swatches-row d-flex justify-content-center align-items-center gap-2 mb-3" th:if="${!product.colors.isEmpty()}">
+                <th:block th:each="color, iterStat : ${product.colors}">
+                  <button type="button"
+                          class="swatch-dot"
+                          th:classappend="${iterStat.first ? 'active' : ''}"
+                          th:style="'background-color: ' + ${color.hex} + ';'"
+                          th:title="${color.name}"
+                          th:attr="data-color-name=${color.name},data-img-src=${color.previewImage}"
+                          th:aria-label="${color.name}">
+                  </button>
+                </th:block>
+              </div>
+
+              <!-- Card Body: Title & Tagline -->
+              <div class="card-body-content flex-grow-1 text-center px-2">
+                <h3 class="product-card-title mb-1">
+                  <a th:href="@{'/product/' + ${product.slug}}" class="text-dark text-decoration-none" th:text="${product.name}">
+                    iPhone 16 Pro
+                  </a>
+                </h3>
+                <p class="product-card-tagline text-secondary small line-clamp-2 mb-3" th:text="${product.tagline}">
+                  Được tiện từ titan. Sức mạnh bứt phá cùng chip A18 Pro.
+                </p>
+              </div>
+
+              <!-- Card Footer: Price & CTA Link -->
+              <div class="card-footer-meta mt-auto pt-3 border-top text-center">
+                <div class="price-wrapper mb-2">
+                  <span class="text-secondary small">Giá từ</span>
+                  <span class="product-price fw-semibold fs-5 text-dark ms-1" th:text="${product.formattedStartingPrice}">
+                    28.990.000đ
+                  </span>
+                </div>
+                <div class="d-flex align-items-center justify-content-center gap-2">
+                  <a th:href="@{'/product/' + ${product.slug}}" class="btn-apple-primary btn-apple-sm-pill w-100">
+                    Khám phá & Mua
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </th:block>
+
+      </div>
+
+      <!-- Pagination Navigation -->
+      <nav th:if="${catalogResult.totalPages > 1}" class="catalog-pagination d-flex justify-content-between align-items-center mt-5 pt-4 border-top" aria-label="Phân trang sản phẩm">
+        <div class="pagination-info text-secondary small">
+          Trang <span class="fw-semibold text-dark" th:text="${catalogResult.currentPage}">1</span> / <span th:text="${catalogResult.totalPages}">2</span>
+        </div>
+        <ul class="pagination pagination-sm m-0 gap-1">
+          <li class="page-item" th:classappend="${!catalogResult.hasPrev} ? 'disabled' : ''">
+            <button class="page-link rounded-pill px-3 page-nav-btn" th:attr="data-page=${catalogResult.currentPage - 1}" type="button" aria-label="Trang trước">
+              <i class="bi bi-chevron-left me-1"></i> Trước
+            </button>
+          </li>
+          <th:block th:each="pageNum : ${#numbers.sequence(1, catalogResult.totalPages)}">
+            <li class="page-item" th:classappend="${pageNum == catalogResult.currentPage} ? 'active' : ''">
+              <button class="page-link rounded-circle page-nav-btn d-flex align-items-center justify-content-center" style="width: 34px; height: 34px;" th:attr="data-page=${pageNum}" type="button" th:text="${pageNum}">
+                1
+              </button>
+            </li>
+          </th:block>
+          <li class="page-item" th:classappend="${!catalogResult.hasNext} ? 'disabled' : ''">
+            <button class="page-link rounded-pill px-3 page-nav-btn" th:attr="data-page=${catalogResult.currentPage + 1}" type="button" aria-label="Trang sau">
+              Sau <i class="bi bi-chevron-right ms-1"></i>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Case B: Empty State (No Products Found) -->
+    <div th:if="${catalogResult.products.isEmpty()}" class="catalog-empty-state text-center py-5 my-4">
+      <div class="empty-icon-wrapper mb-3">
+        <div class="empty-icon-circle mx-auto d-flex align-items-center justify-content-center">
+          <i class="bi bi-search fs-1 text-muted"></i>
+        </div>
+      </div>
+      <h3 class="fw-semibold text-dark mb-2">Không tìm thấy sản phẩm phù hợp</h3>
+      <p class="text-secondary max-w-md mx-auto mb-4" style="max-width: 480px;">
+        Không có sản phẩm nào khớp với bộ lọc bạn đã chọn. Hãy thử nới rộng khoảng giá hoặc bỏ bớt các tiêu chí lọc.
+      </p>
+      <div class="d-flex justify-content-center gap-3">
+        <button type="button" class="btn-apple-primary btn-apple-sm-pill px-4" id="emptyStateResetBtn">
+          Xóa tất cả bộ lọc
+        </button>
+        <a th:href="@{/products}" class="btn btn-outline-secondary rounded-pill px-4" style="font-size: 13px;">
+          Xem tất cả sản phẩm
+        </a>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

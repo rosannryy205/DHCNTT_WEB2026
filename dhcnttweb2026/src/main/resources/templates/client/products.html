@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout}">
+<head>
+  <title th:text="${pageTitle}">Cửa hàng sản phẩm Apple - DH Store</title>
+  
+  <!-- Page-specific styles -->
+  <th:block layout:fragment="styles">
+    <link rel="stylesheet" th:href="@{/css/products.css}">
+  </th:block>
+</head>
+<body>
+  <div layout:fragment="content" class="products-catalog-page py-4">
+    
+    <!-- Hero / Category Header Banner -->
+    <section class="catalog-hero-section text-center py-5 mb-4 bg-white border-bottom">
+      <div class="container-xl">
+        <span class="text-uppercase tracking-wider text-secondary small fw-semibold">Khám Phá Hệ Sinh Thái</span>
+        <h1 class="display-5 fw-bold text-dark mt-2 mb-3">Cửa Hàng Apple Chính Hãng</h1>
+        <p class="text-secondary lead fs-6 mx-auto mb-0" style="max-width: 650px;">
+          Nơi tốt nhất để tìm kiếm những chiếc iPhone, Mac, iPad, Apple Watch và phụ kiện chính hãng với trải nghiệm tinh hoa.
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Content Container: Sidebar + Product Grid -->
+    <div class="container-xl">
+      <div class="row g-4">
+        
+        <!-- Desktop Sidebar (Col 3, Sticky) -->
+        <aside class="col-12 col-lg-3 d-none d-lg-block">
+          <div class="filter-sidebar p-4 bg-white rounded-4 border sticky-top" style="top: 80px; z-index: 10;">
+            
+            <div class="sidebar-header d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
+              <h5 class="fw-semibold text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-sliders2 fs-6 text-primary"></i> Bộ lọc sản phẩm
+              </h5>
+              <button type="button" class="btn btn-sm btn-link text-decoration-none text-muted p-0 small" id="desktopResetFiltersBtn">
+                Đặt lại
+              </button>
+            </div>
+
+            <!-- Form Bộ lọc -->
+            <form id="filterForm">
+              
+              <!-- 1. Danh mục sản phẩm (Categories) -->
+              <div class="filter-group mb-4">
+                <label class="filter-group-title d-block fw-semibold text-dark mb-2">
+                  Dòng sản phẩm
+                </label>
+                <div class="d-flex flex-column gap-2">
+                  <th:block th:each="cat : ${filterOptions.categories}">
+                    <label class="form-check d-flex align-items-center justify-content-between m-0 p-0 cursor-pointer">
+                      <span class="d-flex align-items-center gap-2">
+                        <input class="form-check-input filter-category-checkbox m-0"
+                               type="checkbox"
+                               name="category"
+                               th:value="${cat.code}"
+                               th:checked="${selectedCategories.contains(cat.code)}">
+                        <i class="bi text-secondary" th:classappend="${cat.iconClass}"></i>
+                        <span class="small text-dark" th:text="${cat.name}">iPhone</span>
+                      </span>
+                      <span class="badge rounded-pill bg-light text-secondary border small" th:text="${cat.count}">4</span>
+                    </label>
+                  </th:block>
+                </div>
+              </div>
+
+              <!-- 2. Khoảng giá (Price Range) -->
+              <div class="filter-group mb-4">
+                <label class="filter-group-title d-block fw-semibold text-dark mb-2">
+                  Mức giá
+                </label>
+                <!-- Quick Pills -->
+                <div class="quick-price-pills d-flex flex-wrap gap-1 mb-3">
+                  <th:block th:each="pr : ${filterOptions.priceRanges}">
+                    <button type="button"
+                            class="btn btn-sm quick-price-pill"
+                            th:attr="data-min=${pr.min},data-max=${pr.max},data-code=${pr.code}"
+                            th:text="${pr.label}">
+                      Dưới 15 triệu
+                    </button>
+                  </th:block>
+                </div>
+                <!-- Min / Max inputs -->
+                <div class="row g-2 align-items-center">
+                  <div class="col-6">
+                    <input type="number"
+                           class="form-control form-control-sm text-center"
+                           id="minPriceInput"
+                           name="minPrice"
+                           placeholder="Từ (VNĐ)"
+                           th:value="${selectedMinPrice}">
+                  </div>
+                  <div class="col-6">
+                    <input type="number"
+                           class="form-control form-control-sm text-center"
+                           id="maxPriceInput"
+                           name="maxPrice"
+                           placeholder="Đến (VNĐ)"
+                           th:value="${selectedMaxPrice}">
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. Dung lượng lưu trữ (Storage - Contextual) -->
+              <div class="filter-group mb-4" id="storageFilterGroup">
+                <label class="filter-group-title d-block fw-semibold text-dark mb-2">
+                  Dung lượng lưu trữ
+                </label>
+                <div class="d-flex flex-wrap gap-1">
+                  <th:block th:each="st : ${filterOptions.storages}">
+                    <label class="storage-pill-label">
+                      <input type="checkbox"
+                             name="storage"
+                             class="filter-storage-checkbox visually-hidden"
+                             th:value="${st.code}"
+                             th:checked="${selectedStorages.contains(st.code)}">
+                      <span class="storage-pill-badge" th:text="${st.label}">128GB</span>
+                    </label>
+                  </th:block>
+                </div>
+              </div>
+
+              <!-- 4. Màu sắc hoàn thiện (Color Swatches) -->
+              <div class="filter-group mb-4">
+                <label class="filter-group-title d-block fw-semibold text-dark mb-2">
+                  Màu sắc hoàn thiện
+                </label>
+                <div class="d-flex flex-wrap gap-2">
+                  <th:block th:each="col : ${filterOptions.colors}">
+                    <label class="color-swatch-filter-label" th:title="${col.name} + ' (' + ${col.count} + ')'">
+                      <input type="checkbox"
+                             name="color"
+                             class="filter-color-checkbox visually-hidden"
+                             th:value="${col.name}"
+                             th:checked="${selectedColors.contains(col.name)}">
+                      <span class="color-swatch-filter-dot" th:style="'background-color: ' + ${col.hex} + ';'"></span>
+                    </label>
+                  </th:block>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </aside>
+
+        <!-- Product Grid Main Area (Col 9) -->
+        <main class="col-12 col-lg-9">
+          
+          <!-- Control Bar: Mobile Filter Button & Sort Select -->
+          <div class="catalog-controls-bar d-flex align-items-center justify-content-between p-3 bg-white rounded-4 border mb-4">
+            
+            <!-- Mobile Drawer Button (visible only < lg) -->
+            <button class="btn btn-sm btn-outline-dark rounded-pill d-lg-none d-flex align-items-center gap-2"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#mobileFilterDrawer">
+              <i class="bi bi-sliders2"></i>
+              <span>Bộ lọc & Sắp xếp</span>
+            </button>
+
+            <!-- Sort By Select Dropdown -->
+            <div class="sort-selector-wrapper d-flex align-items-center gap-2 ms-auto">
+              <label for="catalogSortSelect" class="text-secondary small fw-medium text-nowrap mb-0 d-none d-sm-inline">
+                Sắp xếp theo:
+              </label>
+              <select id="catalogSortSelect" class="form-select form-select-sm rounded-pill border-secondary-subtle px-3" style="width: auto; min-width: 170px;">
+                <option value="newest" th:selected="${currentSort == 'newest'}">Mới nhất</option>
+                <option value="popular" th:selected="${currentSort == 'popular'}">Bán chạy nhất</option>
+                <option value="price-asc" th:selected="${currentSort == 'price-asc'}">Giá: Thấp đến Cao</option>
+                <option value="price-desc" th:selected="${currentSort == 'price-desc'}">Giá: Cao đến Thấp</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Async Dynamic Grid Container -->
+          <div id="product-grid-container" class="position-relative">
+            <!-- Loading Overlay (Shown during AJAX fetch) -->
+            <div id="catalogLoadingOverlay" class="catalog-loading-overlay d-none">
+              <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;">
+                <span class="visually-hidden">Đang tải...</span>
+              </div>
+            </div>
+
+            <!-- Thymeleaf Initial Fragment Load -->
+            <div th:replace="~{client/fragments/product-grid :: product-grid}"></div>
+          </div>
+
+        </main>
+
+      </div>
+    </div>
+
+    <!-- Mobile Offcanvas Filter Drawer -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileFilterDrawer" aria-labelledby="mobileFilterDrawerLabel">
+      <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-semibold text-dark d-flex align-items-center gap-2" id="mobileFilterDrawerLabel">
+          <i class="bi bi-sliders2 text-primary"></i> Bộ lọc & Sắp xếp
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
+      </div>
+      <div class="offcanvas-body p-4">
+        <!-- Cloned Mobile Filter Content -->
+        <div id="mobileFilterContent">
+          <!-- Populated by JS from desktop filter form -->
+        </div>
+      </div>
+      <div class="offcanvas-footer p-3 border-top bg-light d-flex gap-2">
+        <button type="button" class="btn btn-outline-secondary rounded-pill flex-fill" id="mobileResetFiltersBtn">
+          Đặt lại
+        </button>
+        <button type="button" class="btn-apple-primary btn-apple-sm-pill flex-fill" data-bs-dismiss="offcanvas" id="mobileApplyFiltersBtn">
+          Áp dụng
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Page-specific scripts -->
+  <th:block layout:fragment="scripts">
+    <script th:src="@{/js/products.js}"></script>
+  </th:block>
+</body>
+</html>

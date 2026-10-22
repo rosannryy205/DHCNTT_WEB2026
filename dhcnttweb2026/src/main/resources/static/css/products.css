@@ -1,0 +1,281 @@
+/* ==========================================================================
+   Apple Design System - Products Catalog & Filter Styles
+   DH Store (2026)
+   ========================================================================== */
+
+/* Hero Section */
+.catalog-hero-section {
+  background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
+}
+
+.tracking-wider {
+  letter-spacing: 0.1em;
+}
+
+/* Sidebar Styles */
+.filter-sidebar {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.filter-group-title {
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+/* Category Checkbox */
+.filter-category-checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Quick Price Pills */
+.quick-price-pill {
+  background-color: #f5f5f7;
+  color: #1d1d1f;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.quick-price-pill:hover {
+  background-color: #e5e5ea;
+  color: #000000;
+}
+
+.quick-price-pill.active {
+  background-color: #0071e3;
+  color: #ffffff;
+  border-color: #0071e3;
+}
+
+/* Storage Pills */
+.storage-pill-label {
+  cursor: pointer;
+  margin: 0;
+}
+
+.storage-pill-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #1d1d1f;
+  background-color: #ffffff;
+  border: 1px solid #d2d2d7;
+  border-radius: 20px;
+  padding: 4px 12px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.storage-pill-label:hover .storage-pill-badge {
+  border-color: #86868b;
+}
+
+.filter-storage-checkbox:checked + .storage-pill-badge {
+  background-color: #1d1d1f;
+  color: #ffffff;
+  border-color: #1d1d1f;
+}
+
+/* Color Swatches in Filter */
+.color-swatch-filter-label {
+  cursor: pointer;
+  margin: 0;
+  display: inline-flex;
+}
+
+.color-swatch-filter-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.color-swatch-filter-label:hover .color-swatch-filter-dot {
+  transform: scale(1.15);
+}
+
+.filter-color-checkbox:checked + .color-swatch-filter-dot {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #0071e3;
+}
+
+/* Product Card */
+.apple-product-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e5ea;
+  border-radius: 18px;
+  padding: 1.5rem;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+
+.apple-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+/* Product Image & Showcase */
+.product-image-container {
+  height: 210px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-preview-img {
+  max-height: 180px;
+  max-width: 100%;
+  object-fit: contain;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.06));
+}
+
+.product-preview-img.img-switching {
+  opacity: 0.3;
+  transform: scale(0.96);
+}
+
+/* Card Swatches (Finish Dots) */
+.product-swatches-row {
+  min-height: 22px;
+}
+
+.swatch-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.swatch-dot:hover,
+.swatch-dot.active {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 3.5px #0071e3;
+}
+
+/* Badges */
+.apple-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  letter-spacing: 0.3px;
+}
+
+.apple-badge-new {
+  background-color: #fbf0ea;
+  color: #b35300;
+  border: 1px solid #fed7aa;
+}
+
+.apple-badge-hot {
+  background-color: #fff1f2;
+  color: #e11d48;
+  border: 1px solid #fecdd3;
+}
+
+.apple-badge-highlight {
+  background-color: #eff6ff;
+  color: #0071e3;
+  border: 1px solid #bfdbfe;
+}
+
+/* Card Typography */
+.product-card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.product-card-title a:hover {
+  color: #0071e3 !important;
+}
+
+.product-card-tagline {
+  font-size: 13px;
+  line-height: 1.4;
+  height: 36px;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Loading Overlay */
+.catalog-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  border-radius: 18px;
+  transition: opacity 0.2s ease;
+}
+
+.grid-fade-out {
+  opacity: 0.45;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Empty State */
+.catalog-empty-state {
+  background-color: #ffffff;
+  border-radius: 18px;
+  border: 1px dashed #d2d2d7;
+  padding: 3rem 1.5rem;
+}
+
+.empty-icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #f5f5f7;
+}
+
+/* Pagination */
+.catalog-pagination .page-link {
+  color: #1d1d1f;
+  border-color: #e5e5ea;
+  background-color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.catalog-pagination .page-link:hover {
+  background-color: #f5f5f7;
+  border-color: #d2d2d7;
+  color: #0071e3;
+}
+
+.catalog-pagination .page-item.active .page-link {
+  background-color: #0071e3;
+  border-color: #0071e3;
+  color: #ffffff;
+}
+
+.catalog-pagination .page-item.disabled .page-link {
+  opacity: 0.5;
+  background-color: #fbfbfd;
+}

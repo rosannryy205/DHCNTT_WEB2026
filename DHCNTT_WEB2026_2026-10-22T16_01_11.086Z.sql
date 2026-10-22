@@ -1,0 +1,156 @@
+CREATE TABLE IF NOT EXISTS `Users` (
+	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255),
+	`email` VARCHAR(255) NOT NULL UNIQUE,
+	`password` VARCHAR(255) NOT NULL,
+	`phone` INTEGER,
+	`address` VARCHAR(255),
+	`role` ENUM('admin', 'customer') NOT NULL DEFAULT 'customer',
+	`created_at` DATETIME NOT NULL,
+	`updated_at` DATETIME NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `Brands` (
+	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL,
+	`slug` VARCHAR(255) NOT NULL,
+	`logo` VARCHAR(255) NOT NULL,
+	`description` MEDIUMTEXT(65535) NOT NULL,
+	`created_at` DATETIME NOT NULL,
+	`updated_at` DATETIME NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `Categorites` (
+	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL,
+	`slug` VARCHAR(255) NOT NULL,
+	`parent_id` INTEGER NOT NULL,
+	`image` VARCHAR(255) NOT NULL,
+	`is_active` BOOLEAN NOT NULL DEFAULT 1,
+	`created_at` DATETIME NOT NULL,
+	`updated_at` DATETIME NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `Products` (
+	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`category_id` INTEGER NOT NULL,
+	`brand_id` INTEGER NOT NULL,
+	`name` VARCHAR(255) NOT NULL,
+	`slug` VARCHAR(255) NOT NULL,
+	`description` VARCHAR(255),
+	`is_active` BOOLEAN NOT NULL DEFAULT 1,
+	`created_at` DATETIME NOT NULL,
+	`updated_at` DATETIME NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `Product_Variants` (
+	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`product_id` INTEGER NOT NULL,
+	`sku` VARCHAR(255) NOT NULL,
+	`color` VARCHAR(255),
+	`storage` VARCHAR(255),
+	`ram` VARCHAR(255),
+	`original_price` INTEGER NOT NULL,
+	`price` INTEGER NOT NULL,
+	`stock` INTEGER NOT NULL,
+	`image` VARCHAR(255),
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `Order` (
+	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`user_id` INTEGER NOT NULL,
+	`order_code` VARCHAR(255) NOT NULL,
+	`total_amout` DECIMAL NOT NULL,
+	`payment_method` ENUM('vnpay', 'momo', 'cod') NOT NULL DEFAULT 'cod',
+	`payment_status` ENUM() NOT NULL,
+	`order_status` ENUM('Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled') NOT NULL DEFAULT 'Pending',
+	`skipping_address` VARCHAR(255) NOT NULL,
+	`shipping_phone` VARCHAR(255) NOT NULL,
+	`note` VARCHAR(255) NOT NULL,
+	`created_at` DATETIME NOT NULL,
+	`updated_at` DATETIME NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `Order_items` (
+	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`order_id` INTEGER NOT NULL,
+	`product_variant_id` INTEGER NOT NULL,
+	`quantity` INTEGER NOT NULL,
+	`price` DECIMAL NOT NULL,
+	`total_price` DECIMAL NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `Category_Brand` (
+	`category_id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`brand_id` INTEGER NOT NULL,
+	PRIMARY KEY(`category_id`, `brand_id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `Cart` (
+	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`user_id` INTEGER NOT NULL,
+	`created_at` DATETIME NOT NULL,
+	`updated_at` DATETIME NOT NULL,
+	PRIMARY KEY(`id`)
+);
+
+
+CREATE TABLE IF NOT EXISTS `Cart_Items` (
+	`id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	`cart_id` INTEGER NOT NULL,
+	`product_variant_id` INTEGER NOT NULL,
+	`quantity` INTEGER,
+	`created_at` DATETIME,
+	`updated_at` DATETIME,
+	PRIMARY KEY(`id`)
+);
+
+
+ALTER TABLE `Cart_Items`
+ADD FOREIGN KEY(`cart_id`) REFERENCES `Cart`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Users`
+ADD FOREIGN KEY(`id`) REFERENCES `Order`(`user_id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Categorites`
+ADD FOREIGN KEY(`id`) REFERENCES `Category_Brand`(`category_id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Brands`
+ADD FOREIGN KEY(`id`) REFERENCES `Category_Brand`(`brand_id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Products`
+ADD FOREIGN KEY(`category_id`) REFERENCES `Categorites`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Products`
+ADD FOREIGN KEY(`brand_id`) REFERENCES `Brands`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Product_Variants`
+ADD FOREIGN KEY(`product_id`) REFERENCES `Products`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Order_items`
+ADD FOREIGN KEY(`order_id`) REFERENCES `Order`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Order_items`
+ADD FOREIGN KEY(`product_variant_id`) REFERENCES `Product_Variants`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Cart_Items`
+ADD FOREIGN KEY(`product_variant_id`) REFERENCES `Product_Variants`(`id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Users`
+ADD FOREIGN KEY(`id`) REFERENCES `Cart`(`user_id`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
