@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/header :: head('Thêm sản phẩm')}"></head>
+<body>
+<div class="admin-shell">
+    <aside th:replace="~{fragments/sidebar :: sidebar(${activeMenu})}"></aside>
+    <div class="admin-main">
+        <header th:replace="~{fragments/header :: topbar(${pageTitle}, ${subtitle})}"></header>
+        <section class="tile-light">
+            <div class="container-admin">
+                <form th:action="@{/admin/products/add}" th:object="${product}" method="post">
+                    <div class="form-grid">
+                        <div class="store-utility-card">
+                            <div class="form-group">
+                                <label class="form-label">Tên sản phẩm *</label>
+                                <input type="text" th:field="*{name}" class="form-control" placeholder="VD: iPhone 17 Pro Max 512GB" required/>
+                            </div>
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label class="form-label">Mã SKU *</label>
+                                    <input type="text" th:field="*{sku}" class="form-control numeric" placeholder="APL-IP17PM-512" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Danh mục *</label>
+                                    <select th:field="*{category}" class="form-control">
+                                        <option value="iPhone">iPhone</option>
+                                        <option value="Mac">Mac</option>
+                                        <option value="iPad">iPad</option>
+                                        <option value="Phụ kiện">Phụ kiện</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label class="form-label">Giá niêm yết (VNĐ) *</label>
+                                    <input type="number" th:field="*{price}" class="form-control numeric" min="0" step="10000" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Số lượng tồn kho *</label>
+                                    <input type="number" th:field="*{stock}" class="form-control numeric" min="0" required/>
+                                </div>
+                            </div>
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label class="form-label">Trạng thái</label>
+                                    <select th:field="*{status}" class="form-control">
+                                        <option value="Đang bán">Đang bán</option>
+                                        <option value="Sắp ra mắt">Sắp ra mắt</option>
+                                        <option value="Tạm hết hàng">Tạm hết hàng</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">URL Ảnh Render PNG</label>
+                                    <input type="url" th:field="*{imageUrl}" class="form-control" placeholder="https://..."/>
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label class="form-label">Mô tả Tagline</label>
+                                <textarea th:field="*{tagline}" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="store-utility-card" style="background:var(--color-surface-pearl);text-align:center;">
+                            <span class="t-fine-print" style="color:var(--color-primary);text-transform:uppercase;">Xem trước thẻ trưng bày</span>
+                            <img class="product-render-img" src="https://pngimg.com/uploads/iphone_14/iphone_14_PNG20.png" alt="Preview"/>
+                            <p class="t-caption" style="color:var(--color-ink-muted-48);">Hình ảnh sản phẩm tự động áp dụng hiệu ứng đổ bóng duy nhất của hệ thống.</p>
+                        </div>
+                    </div>
+                    <div class="floating-sticky-bar">
+                        <span class="t-body-strong">Tạo sản phẩm mới</span>
+                        <div style="display:flex;gap:12px;">
+                            <a th:href="@{/admin/products}" class="btn-secondary-pill">Hủy bỏ</a>
+                            <button type="submit" class="btn-primary">Lưu & Xuất bản</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

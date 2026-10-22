@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/header :: head('Dashboard')}"></head>
+<body>
+<div class="admin-shell">
+    <aside th:replace="~{fragments/sidebar :: sidebar(${activeMenu})}"></aside>
+    <div class="admin-main">
+        <header th:replace="~{fragments/header :: topbar(${pageTitle}, ${subtitle})}"></header>
+        <section class="tile-light">
+            <div class="container-admin">
+                <p class="t-caption-strong" style="color:var(--color-primary);text-transform:uppercase;">Báo cáo thời gian thực</p>
+                <h1 class="t-display-lg" style="margin-top:6px;">Hiệu suất kinh doanh.</h1>
+                <div class="kpi-grid">
+                    <div class="store-utility-card">
+                        <span class="t-caption" style="color:var(--color-ink-muted-48);">Tổng doanh thu</span>
+                        <div class="t-display-md numeric" style="margin-top:8px;" th:text="${#numbers.formatDecimal(totalRevenue, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></div>
+                        <span class="t-caption-strong" style="color:var(--color-primary);margin-top:14px;">+18.4% so với tháng trước</span>
+                    </div>
+                    <div class="store-utility-card">
+                        <span class="t-caption" style="color:var(--color-ink-muted-48);">Tổng đơn hàng</span>
+                        <div class="t-display-md numeric" style="margin-top:8px;" th:text="${totalOrders}"></div>
+                        <span class="t-caption" style="color:var(--color-ink-muted-80);margin-top:14px;">98.2% giao thành công</span>
+                    </div>
+                    <div class="store-utility-card">
+                        <span class="t-caption" style="color:var(--color-ink-muted-48);">Danh mục sản phẩm</span>
+                        <div class="t-display-md numeric" style="margin-top:8px;" th:text="${totalProducts}"></div>
+                        <a th:href="@{/admin/products}" class="text-link" style="margin-top:14px;">Xem danh sách ›</a>
+                    </div>
+                    <div class="store-utility-card">
+                        <span class="t-caption" style="color:var(--color-ink-muted-48);">Thiết bị tồn kho</span>
+                        <div class="t-display-md numeric" style="margin-top:8px;" th:text="${totalStock}"></div>
+                        <a th:href="@{/admin/products/add}" class="text-link" style="margin-top:14px;">Thêm sản phẩm ›</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="tile-dark">
+            <div class="container-admin">
+                <h2 class="t-display-lg">Biểu đồ Doanh thu & Sản phẩm chủ lực.</h2>
+                <div class="split-grid">
+                    <div class="dark-utility-card">
+                        <h3 class="t-tagline">Doanh thu 6 tháng gần nhất (Triệu VNĐ)</h3>
+                        <svg viewBox="0 0 650 220" width="100%" height="220" style="margin-top:20px;">
+                            <line x1="40" y1="30" x2="620" y2="30" stroke="rgba(255,255,255,0.1)"/>
+                            <line x1="40" y1="100" x2="620" y2="100" stroke="rgba(255,255,255,0.1)"/>
+                            <line x1="40" y1="170" x2="620" y2="170" stroke="rgba(255,255,255,0.2)"/>
+                            <rect x="70" y="105" width="44" height="65" rx="6" fill="#0066cc"/>
+                            <text x="92" y="195" fill="#cccccc" font-size="12" text-anchor="middle">T5</text>
+                            <rect x="165" y="90" width="44" height="80" rx="6" fill="#0066cc"/>
+                            <text x="187" y="195" fill="#cccccc" font-size="12" text-anchor="middle">T6</text>
+                            <rect x="260" y="75" width="44" height="95" rx="6" fill="#0066cc"/>
+                            <text x="282" y="195" fill="#cccccc" font-size="12" text-anchor="middle">T7</text>
+                            <rect x="355" y="60" width="44" height="110" rx="6" fill="#0066cc"/>
+                            <text x="377" y="195" fill="#cccccc" font-size="12" text-anchor="middle">T8</text>
+                            <rect x="450" y="45" width="44" height="125" rx="6" fill="#0066cc"/>
+                            <text x="472" y="195" fill="#cccccc" font-size="12" text-anchor="middle">T9</text>
+                            <rect x="545" y="25" width="44" height="145" rx="6" fill="#2997ff"/>
+                            <text x="567" y="195" fill="#ffffff" font-size="12" font-weight="600" text-anchor="middle">T10</text>
+                        </svg>
+                    </div>
+                    <div class="dark-utility-card" style="text-align:center;" th:if="${featuredProduct != null}">
+                        <span class="t-fine-print" style="color:var(--color-primary-on-dark);text-transform:uppercase;">Bán chạy số 1</span>
+                        <h3 class="t-tagline" style="margin-top:8px;" th:text="${featuredProduct.name}"></h3>
+                        <img class="product-render-img" th:src="${featuredProduct.imageUrl}" th:alt="${featuredProduct.name}"/>
+                        <p class="t-caption numeric" style="color:var(--color-body-muted);" th:text="${#numbers.formatDecimal(featuredProduct.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></p>
+                        <div style="margin-top:12px;">
+                            <a th:href="@{/admin/products/edit/{id}(id=${featuredProduct.id})}" class="text-link-on-dark">Chỉnh sửa sản phẩm ›</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="tile-parchment">
+            <div class="container-admin">
+                <h2 class="t-display-md" style="margin-bottom:20px;">Đơn hàng mới nhất.</h2>
+                <div class="spec-table-container">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Sản phẩm</th>
+                                <th>Ngày đặt</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="o : ${recentOrders}">
+                                <td class="t-body-strong numeric" th:text="${o.orderCode}"></td>
+                                <td th:text="${o.customerName}"></td>
+                                <td th:text="${o.productName}"></td>
+                                <td class="t-caption numeric" th:text="${o.orderDate}"></td>
+                                <td class="t-body-strong numeric" th:text="${#numbers.formatDecimal(o.totalAmount, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></td>
+                                <td class="t-caption-strong" style="color:var(--color-primary);" th:text="${o.status}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>
