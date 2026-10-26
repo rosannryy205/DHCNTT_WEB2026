@@ -31,6 +31,13 @@ class AdminControllerTest {
     }
 
     @Test
+    void testAdminTrailingSlashUrlRendersSuccessfully() throws Exception {
+        mockMvc.perform(get("/admin/"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("activeMenu", "dashboard"));
+    }
+
+    @Test
     void testProductListPageHasAddButtonAndNoSidebarAddEdit() throws Exception {
         var result = mockMvc.perform(get("/admin/products"))
                 .andExpect(status().isOk())

@@ -16,7 +16,7 @@ public class AdminController {
     }
 
     // 1. TRANG DASHBOARD
-    @GetMapping({"/admin", "/admin/dashboard"})
+    @GetMapping({"/admin", "/admin/", "/admin/dashboard"})
     public String dashboard(Model model) {
         var all = productService.findAll(null, null);
         model.addAttribute("activeMenu", "dashboard");
@@ -32,7 +32,7 @@ public class AdminController {
     }
 
     // 2. TRANG DANH SÁCH SẢN PHẨM
-    @GetMapping("/admin/products")
+    @GetMapping({"/admin/products", "/admin/products/"})
     public String productList(
             @RequestParam(required = false, defaultValue = "") String keyword,
             @RequestParam(required = false, defaultValue = "ALL") String category,
