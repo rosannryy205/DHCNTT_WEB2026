@@ -1,6 +1,6 @@
 package com.example.dhcnttweb2026.controller;
 
-import com.example.dhcnttweb2026.model.Product;
+import com.example.dhcnttweb2026.model.AdminProductDto;
 import com.example.dhcnttweb2026.service.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,7 +50,7 @@ public class AdminController {
     // 3. TRANG THÊM SẢN PHẨM
     @GetMapping("/admin/products/add")
     public String showAddForm(Model model) {
-        Product p = new Product();
+        AdminProductDto p = new AdminProductDto();
         p.setCategory("iPhone");
         p.setBrand("Apple");
         p.setStatus("Đang bán");
@@ -66,7 +66,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/products/add")
-    public String addProduct(@ModelAttribute Product product, RedirectAttributes ra) {
+    public String addProduct(@ModelAttribute AdminProductDto product, RedirectAttributes ra) {
         productService.save(product);
         ra.addFlashAttribute("successMessage", "Đã thêm sản phẩm mới: " + product.getName());
         return "redirect:/admin/products";
@@ -90,7 +90,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/products/edit/{id}")
-    public String updateProduct(@PathVariable Long id, @ModelAttribute Product product, RedirectAttributes ra) {
+    public String updateProduct(@PathVariable Long id, @ModelAttribute AdminProductDto product, RedirectAttributes ra) {
         product.setId(id);
         productService.save(product);
         ra.addFlashAttribute("successMessage", "Đã cập nhật sản phẩm: " + product.getName());

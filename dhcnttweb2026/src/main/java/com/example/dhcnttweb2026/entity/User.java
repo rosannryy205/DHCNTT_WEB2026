@@ -11,6 +11,7 @@ public class User {
 
     public enum Role {
         admin,
+        staff,
         customer
     }
 

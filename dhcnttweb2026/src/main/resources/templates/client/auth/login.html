@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout}">
+<head>
+  <title>Đăng nhập tài khoản</title>
+  <th:block layout:fragment="styles">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+  </th:block>
+</head>
+<body>
+
+<main layout:fragment="content">
+  <div class="auth-canvas">
+    <div class="auth-card text-center">
+      
+      <!-- IUH Store Logo -->
+      <div class="mb-3">
+        <div th:replace="~{fragments/brand-logo :: client-icon(52)}"></div>
+      </div>
+
+      <div class="auth-role-badge">
+        <i class="bi bi-person-fill text-secondary"></i>
+        <span>Cổng Khách Hàng (Customer)</span>
+      </div>
+
+      <h1 class="auth-title">Đăng nhập IUH ID.</h1>
+      <p class="auth-subtitle">
+        Nhập tài khoản để quản lý túi hàng, lịch sử đơn hàng và thiết bị công nghệ tại IUH Store.
+      </p>
+
+      <form th:action="@{/login}" method="post">
+        
+        <div class="auth-form-group">
+          <label class="auth-label" for="email">Email hoặc Số điện thoại</label>
+          <input type="text" id="email" name="username" class="auth-input" 
+                 placeholder="name@example.com" required autofocus autocomplete="username">
+        </div>
+
+        <div class="auth-form-group">
+          <label class="auth-label" for="password">Mật khẩu</label>
+          <input type="password" id="password" name="password" class="auth-input" 
+                 placeholder="Nhập mật khẩu" required autocomplete="current-password">
+        </div>
+
+        <div class="auth-options">
+          <label class="auth-checkbox-label">
+            <input type="checkbox" name="rememberMe" checked>
+            <span>Ghi nhớ đăng nhập</span>
+          </label>
+          <a th:href="@{/}" class="auth-link">Quên mật khẩu?</a>
+        </div>
+
+        <button type="submit" class="btn-apple-auth">
+          Đăng nhập vào Cửa hàng
+        </button>
+
+      </form>
+
+      <div class="auth-divider"></div>
+
+      <p class="auth-footer-prompt">
+        Bạn chưa có tài khoản IUH Store? 
+        <a th:href="@{/register}" class="auth-link auth-link-strong ms-1">Tạo tài khoản ID ngay</a>
+      </p>
+
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.example.dhcnttweb2026.controller;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ClientHomeController {
 
     @GetMapping({"/", "/home"})
-    public String home(Model model) {
+    public String home(@NonNull Model model) {
         model.addAttribute("pageTitle", "Trang Chủ");
         return "client/index";
     }

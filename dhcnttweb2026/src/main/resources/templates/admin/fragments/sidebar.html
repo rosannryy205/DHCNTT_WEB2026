@@ -4,12 +4,9 @@
   <!-- macOS Dark Sidebar (#1d1d1f) with Collapsible State -->
   <aside th:fragment="sidebar" id="adminSidebar" class="admin-sidebar">
     
-    <!-- Sidebar Header / Brand -->
+    <!-- Sidebar Header / Brand: IUH Console Logo -->
     <div class="sidebar-header">
-      <a th:href="@{/admin}" class="brand-title">
-        <i class="bi bi-apple fs-4 text-white"></i>
-        <span>Admin Console</span>
-      </a>
+      <div th:replace="~{fragments/brand-logo :: admin-logo}"></div>
     </div>
 
     <!-- Sidebar Menu Items -->

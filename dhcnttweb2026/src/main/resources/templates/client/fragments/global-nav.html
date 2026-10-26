@@ -5,11 +5,8 @@
   <nav th:fragment="global-nav" class="navbar navbar-expand-lg apple-global-nav p-0">
     <div class="container-xl d-flex align-items-center justify-content-between h-100">
       
-      <!-- Brand Logo -->
-      <a class="nav-brand-logo" th:href="@{/}">
-        <i class="bi bi-apple fs-5 me-2"></i>
-        <span class="fw-semibold">DH Store</span>
-      </a>
+      <!-- IUH Store Brand Logo -->
+      <div th:replace="~{fragments/brand-logo :: client-logo}"></div>
 
       <!-- Desktop Links (Spaced evenly, 12px SF Pro) -->
       <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center">
@@ -23,7 +20,7 @@
         <a class="nav-link" th:href="@{/}">Hỗ trợ</a>
       </div>
 
-      <!-- Right Utility Cluster: Search, Cart badge, Login / Register link -->
+      <!-- Right Utility Cluster: Search, Cart badge & Account -->
       <div class="d-flex align-items-center gap-3">
         <a th:href="@{/}" class="text-white opacity-75 hover-opacity-100 text-decoration-none" title="Tìm kiếm">
           <i class="bi bi-search fs-6"></i>
@@ -32,7 +29,7 @@
           <i class="bi bi-bag fs-6"></i>
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 10px; padding: 2px 5px;">2</span>
         </a>
-        <a th:href="@{/login}" class="text-white opacity-75 hover-opacity-100 text-decoration-none" title="Đăng nhập / Đăng ký">
+        <a th:href="@{/login}" class="text-white opacity-75 hover-opacity-100 text-decoration-none" title="Tài khoản / Đăng nhập">
           <i class="bi bi-person fs-6"></i>
         </a>
       </div>

@@ -563,7 +563,7 @@ public class ProductCatalogService {
         return new FilterOptionsDto(categories, priceRanges, storages, colors);
     }
 
-    @SuppressWarnings("null")
+
     public CatalogPageResult filterProducts(
             List<String> selectedCategories,
             Long minPrice,

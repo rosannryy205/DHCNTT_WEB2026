@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout}">
+<head>
+  <title>Tạo tài khoản DH Store</title>
+  <th:block layout:fragment="styles">
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+  </th:block>
+</head>
+<body>
+
+<main layout:fragment="content">
+  <div class="auth-canvas">
+    <div class="auth-card auth-card-wide text-center">
+      
+      <!-- IUH Store Logo -->
+      <div class="mb-3">
+        <div th:replace="~{fragments/brand-logo :: client-icon(52)}"></div>
+      </div>
+
+      <div class="auth-role-badge">
+        <i class="bi bi-person-plus-fill text-secondary"></i>
+        <span>Đăng Ký Tài Khoản Khách Hàng (Customer)</span>
+      </div>
+
+      <h1 class="auth-title">Tạo tài khoản IUH Store.</h1>
+      <p class="auth-subtitle">
+        Một tài khoản duy nhất để lưu trữ túi hàng, đặt mua thiết bị công nghệ và nhận bảo hành chính hãng.
+      </p>
+
+      <form th:action="@{/register}" method="post">
+        
+        <div class="auth-form-group">
+          <label class="auth-label" for="fullName">Họ và tên</label>
+          <input type="text" id="fullName" name="name" class="auth-input" 
+                 placeholder="Nguyễn Văn A" required autofocus>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-md-6 auth-form-group">
+            <label class="auth-label" for="email">Địa chỉ Email</label>
+            <input type="email" id="email" name="email" class="auth-input" 
+                   placeholder="name@example.com" required autocomplete="email">
+          </div>
+          <div class="col-md-6 auth-form-group">
+            <label class="auth-label" for="phone">Số điện thoại</label>
+            <input type="tel" id="phone" name="phone" class="auth-input" 
+                   placeholder="0912 345 678" required autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="row g-2">
+          <div class="col-md-6 auth-form-group">
+            <label class="auth-label" for="password">Mật khẩu</label>
+            <input type="password" id="password" name="password" class="auth-input" 
+                   placeholder="Tối thiểu 8 ký tự" required autocomplete="new-password">
+          </div>
+          <div class="col-md-6 auth-form-group">
+            <label class="auth-label" for="confirmPassword">Xác nhận mật khẩu</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" class="auth-input" 
+                   placeholder="Nhập lại mật khẩu" required autocomplete="new-password">
+          </div>
+        </div>
+
+        <div class="auth-options my-3">
+          <label class="auth-checkbox-label">
+            <input type="checkbox" name="terms" required checked>
+            <span style="font-size: 13px; line-height: 1.4;">
+              Tôi đồng ý với <a th:href="@{/}" class="auth-link">Điều khoản dịch vụ</a> và <a th:href="@{/}" class="auth-link">Chính sách quyền riêng tư</a> của IUH Store.
+            </span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-apple-auth mt-2">
+          Tạo tài khoản ID
+        </button>
+
+      </form>
+
+      <div class="auth-divider"></div>
+
+      <p class="auth-footer-prompt">
+        Bạn đã có tài khoản IUH Store? 
+        <a th:href="@{/login}" class="auth-link auth-link-strong ms-1">Đăng nhập ngay</a>
+      </p>
+
+    </div>
+  </div>
+</main>
+
+</body>
+</html>

@@ -3,10 +3,7 @@
 <body>
 <aside th:fragment="sidebar(activeMenu)" class="admin-sidebar">
     <div class="sidebar-brand">
-        <a th:href="@{/admin/dashboard}" class="brand-link">
-            <span> Store Admin</span>
-        </a>
-        <span class="sidebar-badge">2026</span>
+        <div th:replace="~{fragments/brand-logo :: admin-logo}"></div>
     </div>
 
     <div class="sidebar-section-label">QUẢN TRỊ HỆ THỐNG</div>

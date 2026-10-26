@@ -1,6 +1,10 @@
 package com.example.dhcnttweb2026.model;
 
-public class Product {
+/**
+ * DTO đại diện cho biểu mẫu quản trị và hiển thị sản phẩm trong Admin Console.
+ * Tổng hợp thông tin cơ bản của Product và cấu hình mặc định của ProductVariant.
+ */
+public class AdminProductDto {
     private Long id;
     private String name;
     private String slug;
@@ -17,15 +21,15 @@ public class Product {
     private String imageUrl;
     private String tagline;
 
-    public Product() {}
+    public AdminProductDto() {}
 
-    public Product(Long id, String name, String sku, String category, long price, int stock, String status, String imageUrl, String tagline) {
+    public AdminProductDto(Long id, String name, String sku, String category, long price, int stock, String status, String imageUrl, String tagline) {
         this(id, name, null, sku, category, "Apple", null, null, null, price, price, stock, status, imageUrl, tagline);
     }
 
-    public Product(Long id, String name, String slug, String sku, String category, String brand, 
-                   String color, String storage, String ram, long originalPrice, long price, 
-                   int stock, String status, String imageUrl, String tagline) {
+    public AdminProductDto(Long id, String name, String slug, String sku, String category, String brand, 
+                           String color, String storage, String ram, long originalPrice, long price, 
+                           int stock, String status, String imageUrl, String tagline) {
         this.id = id;
         this.name = name;
         this.slug = slug != null ? slug : generateSlug(name);

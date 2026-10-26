@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+  <!-- ========================================================== -->
+  <!-- 1. CLIENT STOREFRONT LOGO (Full with Brand Name)           -->
+  <!-- ========================================================== -->
+  <a th:fragment="client-logo" class="navbar-brand d-inline-flex align-items-center gap-2 text-decoration-none" th:href="@{/}" style="text-decoration: none !important;">
+    <!-- Client Geometric IUH Monogram SVG -->
+    <svg class="iuh-brand-mark client-mark" width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="iuhStoreGradient" x1="2" y1="2" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#0071e3"/>
+          <stop offset="100%" stop-color="#004ea3"/>
+        </linearGradient>
+      </defs>
+      <!-- Soft Squircle Canvas -->
+      <rect width="36" height="36" rx="9" fill="url(#iuhStoreGradient)"/>
+      <!-- Monogram 'I' -->
+      <rect x="6" y="9" width="3" height="18" rx="1.5" fill="#ffffff"/>
+      <!-- Monogram 'U' -->
+      <path d="M14 9V19.5C14 21.985 15.79 24 18 24C20.21 24 22 21.985 22 19.5V9" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+      <!-- Monogram 'H' -->
+      <path d="M26 9.5V26.5M30.5 9.5V26.5M26 18H30.5" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round"/>
+    </svg>
+    <div class="d-inline-flex align-items-baseline">
+      <span class="fw-bold fs-5 text-white" style="letter-spacing: -0.5px; font-family: var(--apple-font-family);">IUH</span>
+      <span class="fs-5 ms-1" style="color: var(--apple-primary, #0066cc); font-weight: 500; letter-spacing: -0.2px; font-family: var(--apple-font-family);">Store</span>
+    </div>
+  </a>
+
+  <!-- ========================================================== -->
+  <!-- 2. CLIENT STOREFRONT ICON ONLY (For Auth Cards & Favicons) -->
+  <!-- ========================================================== -->
+  <div th:fragment="client-icon(size)" class="d-inline-block">
+    <svg class="iuh-brand-mark client-mark" th:attr="width=${size ?: 48}, height=${size ?: 48}" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="iuhStoreGradientIcon" x1="2" y1="2" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#0071e3"/>
+          <stop offset="100%" stop-color="#004ea3"/>
+        </linearGradient>
+      </defs>
+      <rect width="36" height="36" rx="9" fill="url(#iuhStoreGradientIcon)"/>
+      <rect x="6" y="9" width="3" height="18" rx="1.5" fill="#ffffff"/>
+      <path d="M14 9V19.5C14 21.985 15.79 24 18 24C20.21 24 22 21.985 22 19.5V9" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+      <path d="M26 9.5V26.5M30.5 9.5V26.5M26 18H30.5" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- 3. ADMIN CONSOLE LOGO (Full with Workspace Brand)          -->
+  <!-- ========================================================== -->
+  <a th:fragment="admin-logo" class="d-inline-flex align-items-center gap-2 text-decoration-none" th:href="@{/admin}" style="text-decoration: none !important;">
+    <!-- Admin Security Console Monogram SVG (Distinct obsidian + cyan border + node) -->
+    <svg class="iuh-brand-mark admin-mark" width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="iuhAdminBorder" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#2997ff"/>
+          <stop offset="100%" stop-color="#0051a8"/>
+        </linearGradient>
+      </defs>
+      <!-- Obsidian Canvas with Cyan/Blue Console Border -->
+      <rect x="0.75" y="0.75" width="34.5" height="34.5" rx="8.25" fill="#161618" stroke="url(#iuhAdminBorder)" stroke-width="1.5"/>
+      <!-- Monogram 'I' with Cyan Tint -->
+      <rect x="6" y="9" width="3" height="18" rx="1.5" fill="#ffffff"/>
+      <!-- Monogram 'U' -->
+      <path d="M14 9V19.5C14 21.985 15.79 24 18 24C20.21 24 22 21.985 22 19.5V9" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+      <!-- Monogram 'H' -->
+      <path d="M26 9.5V26.5M30.5 9.5V26.5M26 18H30.5" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round"/>
+      <!-- Active Console Status Indicator Dot -->
+      <circle cx="31" cy="5" r="2.2" fill="#30d158"/>
+    </svg>
+    <div class="d-inline-flex align-items-baseline" style="text-decoration: none !important;">
+      <span class="fw-bold fs-5" style="color: var(--apple-primary, #0066cc); letter-spacing: -0.5px; font-family: var(--apple-font-family); text-decoration: none !important;">IUH</span>
+      <span class="fs-5 ms-1" style="color: var(--apple-primary, #0066cc); font-weight: 500; letter-spacing: -0.2px; font-family: var(--apple-font-family); text-decoration: none !important;">Console</span>
+      <span class="badge rounded-pill ms-2" style="background-color: var(--apple-primary, #0066cc); color: #ffffff; font-size: 9.5px; font-weight: 600; letter-spacing: 0.5px; padding: 2.5px 8px; border-radius: 20px !important; display: inline-flex; align-items: center; justify-content: center; line-height: 1.2; align-self: center; box-shadow: 0 1px 3px rgba(0, 102, 204, 0.28); text-decoration: none !important;">ADMIN</span>
+    </div>
+  </a>
+
+  <!-- ========================================================== -->
+  <!-- 4. ADMIN CONSOLE ICON ONLY (For Admin Login Card)          -->
+  <!-- ========================================================== -->
+  <div th:fragment="admin-icon(size)" class="d-inline-block">
+    <svg class="iuh-brand-mark admin-mark" th:attr="width=${size ?: 48}, height=${size ?: 48}" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="iuhAdminBorderIcon" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#2997ff"/>
+          <stop offset="100%" stop-color="#0051a8"/>
+        </linearGradient>
+      </defs>
+      <rect x="0.75" y="0.75" width="34.5" height="34.5" rx="8.25" fill="#161618" stroke="url(#iuhAdminBorderIcon)" stroke-width="1.5"/>
+      <rect x="6" y="9" width="3" height="18" rx="1.5" fill="#ffffff"/>
+      <path d="M14 9V19.5C14 21.985 15.79 24 18 24C20.21 24 22 21.985 22 19.5V9" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+      <path d="M26 9.5V26.5M30.5 9.5V26.5M26 18H30.5" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round"/>
+      <circle cx="31" cy="5" r="2.2" fill="#30d158"/>
+    </svg>
+  </div>
+
+</body>
+</html>

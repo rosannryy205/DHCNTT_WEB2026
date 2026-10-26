@@ -36,6 +36,17 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.admin-sidebar .sidebar-header a,
+.admin-sidebar .sidebar-header a:hover,
+.admin-sidebar .sidebar-header a:focus,
+.admin-sidebar .sidebar-header a:active {
+  text-decoration: none !important;
+}
+
+.badge.rounded-pill {
+  border-radius: var(--apple-radius-pill, 9999px) !important;
+}
+
 .admin-sidebar .brand-title {
   font-size: 16px;
   font-weight: 600;

@@ -8,7 +8,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -21,13 +26,16 @@ class ClientHomeControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(Objects.requireNonNull(webApplicationContext)).build();
     }
 
     @Test
     void testHomePageRendersSuccessfully() throws Exception {
-        mockMvc.perform(get("/"))
-                .andExpect(status().isOk());
+        String content = mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(content.contains("client.css"), "Home page must include client.css");
+        assertTrue(content.contains("apple-design-tokens.css"), "Home page must include apple-design-tokens.css");
     }
 
     @Test
@@ -40,5 +48,65 @@ class ClientHomeControllerTest {
     void testProductDetailPageRendersSuccessfully() throws Exception {
         mockMvc.perform(get("/product/iphone-16-pro"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testAdminAccessibleDirectly() throws Exception {
+        mockMvc.perform(get("/admin"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testAdminProductsAccessibleDirectly() throws Exception {
+        mockMvc.perform(get("/admin/products"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testCustomerLoginPageRendersAppleDesign() throws Exception {
+        String content = mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(content.contains("auth.css"), "Customer login must include auth.css");
+        assertTrue(content.contains("Đăng nhập IUH ID"), "Customer login must include IUH ID title");
+    }
+
+    @Test
+    void testCustomerLoginSubmitRedirectsToHome() throws Exception {
+        mockMvc.perform(post("/login"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    void testCustomerRegisterPageRendersAppleDesign() throws Exception {
+        String content = mockMvc.perform(get("/register"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(content.contains("auth.css"), "Customer register must include auth.css");
+        assertTrue(content.contains("Tạo tài khoản IUH Store"), "Customer register must include title");
+    }
+
+    @Test
+    void testCustomerRegisterSubmitRedirectsToHome() throws Exception {
+        mockMvc.perform(post("/register"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
+    }
+
+    @Test
+    void testAdminLoginPageRendersAppleConsoleDesign() throws Exception {
+        String content = mockMvc.perform(get("/admin/login"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        assertTrue(content.contains("auth.css"), "Admin login must include auth.css");
+        assertTrue(content.contains("IUH Store Admin Workspace"), "Admin login must include Workspace header");
+    }
+
+    @Test
+    void testAdminLoginSubmitRedirectsToAdmin() throws Exception {
+        mockMvc.perform(post("/admin/login"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin"));
     }
 }

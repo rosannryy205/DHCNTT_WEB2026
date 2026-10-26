@@ -1,7 +1,7 @@
 package com.example.dhcnttweb2026.service;
 
+import com.example.dhcnttweb2026.model.AdminProductDto;
 import com.example.dhcnttweb2026.model.OrderRecord;
-import com.example.dhcnttweb2026.model.Product;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,30 +12,30 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ProductService {
-    private final List<Product> products = new ArrayList<>();
+    private final List<AdminProductDto> products = new ArrayList<>();
     private final List<OrderRecord> orders = new ArrayList<>();
     private final AtomicLong idSequence = new AtomicLong(10);
 
     public ProductService() {
-        products.add(new Product(1L, "iPhone 17 Pro Titanium 256GB", "iphone-17-pro-titanium-256gb",
+        products.add(new AdminProductDto(1L, "iPhone 17 Pro Titanium 256GB", "iphone-17-pro-titanium-256gb",
                 "APL-IP17P-256", "iPhone", "Apple", "Titan Tự Nhiên", "256GB", "12GB",
                 37990000L, 34990000L, 42, "Đang bán",
                 "https://pngimg.com/uploads/iphone_14/iphone_14_PNG20.png",
                 "Khung viền Titan cấp hàng không vũ trụ. Chip A19 Pro."));
 
-        products.add(new Product(2L, "MacBook Pro 16 inch M4 Max", "macbook-pro-16-inch-m4-max",
+        products.add(new AdminProductDto(2L, "MacBook Pro 16 inch M4 Max", "macbook-pro-16-inch-m4-max",
                 "APL-MBP16-M4M", "Mac", "Apple", "Đen Không Gian (Space Black)", "1TB", "48GB",
                 94990000L, 89990000L, 15, "Đang bán",
                 "https://pngimg.com/uploads/macbook/macbook_PNG65.png",
                 "Hiệu năng đỉnh cao cho kỹ sư và nhà phát triển chuyên nghiệp."));
 
-        products.add(new Product(3L, "iPad Pro 13 inch OLED M4", "ipad-pro-13-inch-oled-m4",
+        products.add(new AdminProductDto(3L, "iPad Pro 13 inch OLED M4", "ipad-pro-13-inch-oled-m4",
                 "APL-IPADP13-M4", "iPad", "Apple", "Bạc (Silver)", "512GB", "16GB",
                 41990000L, 37990000L, 28, "Đang bán",
                 "https://pngimg.com/uploads/tablet/tablet_PNG8567.png",
                 "Màn hình Ultra Retina XDR hai lớp OLED siêu mỏng 5.1 mm."));
 
-        products.add(new Product(4L, "AirPods Max USB-C", "airpods-max-usb-c",
+        products.add(new AdminProductDto(4L, "AirPods Max USB-C", "airpods-max-usb-c",
                 "APL-APM-USBC", "Phụ kiện", "Apple", "Midnight", "Không áp dụng", "Không áp dụng",
                 14990000L, 13990000L, 34, "Đang bán",
                 "https://pngimg.com/uploads/headphones/headphones_PNG101980.png",
@@ -47,7 +47,7 @@ public class ProductService {
         orders.add(new OrderRecord("#ORD-9039", "Phạm Bảo Ngọc", "AirPods Max USB-C", "17/10/2026 16:05", 13990000L, "Hoàn tất"));
     }
 
-    public List<Product> findAll(String keyword, String category) {
+    public List<AdminProductDto> findAll(String keyword, String category) {
         return products.stream()
                 .filter(p -> (category == null || category.isBlank() || "ALL".equalsIgnoreCase(category)
                         || (p.getCategory() != null && p.getCategory().equalsIgnoreCase(category))))
@@ -58,16 +58,16 @@ public class ProductService {
                 .toList();
     }
 
-    public Optional<Product> findById(Long id) {
+    public Optional<AdminProductDto> findById(Long id) {
         return products.stream().filter(p -> Objects.equals(p.getId(), id)).findFirst();
     }
 
-    public void save(Product product) {
+    public void save(AdminProductDto product) {
         if (product == null) {
             return;
         }
         if (product.getSlug() == null || product.getSlug().isBlank()) {
-            product.setSlug(Product.generateSlug(product.getName()));
+            product.setSlug(AdminProductDto.generateSlug(product.getName()));
         }
         if (product.getBrand() == null || product.getBrand().isBlank()) {
             product.setBrand("Apple");
@@ -114,7 +114,7 @@ public class ProductService {
     public int getTotalStock() {
         return products.stream()
                 .filter(Objects::nonNull)
-                .mapToInt(Product::getStock)
+                .mapToInt(AdminProductDto::getStock)
                 .sum();
     }
 }

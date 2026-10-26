@@ -2,7 +2,7 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{client/layout}">
 <head>
-  <title th:text="${pageTitle}">Túi hàng của bạn - DH Store</title>
+  <title th:text="${pageTitle}">Túi hàng của bạn - IUH Store</title>
 
   <!-- Page-specific styles -->
   <th:block layout:fragment="styles">
@@ -178,13 +178,13 @@
         </div>
         <h2 class="empty-bag-title">Túi của bạn đang trống.</h2>
         <p class="empty-bag-text">
-          Đăng nhập để xem lại các sản phẩm bạn đã lưu trước đó, hoặc tiếp tục khám phá các thiết bị công nghệ mới nhất.
+          Khám phá các thiết bị và phụ kiện công nghệ mới nhất để bổ sung vào giỏ hàng của bạn.
         </p>
         <div class="empty-bag-cta-group">
-          <a th:href="@{/}" class="btn-apple-primary btn-apple-lg-pill py-2 px-4 text-decoration-none">
+          <a th:href="@{/products}" class="btn-apple-primary btn-apple-lg-pill py-2 px-4 text-decoration-none">
             <i class="bi bi-arrow-left me-1"></i> Tiếp tục mua sắm
           </a>
-          <a th:href="@{/login}" class="btn-apple-secondary btn-apple-lg-pill py-2 px-4 text-decoration-none">
+          <a th:href="@{/login}" class="btn-apple-secondary btn-apple-lg-pill py-2 px-4 text-decoration-none ms-2">
             <i class="bi bi-person me-1"></i> Đăng nhập
           </a>
         </div>

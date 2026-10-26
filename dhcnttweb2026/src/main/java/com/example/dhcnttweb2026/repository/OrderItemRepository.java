@@ -5,7 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import com.example.dhcnttweb2026.entity.OrderItem;
 
+import java.util.List;
+
 @Repository
-public interface orderItemsReponsitory extends JpaRepository<OrderItem, Long> {
-    
+public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
+    List<OrderItem> findByOrderId(Long orderId);
 }

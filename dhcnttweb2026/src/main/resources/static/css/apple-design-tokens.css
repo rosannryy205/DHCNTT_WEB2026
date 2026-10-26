@@ -209,3 +209,25 @@ a.apple-link-on-dark:hover {
   line-height: 1.19;
   letter-spacing: 0.231px;
 }
+
+/* IUH Store Brand Marks */
+.iuh-brand-mark {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), filter 0.18s ease;
+}
+
+.navbar-brand:hover .iuh-brand-mark,
+.brand-title:hover .iuh-brand-mark,
+.brand-link:hover .iuh-brand-mark {
+  transform: scale(1.05);
+}
+
+.client-mark {
+  filter: drop-shadow(0 2px 6px rgba(0, 113, 227, 0.25));
+}
+
+.admin-mark {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}

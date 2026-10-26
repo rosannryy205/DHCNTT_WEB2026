@@ -1,6 +1,6 @@
-# DH Store
+# IUH Store
 
-Hệ thống thương mại điện tử chuyên kinh doanh sản phẩm Apple và thiết bị công nghệ cao cấp, bao gồm hai phân hệ Storefront (Khách hàng) và Admin Console (Quản trị).
+Hệ thống thương mại điện tử chuyên kinh doanh thiết bị công nghệ cao cấp, bao gồm hai phân hệ Storefront (Khách hàng) và Admin Console (Quản trị).
 
 ## Language
 
@@ -85,5 +85,5 @@ Nhân viên vận hành hệ thống cửa hàng, có quyền truy cập vào ph
 _Avoid_: Employee, clerk, moderator
 
 **Admin**:
-Quản trị viên cấp cao nhất của hệ thống DH Store, có toàn quyền cấu hình, quản trị sản phẩm, phân quyền và giám sát hoạt động.
+Quản trị viên cấp cao nhất của hệ thống IUH Store, có toàn quyền cấu hình, quản trị sản phẩm, phân quyền và giám sát hoạt động.
 _Avoid_: Superuser, root, boss
