@@ -12,11 +12,16 @@
                     <span class="t-caption-strong" style="color:var(--color-primary);" th:text="${successMessage}"></span>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
-                    <form th:action="@{/admin/products}" method="get" style="display:flex;gap:12px;">
-                        <input type="hidden" name="category" th:value="${selectedCategory}"/>
-                        <input type="text" name="keyword" class="search-input" placeholder="Tìm theo tên hoặc mã SKU..." th:value="${keyword}"/>
-                        <button type="submit" class="btn-secondary-pill">Tìm kiếm</button>
-                    </form>
+                    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                        <form th:action="@{/admin/products}" method="get" style="display:flex;gap:12px;">
+                            <input type="hidden" name="category" th:value="${selectedCategory}"/>
+                            <input type="text" name="keyword" class="search-input" placeholder="Tìm theo tên, SKU, hãng..." th:value="${keyword}"/>
+                            <button type="submit" class="btn-secondary-pill">Tìm kiếm</button>
+                        </form>
+                        <a th:href="@{/admin/products/add}" class="btn-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+                            <span>＋ Thêm sản phẩm mới</span>
+                        </a>
+                    </div>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;">
                         <a th:href="@{/admin/products(category='ALL', keyword=${keyword})}" class="configurator-option-chip" th:classappend="${selectedCategory == 'ALL'} ? 'selected'">Tất cả</a>
                         <a th:href="@{/admin/products(category='iPhone', keyword=${keyword})}" class="configurator-option-chip" th:classappend="${selectedCategory == 'iPhone'} ? 'selected'">iPhone</a>
@@ -32,21 +37,25 @@
                 <div class="product-gallery-grid">
                     <article class="store-utility-card" th:each="p : ${products}">
                         <div>
-                            <div style="display:flex;justify-content:space-between;">
-                                <span class="t-fine-print" style="color:var(--color-ink-muted-48);" th:text="${p.category}"></span>
-                                <span class="t-fine-print" style="color:var(--color-primary);" th:text="${p.status}"></span>
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span class="t-fine-print" style="color:var(--color-ink-muted-48);" th:text="${(p.brand != null ? p.brand : 'Apple') + ' • ' + p.category}"></span>
+                                <span class="t-fine-print" style="color:var(--color-primary);font-weight:600;" th:text="${p.status}"></span>
                             </div>
                             <img class="product-render-img" th:src="${p.imageUrl}" th:alt="${p.name}"/>
                             <h3 class="t-body-strong" th:text="${p.name}"></h3>
-                            <p class="t-caption" style="color:var(--color-ink-muted-48);margin-top:6px;" th:text="${p.tagline}"></p>
+                            <p class="t-caption" style="color:var(--color-ink-muted-48);margin-top:4px;" 
+                               th:text="${p.color != null ? p.color + ' • ' + (p.storage != null ? p.storage : '') : p.tagline}"></p>
                         </div>
                         <div style="margin-top:20px;padding-top:14px;border-top:1px solid var(--color-divider-soft);display:flex;justify-content:space-between;align-items:center;">
-                            <span class="numeric" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
-                            <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="text-link">Chỉnh sửa ›</a>
+                            <div>
+                                <span class="numeric t-body-strong" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+                                <span th:if="${p.originalPrice > p.price}" class="numeric t-fine-print" style="text-decoration:line-through;color:var(--color-ink-muted-48);margin-left:6px;" th:text="${#numbers.formatDecimal(p.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+                            </div>
+                            <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="text-link" style="font-weight:600;">Chỉnh sửa ›</a>
                         </div>
                     </article>
                 </div>
-                <h3 class="t-tagline" style="margin:48px 0 16px;">Bảng thông số tồn kho</h3>
+                <h3 class="t-tagline" style="margin:48px 0 16px;">Bảng thông số tồn kho & quy cách</h3>
                 <div class="spec-table-container">
                     <table class="spec-table">
                         <thead>
@@ -54,7 +63,8 @@
                                 <th>ID</th>
                                 <th>Sản phẩm</th>
                                 <th>Mã SKU</th>
-                                <th>Danh mục</th>
+                                <th>Danh mục & Hãng</th>
+                                <th>Màu & Bộ nhớ</th>
                                 <th>Giá bán</th>
                                 <th>Tồn kho</th>
                                 <th>Thao tác</th>
@@ -63,15 +73,22 @@
                         <tbody>
                             <tr th:each="p : ${products}">
                                 <td class="numeric" th:text="${p.id}"></td>
-                                <td class="t-body-strong" th:text="${p.name}"></td>
+                                <td>
+                                    <div class="t-body-strong" th:text="${p.name}"></div>
+                                    <div class="t-fine-print" style="color:var(--color-ink-muted-48);" th:text="'slug: ' + ${p.slug}"></div>
+                                </td>
                                 <td class="numeric t-caption" th:text="${p.sku}"></td>
-                                <td th:text="${p.category}"></td>
-                                <td class="numeric" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></td>
+                                <td th:text="${p.category + ' (' + (p.brand != null ? p.brand : 'Apple') + ')'}"></td>
+                                <td class="t-caption" th:text="${(p.color != null ? p.color : '-') + ' / ' + (p.storage != null ? p.storage : '-')}"></td>
+                                <td class="numeric">
+                                    <div class="t-body-strong" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></div>
+                                    <div th:if="${p.originalPrice > p.price}" class="t-fine-print" style="text-decoration:line-through;color:var(--color-ink-muted-48);" th:text="${#numbers.formatDecimal(p.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></div>
+                                </td>
                                 <td class="numeric" th:text="${p.stock}"></td>
-                                <td style="display:flex;gap:14px;">
-                                    <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="text-link">Chỉnh sửa</a>
+                                <td style="display:flex;gap:14px;align-items:center;">
+                                    <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="text-link" style="font-weight:600;">Chỉnh sửa</a>
                                     <form th:action="@{/admin/products/delete/{id}(id=${p.id})}" method="post" style="display:inline;">
-                                        <button type="submit" class="text-link" style="color:var(--color-ink-muted-48);">Xóa</button>
+                                        <button type="submit" class="text-link" style="color:var(--color-ink-muted-48);" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này khỏi kho?');">Xóa</button>
                                     </form>
                                 </td>
                             </tr>

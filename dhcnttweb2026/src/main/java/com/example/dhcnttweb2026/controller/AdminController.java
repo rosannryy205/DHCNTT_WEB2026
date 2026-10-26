@@ -2,7 +2,6 @@ package com.example.dhcnttweb2026.controller;
 
 import com.example.dhcnttweb2026.model.Product;
 import com.example.dhcnttweb2026.service.ProductService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,38 +15,8 @@ public class AdminController {
         this.productService = productService;
     }
 
-    // TRANG ĐĂNG NHẬP ADMIN
-    @GetMapping("/admin/login")
-    public String showLoginPage(HttpSession session) {
-        if (session.getAttribute("ADMIN_USER") != null) {
-            return "redirect:/admin/dashboard";
-        }
-        return "admin/login";
-    }
-
-    @PostMapping("/admin/login")
-    public String processLogin(
-            @RequestParam String username,
-            @RequestParam String password,
-            HttpSession session,
-            Model model) {
-        if ("admin".equalsIgnoreCase(username.trim()) && ("123456".equals(password) || "admin123".equals(password))) {
-            session.setAttribute("ADMIN_USER", "Phan Tuấn Anh (Admin)");
-            return "redirect:/admin/dashboard";
-        }
-        model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không chính xác (Mặc định: admin / 123456).");
-        return "admin/login";
-    }
-
-    @GetMapping("/admin/logout")
-    public String logout(HttpSession session, RedirectAttributes ra) {
-        session.invalidate();
-        ra.addFlashAttribute("logoutMessage", "Bạn đã đăng xuất khỏi hệ thống quản trị.");
-        return "redirect:/admin/login";
-    }
-
     // 1. TRANG DASHBOARD
-    @GetMapping({"/", "/admin", "/admin/dashboard"})
+    @GetMapping({"/admin", "/admin/dashboard"})
     public String dashboard(Model model) {
         var all = productService.findAll(null, null);
         model.addAttribute("activeMenu", "dashboard");
@@ -83,10 +52,15 @@ public class AdminController {
     public String showAddForm(Model model) {
         Product p = new Product();
         p.setCategory("iPhone");
+        p.setBrand("Apple");
         p.setStatus("Đang bán");
-        model.addAttribute("activeMenu", "add");
+        p.setColor("Titan Tự Nhiên");
+        p.setStorage("256GB");
+        p.setRam("12GB");
+        p.setStock(20);
+        model.addAttribute("activeMenu", "products");
         model.addAttribute("pageTitle", "Thêm Sản Phẩm Mới");
-        model.addAttribute("subtitle", "Tạo mới thiết bị vào hệ thống");
+        model.addAttribute("subtitle", "Tạo mới thiết bị và cấu hình vào hệ thống");
         model.addAttribute("product", p);
         return "admin/product-add";
     }
@@ -107,7 +81,7 @@ public class AdminController {
             if (!all.isEmpty()) return "redirect:/admin/products/edit/" + all.get(0).getId();
             return "redirect:/admin/products";
         }
-        model.addAttribute("activeMenu", "edit");
+        model.addAttribute("activeMenu", "products");
         model.addAttribute("pageTitle", "Chỉnh Sửa Sản Phẩm");
         model.addAttribute("subtitle", "Mã SKU: " + opt.get().getSku());
         model.addAttribute("product", opt.get());

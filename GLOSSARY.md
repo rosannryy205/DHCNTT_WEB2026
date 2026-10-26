@@ -71,3 +71,19 @@ _Avoid_: Tag lọc, nhãn đang lọc, filter badge
 **Sort Criterion (Tiêu chí sắp xếp)**:
 Quy tắc thứ tự hiển thị danh sách sản phẩm trên lưới (ví dụ: Giá tăng dần, Giá giảm dần, Mới nhất, Bán chạy).
 _Avoid_: Kiểu xếp, thứ tự lọc
+
+**Admin Product Management (Quản lý sản phẩm)**:
+Không gian làm việc tập trung trong Admin Console cho phép quản trị viên xem danh mục sản phẩm, tìm kiếm, lọc theo thiết bị, và kích hoạt các hành động theo ngữ cảnh (Thêm sản phẩm mới qua nút CTA hoặc Chỉnh sửa cấu hình từng sản phẩm).
+_Avoid_: Mục Thêm/Sửa đặt rời rạc trên sidebar điều hướng cấp cao.
+
+**Customer**:
+Người dùng mua sắm trên Storefront, sở hữu túi hàng và lịch sử đơn hàng cá nhân.
+_Avoid_: Client, buyer, end-user
+
+**Staff**:
+Nhân viên vận hành hệ thống cửa hàng, có quyền truy cập vào phân hệ Admin Console để xử lý đơn hàng và kiểm tra kho thiết bị.
+_Avoid_: Employee, clerk, moderator
+
+**Admin**:
+Quản trị viên cấp cao nhất của hệ thống DH Store, có toàn quyền cấu hình, quản trị sản phẩm, phân quyền và giám sát hoạt động.
+_Avoid_: Superuser, root, boss
