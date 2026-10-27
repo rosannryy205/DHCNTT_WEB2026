@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout}">
+<head>
+  <title th:text="${pageTitle}">Đặt hàng thành công - IUH Store</title>
+
+  <!-- Page-specific styles -->
+  <th:block layout:fragment="styles">
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+  </th:block>
+</head>
+<body>
+  <div layout:fragment="content">
+
+    <!-- Progress indicator: step 3 active -->
+    <div class="checkout-header-wrapper">
+      <div class="container-xl">
+        <ul class="checkout-progress-nav">
+          <li>
+            <a th:href="@{/bag}" class="checkout-progress-step completed">
+              <span class="step-number"><i class="bi bi-check"></i></span>
+              <span>1. Túi hàng</span>
+            </a>
+          </li>
+          <li class="checkout-progress-divider"></li>
+          <li>
+            <a th:href="@{/checkout}" class="checkout-progress-step completed">
+              <span class="step-number"><i class="bi bi-check"></i></span>
+              <span>2. Thanh toán &amp; Giao hàng</span>
+            </a>
+          </li>
+          <li class="checkout-progress-divider"></li>
+          <li>
+            <span class="checkout-progress-step active">
+              <span class="step-number"><i class="bi bi-check-lg"></i></span>
+              <span>3. Hoàn tất</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Success Container -->
+    <div class="container-xl py-5">
+      <div class="success-card">
+
+        <!-- Icon thành công -->
+        <div class="success-icon-wrap">
+          <i class="bi bi-check2"></i>
+        </div>
+
+        <h1 class="apple-hero-display" style="font-size: 34px; margin-bottom: 12px;">Cảm ơn bạn đã đặt hàng!</h1>
+        <p class="text-muted" style="font-size: 16px; max-width: 540px; margin: 0 auto;">
+          Đơn hàng của bạn đã được hệ thống ghi nhận thành công và đang được chuẩn bị để đóng gói an toàn theo quy chuẩn Apple.
+        </p>
+
+        <!-- Mã đơn hàng -->
+        <div>
+          <span class="success-order-code-badge">
+            Mã đơn hàng: <strong class="text-primary" th:text="${orderCode}">ORD-20261027-9045</strong>
+          </span>
+        </div>
+
+        <!-- Chi tiết tóm tắt đơn hàng đã đặt -->
+        <div class="success-details-table">
+          <div class="success-detail-row">
+            <span class="success-detail-label">Thời gian dự kiến giao</span>
+            <span class="success-detail-val text-success" th:text="${estimatedDeliveryDate}">30 Tháng 10, 2026</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label">Người nhận hàng</span>
+            <span class="success-detail-val" th:text="${recipientName}">Nguyễn Minh Quân</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label">Số điện thoại liên lạc</span>
+            <span class="success-detail-val" th:text="${shippingPhone}">0987654321</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label">Địa chỉ nhận hàng</span>
+            <span class="success-detail-val" th:text="${shippingAddress}">Số 15 Lê Duẩn, Phường Tràng Tiền, Quận Hoàn Kiếm, Hà Nội</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label">Hình thức thanh toán</span>
+            <span class="success-detail-val" th:text="${paymentMethodName}">Thanh toán khi nhận hàng (COD)</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label">Tổng tiền thanh toán</span>
+            <span class="success-detail-val fs-6 text-dark" th:text="${formattedTotal}">33.419.000đ</span>
+          </div>
+        </div>
+
+        <!-- Nút điều hướng -->
+        <div class="success-actions-row">
+          <a th:href="@{/products}" class="btn-apple-primary px-4 py-2 text-decoration-none">
+            <i class="bi bi-arrow-left me-1"></i> Tiếp tục mua sắm
+          </a>
+          <a th:href="@{/}" class="btn-apple-secondary px-4 py-2 text-decoration-none">
+            <i class="bi bi-house me-1"></i> Trang chủ
+          </a>
+        </div>
+
+        <!-- Hỗ trợ sau bán hàng -->
+        <div class="mt-4 pt-3 text-muted small">
+          <p class="mb-1">Cần hỗ trợ thêm về đơn hàng? Gọi ngay tổng đài miễn cước: <strong class="text-dark">1800 1122</strong> (08:00 - 21:00 hàng ngày).</p>
+          <p class="mb-0">Hóa đơn điện tử VAT và thông tin bảo hành điện tử chính hãng Apple sẽ được gửi tới email của quý khách.</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout}">
+<head>
+  <title th:text="${pageTitle}">Thanh toán an toàn - IUH Store</title>
+
+  <!-- Page-specific styles -->
+  <th:block layout:fragment="styles">
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+  </th:block>
+</head>
+<body>
+  <div layout:fragment="content">
+
+    <!-- 1. Thanh tiến trình đặt hàng chuẩn Apple (Breadcrumb Steps) -->
+    <div class="checkout-header-wrapper">
+      <div class="container-xl">
+        <ul class="checkout-progress-nav">
+          <li>
+            <a th:href="@{/bag}" class="checkout-progress-step completed">
+              <span class="step-number"><i class="bi bi-check"></i></span>
+              <span>1. Túi hàng</span>
+            </a>
+          </li>
+          <li class="checkout-progress-divider"></li>
+          <li>
+            <span class="checkout-progress-step active">
+              <span class="step-number">2</span>
+              <span>2. Thanh toán &amp; Giao hàng</span>
+            </span>
+          </li>
+          <li class="checkout-progress-divider"></li>
+          <li>
+            <span class="checkout-progress-step">
+              <span class="step-number">3</span>
+              <span>3. Hoàn tất</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container-xl py-4 py-lg-5">
+
+      <!-- Hero Title -->
+      <div class="checkout-hero-section">
+        <h1 class="checkout-page-title">Thanh toán.</h1>
+        <p class="checkout-page-subtitle">
+          Vui lòng kiểm tra thông tin giao hàng và chọn phương thức thanh toán bảo mật để hoàn tất đơn hàng.
+        </p>
+      </div>
+
+      <!-- Banner gợi ý đăng nhập nhanh -->
+      <div class="checkout-login-hint">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-person-circle fs-5 text-primary"></i>
+          <span>Bạn đã có tài khoản IUH Store? <a th:href="@{/login}">Đăng nhập ngay</a> để tự động điền địa chỉ và đồng bộ đơn hàng.</span>
+        </div>
+        <span class="d-none d-md-inline text-muted small">Mua sắm an toàn &amp; bảo mật</span>
+      </div>
+
+      <!-- 2 Columns Checkout Layout (Col-lg-7 : Col-lg-5) -->
+      <form id="checkoutForm" th:action="@{/checkout}" th:object="${checkoutForm}" method="post">
+
+        <!-- Hidden input for totalAmount & full shippingAddress -->
+        <input type="hidden" id="totalAmountInput" name="totalAmount" th:value="${summary != null ? summary.total() : 33419000}">
+        <input type="hidden" id="shippingAddress" name="shippingAddress" th:field="*{shippingAddress}">
+
+        <div class="row g-4 g-lg-5">
+
+          <!-- ================================================================
+               CỘT TRÁI (7 CỘT): CÁC INPUT FORM THANH TOÁN (TUÂN THỦ DATABASE)
+               ================================================================ -->
+          <div class="col-12 col-lg-7">
+
+            <!-- PHẦN 1: THÔNG TIN NGƯỜI NHẬN HÀNG (Mapping: users.name, users.email, orders.shipping_phone) -->
+            <div class="checkout-card">
+              <div class="checkout-card-header">
+                <div class="checkout-step-badge">1</div>
+                <div>
+                  <h2 class="checkout-card-title">Thông tin người nhận</h2>
+                  <p class="checkout-card-desc">Thông tin liên lạc nhận hàng và email nhận biên lai điện tử VAT.</p>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <!-- Họ và tên (users.name - max 100) -->
+                <div class="col-12 col-sm-6">
+                  <div class="apple-form-group mb-0">
+                    <label class="apple-label" for="recipientName">
+                      Họ và tên người nhận <span class="required-star">*</span>
+                    </label>
+                    <div class="apple-input-wrapper">
+                      <i class="bi bi-person apple-input-icon"></i>
+                      <input type="text"
+                             id="recipientName"
+                             name="recipientName"
+                             th:field="*{recipientName}"
+                             class="apple-input has-icon"
+                             maxlength="100"
+                             placeholder="ví dụ: Nguyễn Minh Quân"
+                             required>
+                    </div>
+                    <div class="apple-invalid-feedback">Vui lòng nhập họ và tên người nhận hàng.</div>
+                  </div>
+                </div>
+
+                <!-- Số điện thoại (orders.shipping_phone - max 20) -->
+                <div class="col-12 col-sm-6">
+                  <div class="apple-form-group mb-0">
+                    <label class="apple-label" for="shippingPhone">
+                      Số điện thoại nhận hàng <span class="required-star">*</span>
+                    </label>
+                    <div class="apple-input-wrapper">
+                      <i class="bi bi-telephone apple-input-icon"></i>
+                      <input type="tel"
+                             id="shippingPhone"
+                             name="shippingPhone"
+                             th:field="*{shippingPhone}"
+                             class="apple-input has-icon"
+                             maxlength="20"
+                             placeholder="ví dụ: 0987654321"
+                             required>
+                    </div>
+                    <div class="apple-invalid-feedback">Vui lòng nhập số điện thoại liên lạc hợp lệ.</div>
+                  </div>
+                </div>
+
+                <!-- Email liên hệ & nhận hóa đơn (users.email - max 255) -->
+                <div class="col-12">
+                  <div class="apple-form-group mb-0">
+                    <label class="apple-label" for="email">
+                      Địa chỉ Email <span class="required-star">*</span>
+                    </label>
+                    <div class="apple-input-wrapper">
+                      <i class="bi bi-envelope apple-input-icon"></i>
+                      <input type="email"
+                             id="email"
+                             name="email"
+                             th:field="*{email}"
+                             class="apple-input has-icon"
+                             maxlength="255"
+                             placeholder="ví dụ: quan.nguyen@gmail.com"
+                             required>
+                    </div>
+                    <div class="apple-invalid-feedback">Vui lòng nhập email chính xác để nhận mã đơn hàng.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PHẦN 2: ĐỊA CHỈ NHẬN HÀNG (Mapping: orders.shipping_address - max 255) -->
+            <div class="checkout-card">
+              <div class="checkout-card-header">
+                <div class="checkout-step-badge">2</div>
+                <div>
+                  <h2 class="checkout-card-title">Địa chỉ giao hàng</h2>
+                  <p class="checkout-card-desc">Đơn hàng nguyên seal sẽ được bưu tá giao tận tay quý khách.</p>
+                </div>
+              </div>
+
+              <!-- Cụm chọn Tỉnh / Huyện / Xã -->
+              <div class="row g-3">
+                <!-- Tỉnh / Thành phố -->
+                <div class="col-12 col-sm-4">
+                  <div class="apple-form-group mb-0">
+                    <label class="apple-label" for="provinceSelect">
+                      Tỉnh / Thành phố <span class="required-star">*</span>
+                    </label>
+                    <select id="provinceSelect" name="province" class="apple-select" required>
+                      <option value="Thành phố Hà Nội" th:selected="${checkoutForm.province == 'Thành phố Hà Nội'}">Thành phố Hà Nội</option>
+                      <option value="Thành phố Hồ Chí Minh" th:selected="${checkoutForm.province == 'Thành phố Hồ Chí Minh'}">Thành phố Hồ Chí Minh</option>
+                      <option value="Thành phố Đà Nẵng" th:selected="${checkoutForm.province == 'Thành phố Đà Nẵng'}">Thành phố Đà Nẵng</option>
+                      <option value="Thành phố Cần Thơ" th:selected="${checkoutForm.province == 'Thành phố Cần Thơ'}">Thành phố Cần Thơ</option>
+                      <option value="Thành phố Hải Phòng" th:selected="${checkoutForm.province == 'Thành phố Hải Phòng'}">Thành phố Hải Phòng</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Quận / Huyện -->
+                <div class="col-12 col-sm-4">
+                  <div class="apple-form-group mb-0">
+                    <label class="apple-label" for="districtSelect">
+                      Quận / Huyện <span class="required-star">*</span>
+                    </label>
+                    <select id="districtSelect" name="district" class="apple-select" data-current="Quận Hoàn Kiếm" required>
+                      <option value="Quận Hoàn Kiếm">Quận Hoàn Kiếm</option>
+                      <option value="Quận Ba Đình">Quận Ba Đình</option>
+                      <option value="Quận Đống Đa">Quận Đống Đa</option>
+                      <option value="Quận Cầu Giấy">Quận Cầu Giấy</option>
+                      <option value="Quận Hà Đông">Quận Hà Đông</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Phường / Xã -->
+                <div class="col-12 col-sm-4">
+                  <div class="apple-form-group mb-0">
+                    <label class="apple-label" for="wardSelect">
+                      Phường / Xã <span class="required-star">*</span>
+                    </label>
+                    <select id="wardSelect" name="ward" class="apple-select" data-current="Phường Tràng Tiền" required>
+                      <option value="Phường Tràng Tiền">Phường Tràng Tiền</option>
+                      <option value="Phường Hàng Bạc">Phường Hàng Bạc</option>
+                      <option value="Phường Hàng Trống">Phường Hàng Trống</option>
+                      <option value="Phường Cửa Nam">Phường Cửa Nam</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Số nhà, tên đường cụ thể -->
+                <div class="col-12">
+                  <div class="apple-form-group mb-0">
+                    <label class="apple-label" for="streetAddress">
+                      Địa chỉ chi tiết (Số nhà, tên đường, toà nhà, căn hộ) <span class="required-star">*</span>
+                    </label>
+                    <div class="apple-input-wrapper">
+                      <i class="bi bi-geo-alt apple-input-icon"></i>
+                      <input type="text"
+                             id="streetAddress"
+                             name="streetAddress"
+                             th:field="*{streetAddress}"
+                             class="apple-input has-icon"
+                             placeholder="ví dụ: Số 15 Lê Duẩn, Tầng 8 Toà nhà Center Point"
+                             required>
+                    </div>
+                    <div class="apple-invalid-feedback">Vui lòng nhập số nhà và tên đường chi tiết.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lựa chọn hình thức vận chuyển chuẩn Apple Store -->
+              <div class="mt-4 pt-3 border-top">
+                <label class="apple-label">Phương thức vận chuyển</label>
+                <div class="shipping-options-grid">
+                  <!-- Tiêu chuẩn -->
+                  <label class="shipping-option-item selected">
+                    <div class="shipping-option-left">
+                      <input type="radio" name="shippingMethod" value="standard" class="d-none" checked>
+                      <span class="apple-radio-circle"></span>
+                      <div>
+                        <div class="shipping-option-title">
+                          <i class="bi bi-truck me-1 text-primary"></i> Giao hàng tiêu chuẩn Apple Express (1 - 3 ngày)
+                        </div>
+                        <div class="shipping-option-desc">Đóng gói chuẩn hộp Apple bảo mật, giao trực tiếp đến cửa nhà bạn.</div>
+                      </div>
+                    </div>
+                    <span class="shipping-option-badge">Miễn phí</span>
+                  </label>
+
+                  <!-- Siêu tốc nội thành -->
+                  <label class="shipping-option-item">
+                    <div class="shipping-option-left">
+                      <input type="radio" name="shippingMethod" value="express" class="d-none">
+                      <span class="apple-radio-circle"></span>
+                      <div>
+                        <div class="shipping-option-title">
+                          <i class="bi bi-lightning-charge me-1 text-primary"></i> Giao siêu tốc trong ngày (Nội thành Hà Nội &amp; TP.HCM)
+                        </div>
+                        <div class="shipping-option-desc">Nhận hàng trong vòng 2 - 4 giờ sau khi xác nhận đơn hàng thành công.</div>
+                      </div>
+                    </div>
+                    <span class="shipping-option-badge">Miễn phí</span>
+                  </label>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- PHẦN 3: GHI CHÚ ĐƠN HÀNG (Mapping: orders.note - max 255 ký tự) -->
+            <div class="checkout-card">
+              <div class="checkout-card-header">
+                <div class="checkout-step-badge">3</div>
+                <div>
+                  <h2 class="checkout-card-title">Ghi chú đơn hàng <span class="text-muted fw-normal fs-6">(Không bắt buộc)</span></h2>
+                  <p class="checkout-card-desc">Lưu ý cho shipper khi giao hàng (giờ hành chính, gọi trước, gửi lễ tân...).</p>
+                </div>
+              </div>
+
+              <div class="apple-form-group mb-0">
+                <textarea id="orderNote"
+                          name="note"
+                          th:field="*{note}"
+                          class="apple-textarea"
+                          rows="3"
+                          maxlength="255"
+                          placeholder="Ví dụ: Giao vào giờ hành chính, gọi điện trước khi đến 15 phút, gửi phòng bảo vệ nếu vắng mặt..."></textarea>
+                <div class="apple-char-counter" id="noteCharCount">0/255 ký tự</div>
+              </div>
+            </div>
+
+            <!-- PHẦN 4: PHƯƠNG THỨC THANH TOÁN (Mapping: orders.payment_method - ENUM: cod, vnpay, momo) -->
+            <div class="checkout-card">
+              <div class="checkout-card-header">
+                <div class="checkout-step-badge">4</div>
+                <div>
+                  <h2 class="checkout-card-title">Phương thức thanh toán</h2>
+                  <p class="checkout-card-desc">Mọi giao dịch đều được mã hóa và xác thực an toàn tuyệt đối.</p>
+                </div>
+              </div>
+
+              <div class="payment-methods-stack">
+
+                <!-- 1. COD (orders.payment_method = 'cod') -->
+                <div class="payment-method-card selected">
+                  <div class="payment-method-card-top">
+                    <div class="payment-method-left">
+                      <input type="radio" name="paymentMethod" value="cod" class="d-none" th:checked="*{paymentMethod == 'cod'}">
+                      <span class="apple-radio-circle"></span>
+                      <div class="payment-method-icon-wrap">
+                        <i class="bi bi-cash-stack"></i>
+                      </div>
+                      <div class="payment-method-text-group">
+                        <span class="payment-method-title">Thanh toán khi nhận hàng (COD)</span>
+                        <div class="payment-method-badges">
+                          <span class="payment-chip">Tiền mặt</span>
+                          <span class="payment-chip">Đồng kiểm khi nhận</span>
+                          <span class="payment-chip text-success">0đ phí thu hộ</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="payment-method-details-panel">
+                    <div class="payment-detail-content">
+                      <p class="mb-1"><i class="bi bi-shield-check text-primary me-1"></i> Quý khách được kiểm tra ngoại quan kiện hàng, tem niêm phong trước khi thanh toán bằng tiền mặt cho nhân viên giao hàng.</p>
+                      <p class="mb-0 text-muted small">Áp dụng cho mọi đơn hàng giá trị đến 50.000.000đ trên toàn quốc.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. VNPAY (orders.payment_method = 'vnpay') -->
+                <div class="payment-method-card">
+                  <div class="payment-method-card-top">
+                    <div class="payment-method-left">
+                      <input type="radio" name="paymentMethod" value="vnpay" class="d-none" th:checked="*{paymentMethod == 'vnpay'}">
+                      <span class="apple-radio-circle"></span>
+                      <div class="payment-method-icon-wrap">
+                        <i class="bi bi-qr-code text-primary"></i>
+                      </div>
+                      <div class="payment-method-text-group">
+                        <span class="payment-method-title">Cổng thanh toán VNPAY-QR &amp; Thẻ ngân hàng</span>
+                        <div class="payment-method-badges">
+                          <span class="payment-chip">VNPAY-QR</span>
+                          <span class="payment-chip">ATM Nội địa Napas</span>
+                          <span class="payment-chip">Visa / MasterCard / JCB</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="payment-method-details-panel">
+                    <div class="payment-detail-content">
+                      <p class="mb-2">Quét mã QR bằng ứng dụng Mobile Banking của hơn 40 ngân hàng hoặc thanh toán nhanh qua thẻ ATM nội địa / thẻ quốc tế.</p>
+                      <div class="payment-brand-logos">
+                        <span class="payment-brand-pill"><i class="bi bi-qr-code-scan"></i> VNPAY-QR</span>
+                        <span class="payment-brand-pill">Vietcombank</span>
+                        <span class="payment-brand-pill">Techcombank</span>
+                        <span class="payment-brand-pill">MBBank</span>
+                        <span class="payment-brand-pill">Visa / Master</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3. MOMO (orders.payment_method = 'momo') -->
+                <div class="payment-method-card">
+                  <div class="payment-method-card-top">
+                    <div class="payment-method-left">
+                      <input type="radio" name="paymentMethod" value="momo" class="d-none" th:checked="*{paymentMethod == 'momo'}">
+                      <span class="apple-radio-circle"></span>
+                      <div class="payment-method-icon-wrap" style="background-color: #a50064; color: #ffffff;">
+                        <i class="bi bi-wallet2 text-white"></i>
+                      </div>
+                      <div class="payment-method-text-group">
+                        <span class="payment-method-title">Ví điện tử MoMo</span>
+                        <div class="payment-method-badges">
+                          <span class="payment-chip">Ví MoMo</span>
+                          <span class="payment-chip">Quét mã 1 chạm</span>
+                          <span class="payment-chip">MoMo Rewards</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="payment-method-details-panel">
+                    <div class="payment-detail-content">
+                      <p class="mb-1">Sau khi bấm <strong>"Xác nhận đặt hàng"</strong>, hệ thống sẽ mở ứng dụng MoMo trên điện thoại hoặc hiển thị mã QR để bạn quét thanh toán tức thì.</p>
+                      <p class="mb-0 text-muted small">Bảo mật đạt chuẩn quốc tế PCI DSS cấp độ cao nhất.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- PHẦN 5: TÙY CHỌN HÓA ĐƠN ĐIỆN TỬ GTGT (VAT ELECTRONIC INVOICE) -->
+            <div class="checkout-card">
+              <label class="vat-switch-container" for="needVatInvoice">
+                <div class="vat-switch-info">
+                  <h5><i class="bi bi-receipt me-2 text-primary"></i> Yêu cầu xuất hóa đơn điện tử GTGT (VAT)</h5>
+                  <p>Hóa đơn điện tử hợp lệ theo quy định của Tổng cục Thuế sẽ được gửi qua email sau khi giao hàng thành công.</p>
+                </div>
+                <div class="apple-toggle">
+                  <input type="checkbox" id="needVatInvoice" name="needVatInvoice" th:field="*{needVatInvoice}">
+                  <span class="apple-toggle-slider"></span>
+                </div>
+              </label>
+
+              <!-- Drawer nhập thông tin xuất VAT -->
+              <div id="vatFieldsDrawer" class="vat-fields-drawer" th:classappend="*{needVatInvoice} ? 'open' : ''">
+                <div class="row g-3">
+                  <div class="col-12 col-sm-6">
+                    <div class="apple-form-group mb-0">
+                      <label class="apple-label" for="companyName">Tên công ty / Doanh nghiệp</label>
+                      <input type="text" id="companyName" name="companyName" th:field="*{companyName}" class="apple-input" placeholder="ví dụ: Công ty TNHH Apple Việt Nam">
+                    </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <div class="apple-form-group mb-0">
+                      <label class="apple-label" for="taxCode">Mã số thuế (MST)</label>
+                      <input type="text" id="taxCode" name="taxCode" th:field="*{taxCode}" class="apple-input" placeholder="ví dụ: 0313364865">
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="apple-form-group mb-0">
+                      <label class="apple-label" for="companyAddress">Địa chỉ trụ sở công ty</label>
+                      <input type="text" id="companyAddress" name="companyAddress" th:field="*{companyAddress}" class="apple-input" placeholder="Địa chỉ đăng ký giấy phép kinh doanh">
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="apple-form-group mb-0">
+                      <label class="apple-label" for="invoiceEmail">Email nhận hóa đơn điện tử</label>
+                      <input type="email" id="invoiceEmail" name="invoiceEmail" th:field="*{invoiceEmail}" class="apple-input" placeholder="ketoan@company.com">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ================================================================
+               CỘT PHẢI (5 CỘT): TÓM TẮT ĐƠN HÀNG (STICKY ORDER SUMMARY)
+               ================================================================ -->
+          <div class="col-12 col-lg-5">
+            <div class="checkout-summary-sticky">
+
+              <!-- Header tóm tắt -->
+              <div class="checkout-summary-header">
+                <h3 class="checkout-summary-title">Tóm tắt đơn hàng</h3>
+                <span class="checkout-items-badge" th:text="${summary != null ? summary.totalItemsCount() + ' sản phẩm' : '2 sản phẩm'}">
+                  2 sản phẩm
+                </span>
+              </div>
+
+              <!-- Danh sách các sản phẩm đang đặt hàng -->
+              <div class="checkout-items-list">
+                <div th:each="item : ${checkoutItems}" class="checkout-item-compact">
+                  <div class="checkout-item-img-wrap">
+                    <img th:src="${item.imageUrl()}" th:alt="${item.productName()}" class="checkout-item-img">
+                    <span class="checkout-item-qty-badge" th:text="${item.quantity()}">1</span>
+                  </div>
+                  <div class="checkout-item-info">
+                    <div class="checkout-item-name" th:text="${item.productName()}">iPhone 16 Pro 256GB</div>
+                    <div class="checkout-item-variant">
+                      <span th:if="${item.colorName() != null}" th:text="${item.colorName()}">Titan Sa Mạc</span>
+                      <span th:if="${item.storageCapacity() != null and item.storageCapacity() != 'Tiêu chuẩn'}" th:text="' • ' + ${item.storageCapacity()}"> • 256GB</span>
+                    </div>
+                  </div>
+                  <div class="checkout-item-price" th:text="${item.formattedLineTotal()}">31.990.000đ</div>
+                </div>
+              </div>
+
+              <!-- Dòng chi tiết tính tiền -->
+              <div class="checkout-summary-line">
+                <span>Tạm tính</span>
+                <span class="fw-semibold text-dark" th:text="${summary != null ? summary.formattedSubtotal() : '33.419.000đ'}">33.419.000đ</span>
+              </div>
+
+              <div class="checkout-summary-line">
+                <span>Vận chuyển tiêu chuẩn</span>
+                <span class="text-success fw-medium">Miễn phí</span>
+              </div>
+
+              <!-- Giảm giá voucher (ẩn mặc định, hiện khi áp dụng) -->
+              <div id="discountRow" class="checkout-summary-line text-danger d-none">
+                <span>Ưu đãi (APPLEVIP)</span>
+                <span id="discountVal" class="fw-semibold">-500.000đ</span>
+              </div>
+
+              <div class="checkout-summary-line small text-muted">
+                <span>Thuế GTGT (VAT 10%)</span>
+                <span>Đã bao gồm</span>
+              </div>
+
+              <!-- Accordion Nhập mã ưu đãi -->
+              <div class="checkout-promo-wrapper">
+                <a class="promo-toggle-link" id="promoToggleBtn">
+                  <i class="bi bi-tag"></i> Bạn có mã khuyến mãi?
+                </a>
+                <div id="promoBox" class="promo-box-container">
+                  <input type="text" id="promoCodeInput" name="couponCode" class="apple-input py-2" placeholder="Nhập mã (thử: APPLEVIP)">
+                  <button type="button" id="promoApplyBtn" class="promo-apply-button">Áp dụng</button>
+                </div>
+              </div>
+
+              <div class="checkout-summary-divider"></div>
+
+              <!-- Dòng tổng tiền thanh toán (orders.total_amount) -->
+              <div class="checkout-summary-total">
+                <span class="checkout-total-label">Tổng thanh toán</span>
+                <span id="checkoutTotalDisplay" class="checkout-total-value" th:text="${summary != null ? summary.formattedTotal() : '33.419.000đ'}">
+                  33.419.000đ
+                </span>
+              </div>
+
+              <!-- CTA Xác nhận thanh toán -->
+              <button type="submit" id="placeOrderBtn" class="btn-checkout-submit">
+                <i class="bi bi-shield-lock-fill"></i> Xác nhận đặt hàng
+              </button>
+
+              <!-- Quay lại túi hàng -->
+              <div class="text-center mt-3">
+                <a th:href="@{/bag}" class="return-bag-link">
+                  <i class="bi bi-chevron-left"></i> Quay lại túi hàng để chỉnh sửa
+                </a>
+              </div>
+
+              <!-- Huy hiệu cam kết & Bảo mật Apple Store -->
+              <div class="checkout-trust-container">
+                <div class="checkout-trust-grid">
+                  <div class="checkout-trust-item">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Giao hàng miễn phí toàn quốc</span>
+                  </div>
+                  <div class="checkout-trust-item">
+                    <i class="bi bi-patch-check"></i>
+                    <span>100% Chính hãng Apple VN</span>
+                  </div>
+                  <div class="checkout-trust-item">
+                    <i class="bi bi-arrow-repeat"></i>
+                    <span>Đổi trả miễn phí 14 ngày</span>
+                  </div>
+                  <div class="checkout-trust-item">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Mã hóa thanh toán SSL 256-bit</span>
+                  </div>
+                </div>
+
+                <p class="checkout-legal-disclaimer">
+                  Bằng cách nhấn "Xác nhận đặt hàng", bạn đồng ý với Điều Khoản Dịch Vụ và Chính Sách Quyền Riêng Tư của IUH Store.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+
+  </div>
+
+  <!-- Page-specific scripts -->
+  <th:block layout:fragment="scripts">
+    <script th:src="@{/js/checkout.js}"></script>
+  </th:block>
+</body>
+</html>
+
