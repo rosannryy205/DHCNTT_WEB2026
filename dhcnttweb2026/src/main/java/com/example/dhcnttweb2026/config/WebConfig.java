@@ -2,15 +2,19 @@ package com.example.dhcnttweb2026.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Objects;
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    private final AdminAuthInterceptor adminAuthInterceptor;
+    @NonNull
+    private final HandlerInterceptor adminAuthInterceptor;
 
-    public WebConfig(AdminAuthInterceptor adminAuthInterceptor) {
-        this.adminAuthInterceptor = adminAuthInterceptor;
+    public WebConfig(@NonNull AdminAuthInterceptor adminAuthInterceptor) {
+        this.adminAuthInterceptor = Objects.requireNonNull(adminAuthInterceptor);
     }
 
     @Override

@@ -75,5 +75,14 @@ public class ProductService {
     public List<OrderRecord> getRecentOrders() { return orders; }
     public long getTotalRevenue() { return 1482960000L; }
     public int getTotalOrdersCount() { return 342; }
-    public int getTotalStock() { return products.stream().mapToInt(Product::getStock).sum(); }
+
+    public int getTotalStock() {
+        int total = 0;
+        for (Product p : products) {
+            if (p != null) {
+                total += p.getStock();
+            }
+        }
+        return total;
+    }
 }
