@@ -15,9 +15,13 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Thiết lập mối quan hệ 1 - 1 với bảng users thông qua cột user_id
+    // guest_token cho khách vãng lai chưa đăng nhập (theo ADR 0002)
+    @Column(name = "guest_token", length = 255, unique = true)
+    private String guestToken;
+
+    // Thiết lập mối quan hệ 1 - 1 với bảng users thông qua cột user_id (nullable cho khách vãng lai)
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true, unique = true)
     @JsonBackReference
     private User user;
 
@@ -31,8 +35,20 @@ public class Cart {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public Cart() {
+    }
+
     public Cart(User user) {
         this.user = user;
+    }
+
+    public Cart(String guestToken) {
+        this.guestToken = guestToken;
+    }
+
+    public Cart(User user, String guestToken) {
+        this.user = user;
+        this.guestToken = guestToken;
     }
 
     @PrePersist
@@ -54,6 +70,14 @@ public class Cart {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getGuestToken() {
+        return guestToken;
+    }
+
+    public void setGuestToken(String guestToken) {
+        this.guestToken = guestToken;
     }
 
     public User getUser() {

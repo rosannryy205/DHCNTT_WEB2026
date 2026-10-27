@@ -28,6 +28,9 @@ public class Brand {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public Brand() {
+    }
+
     public Brand(Long id, String name, String slug, String logo, String description) {
         this.id = id;
         this.name = name;

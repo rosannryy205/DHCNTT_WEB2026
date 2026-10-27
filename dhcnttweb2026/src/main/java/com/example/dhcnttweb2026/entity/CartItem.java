@@ -30,6 +30,9 @@ public class CartItem {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public CartItem() {
+    }
+
     public CartItem(Long id, Cart cart, ProductVariant productVariant, Integer quantity) {
         this.id = id;
         this.cart = cart;
