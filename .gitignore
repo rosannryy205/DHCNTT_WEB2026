@@ -1,0 +1,14 @@
+# Root .gitignore for DHCNTT_WEB2026
+target/
+**/target/
+*.class
+**/*.class
+
+### IDE files ###
+.idea/
+*.iml
+.vscode/
+
+### OS files ###
+.DS_Store
+Thumbs.db

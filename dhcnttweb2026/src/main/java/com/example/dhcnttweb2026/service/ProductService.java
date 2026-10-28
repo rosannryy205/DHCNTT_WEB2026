@@ -111,10 +111,14 @@ public class ProductService {
     public List<OrderRecord> getRecentOrders() { return orders; }
     public long getTotalRevenue() { return 1482960000L; }
     public int getTotalOrdersCount() { return 342; }
+
     public int getTotalStock() {
-        return products.stream()
-                .filter(Objects::nonNull)
-                .mapToInt(AdminProductDto::getStock)
-                .sum();
+        int total = 0;
+        for (AdminProductDto p : products) {
+            if (p != null) {
+                total += p.getStock();
+            }
+        }
+        return total;
     }
 }
