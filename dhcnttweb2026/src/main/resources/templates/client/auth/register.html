@@ -2,7 +2,7 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{client/layout}">
 <head>
-  <title>Tạo tài khoản DH Store</title>
+  <title>Tạo tài khoản IUH Store</title>
   <th:block layout:fragment="styles">
     <link rel="stylesheet" th:href="@{/css/auth.css}">
   </th:block>
@@ -28,41 +28,51 @@
         Một tài khoản duy nhất để lưu trữ túi hàng, đặt mua thiết bị công nghệ và nhận bảo hành chính hãng.
       </p>
 
+      <!-- Error Alert -->
+      <div th:if="${errorMessage}" class="alert alert-danger border-0 d-flex align-items-center gap-2 mb-3 py-2 px-3 rounded-3 text-start" style="background-color: #fdf2f2; color: #dc3545; font-size: 13px;">
+        <i class="bi bi-exclamation-triangle-fill fs-6 flex-shrink-0"></i>
+        <span th:text="${errorMessage}">Đăng ký thất bại.</span>
+      </div>
+
       <form th:action="@{/register}" method="post">
+        <input type="hidden" name="returnUrl" th:value="${returnUrl}">
         
-        <div class="auth-form-group">
-          <label class="auth-label" for="fullName">Họ và tên</label>
+        <div class="auth-form-group text-start">
+          <label class="auth-label" for="fullName">Họ và tên <span class="text-danger">*</span></label>
           <input type="text" id="fullName" name="name" class="auth-input" 
+                 th:value="${registerDto != null ? registerDto.name : ''}"
                  placeholder="Nguyễn Văn A" required autofocus>
         </div>
 
-        <div class="row g-2">
+        <div class="row g-2 text-start">
           <div class="col-md-6 auth-form-group">
-            <label class="auth-label" for="email">Địa chỉ Email</label>
+            <label class="auth-label" for="email">Địa chỉ Email <span class="text-danger">*</span></label>
             <input type="email" id="email" name="email" class="auth-input" 
+                   th:value="${registerDto != null ? registerDto.email : ''}"
                    placeholder="name@example.com" required autocomplete="email">
           </div>
           <div class="col-md-6 auth-form-group">
-            <label class="auth-label" for="phone">Số điện thoại</label>
+            <label class="auth-label" for="phone">Số điện thoại <span class="text-muted fw-normal">(Tùy chọn)</span></label>
             <input type="tel" id="phone" name="phone" class="auth-input" 
-                   placeholder="0912 345 678" required autocomplete="tel">
+                   th:value="${registerDto != null ? registerDto.phone : ''}"
+                   placeholder="0912 345 678" autocomplete="tel">
           </div>
         </div>
 
-        <div class="row g-2">
+        <div class="row g-2 text-start">
           <div class="col-md-6 auth-form-group">
-            <label class="auth-label" for="password">Mật khẩu</label>
+            <label class="auth-label" for="password">Mật khẩu <span class="text-danger">*</span></label>
             <input type="password" id="password" name="password" class="auth-input" 
-                   placeholder="Tối thiểu 8 ký tự" required autocomplete="new-password">
+                   placeholder="Tối thiểu 8 ký tự, có chữ và số" required autocomplete="new-password">
           </div>
           <div class="col-md-6 auth-form-group">
-            <label class="auth-label" for="confirmPassword">Xác nhận mật khẩu</label>
+            <label class="auth-label" for="confirmPassword">Xác nhận mật khẩu <span class="text-danger">*</span></label>
             <input type="password" id="confirmPassword" name="confirmPassword" class="auth-input" 
                    placeholder="Nhập lại mật khẩu" required autocomplete="new-password">
           </div>
         </div>
 
-        <div class="auth-options my-3">
+        <div class="auth-options my-3 text-start">
           <label class="auth-checkbox-label">
             <input type="checkbox" name="terms" required checked>
             <span style="font-size: 13px; line-height: 1.4;">
@@ -81,7 +91,7 @@
 
       <p class="auth-footer-prompt">
         Bạn đã có tài khoản IUH Store? 
-        <a th:href="@{/login}" class="auth-link auth-link-strong ms-1">Đăng nhập ngay</a>
+        <a th:href="@{/login(returnUrl=${returnUrl})}" class="auth-link auth-link-strong ms-1">Đăng nhập ngay</a>
       </p>
 
     </div>

@@ -17,9 +17,12 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   if (!variants || variants.length === 0) return;
 
-  // Initial State: Default to first available color and storage
-  let currentColor = 'Titan Sa Mạc';
-  let currentStorage = '128GB';
+  const productName = window.PRODUCT_NAME || 'Sản phẩm Apple';
+
+  // Initial State: Default to first available variant
+  const firstVariant = variants[0];
+  let currentColor = firstVariant.colorName || '';
+  let currentStorage = firstVariant.storageCapacity || '';
   let currentImageIndex = 0;
 
   // DOM Elements
@@ -38,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const toastVariantDesc = document.getElementById('toastVariantDesc');
   const toastPrice = document.getElementById('toastPrice');
   const toastCloseBtn = document.getElementById('toastCloseBtn');
-  const bagBadge = document.querySelector('.apple-global-nav .badge');
+  const bagBadge = document.getElementById('globalNavBagBadge') || document.querySelector('.apple-global-nav .badge');
 
   let toastTimeout = null;
 
@@ -55,7 +58,9 @@ document.addEventListener('DOMContentLoaded', function () {
       selectedColorLabel.textContent = currentColor;
     }
     if (configSummaryName) {
-      configSummaryName.textContent = `iPhone 16 Pro ${variant.storageCapacity} ${variant.colorName}`;
+      const storagePart = (variant.storageCapacity && variant.storageCapacity !== 'Tiêu chuẩn') ? ` ${variant.storageCapacity}` : '';
+      const colorPart = (variant.colorName && variant.colorName !== 'Tiêu chuẩn') ? ` ${variant.colorName}` : '';
+      configSummaryName.textContent = `${productName}${storagePart}${colorPart}`;
     }
     if (configSummaryPrice) {
       configSummaryPrice.textContent = variant.formattedPrice;
@@ -67,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 2. Update Gallery Images
     if (variant.images && variant.images.length > 0) {
       const targetImgSrc = variant.images[currentImageIndex] || variant.images[0];
-      if (mainImage.src !== targetImgSrc) {
+      if (mainImage && mainImage.src !== targetImgSrc) {
         mainImage.style.opacity = '0.3';
         mainImage.style.transform = 'scale(0.98)';
         setTimeout(() => {
@@ -139,31 +144,75 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // 3. Add To Bag Trigger
+  // 3. Add To Bag Trigger via AJAX
   function triggerAddToBag() {
     const variant = findCurrentVariant();
     if (!variant || variant.stockQuantity <= 0) return;
 
-    // Increment Global Nav badge
-    if (bagBadge) {
-      const currentCount = parseInt(bagBadge.textContent.trim()) || 0;
-      bagBadge.textContent = currentCount + 1;
-      bagBadge.classList.add('animate__animated', 'animate__pulse');
+    if (addToBagBtn) {
+      addToBagBtn.disabled = true;
     }
 
-    // Populate and show toast notification
-    if (bagToast) {
-      if (toastImg) toastImg.src = variant.images[0] || '';
-      if (toastVariantDesc) toastVariantDesc.textContent = `iPhone 16 Pro ${variant.storageCapacity} - ${variant.colorName}`;
-      if (toastPrice) toastPrice.textContent = variant.formattedPrice;
+    fetch('/api/bag/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        variantId: variant.id,
+        sku: variant.sku,
+        quantity: 1
+      })
+    })
+    .then(async response => {
+      const data = await response.json();
+      if (response.status === 401 || (data && data.requireLogin)) {
+        window.location.href = data.redirectUrl || ('/login?returnUrl=' + encodeURIComponent(window.location.pathname));
+        return null;
+      }
+      return data;
+    })
+    .then(data => {
+      if (!data) return;
+      if (addToBagBtn) {
+        addToBagBtn.disabled = false;
+      }
 
-      bagToast.classList.add('show');
+      if (data.success) {
+        // Cập nhật badge trên Global Nav
+        if (bagBadge) {
+          bagBadge.textContent = data.totalItems;
+          bagBadge.style.display = data.totalItems > 0 ? 'inline-block' : 'none';
+          bagBadge.classList.add('animate__animated', 'animate__pulse');
+        }
 
-      if (toastTimeout) clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        bagToast.classList.remove('show');
-      }, 5000);
-    }
+        // Điền thông tin và mở Apple Toast
+        if (bagToast) {
+          if (toastImg) toastImg.src = (variant.images && variant.images[0]) || '';
+          if (toastVariantDesc) {
+            const storagePart = (variant.storageCapacity && variant.storageCapacity !== 'Tiêu chuẩn') ? ` ${variant.storageCapacity}` : '';
+            const colorPart = (variant.colorName && variant.colorName !== 'Tiêu chuẩn') ? ` - ${variant.colorName}` : '';
+            toastVariantDesc.textContent = `${productName}${storagePart}${colorPart}`;
+          }
+          if (toastPrice) toastPrice.textContent = variant.formattedPrice;
+
+          bagToast.classList.add('show');
+
+          if (toastTimeout) clearTimeout(toastTimeout);
+          toastTimeout = setTimeout(() => {
+            bagToast.classList.remove('show');
+          }, 5000);
+        }
+      } else {
+        alert(data.message || 'Không thể thêm sản phẩm vào túi hàng.');
+      }
+    })
+    .catch(err => {
+      if (addToBagBtn) {
+        addToBagBtn.disabled = false;
+      }
+      console.error('Lỗi khi gửi yêu cầu thêm vào túi hàng:', err);
+    });
   }
 
   if (addToBagBtn) {
@@ -172,7 +221,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (subnavBuyBtn) {
     subnavBuyBtn.addEventListener('click', function () {
-      // If user is scrolled down, trigger add to bag, or scroll up if desired
       triggerAddToBag();
     });
   }

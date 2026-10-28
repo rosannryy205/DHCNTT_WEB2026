@@ -22,16 +22,67 @@
 
       <!-- Right Utility Cluster: Search, Cart badge & Account -->
       <div class="d-flex align-items-center gap-3">
-        <a th:href="@{/}" class="text-white opacity-75 hover-opacity-100 text-decoration-none" title="Tìm kiếm">
+        <a th:href="@{/products}" class="text-white opacity-75 hover-opacity-100 text-decoration-none" title="Tìm kiếm">
           <i class="bi bi-search fs-6"></i>
         </a>
+
+        <!-- Túi hàng (Bag) -->
         <a th:href="@{/bag}" class="text-white opacity-75 hover-opacity-100 text-decoration-none position-relative" title="Túi hàng">
           <i class="bi bi-bag fs-6"></i>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size: 10px; padding: 2px 5px;">2</span>
+          <span id="globalNavBagBadge"
+                th:text="${bagItemCount != null ? bagItemCount : 0}"
+                th:style="${(bagItemCount != null and bagItemCount > 0) ? 'font-size: 10px; padding: 2px 5px;' : 'font-size: 10px; padding: 2px 5px; display: none;'}"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+          </span>
         </a>
-        <a th:href="@{/login}" class="text-white opacity-75 hover-opacity-100 text-decoration-none" title="Tài khoản / Đăng nhập">
+
+        <!-- Khi chưa đăng nhập: Icon người dẫn đến trang login -->
+        <a th:if="${currentCustomer == null}" 
+           th:href="@{/login}" 
+           class="text-white opacity-75 hover-opacity-100 text-decoration-none" 
+           title="Đăng nhập tài khoản">
           <i class="bi bi-person fs-6"></i>
         </a>
+
+        <!-- Khi đã đăng nhập: Dropdown menu kiểu Apple -->
+        <div th:if="${currentCustomer != null}" class="dropdown">
+          <button class="btn btn-link text-white opacity-85 hover-opacity-100 text-decoration-none p-0 d-flex align-items-center gap-1 dropdown-toggle" 
+                  type="button" 
+                  id="customerDropdown" 
+                  data-bs-toggle="dropdown" 
+                  aria-expanded="false" 
+                  style="border: none; background: transparent; font-size: 13px;">
+            <i class="bi bi-person-circle fs-6 text-primary"></i>
+            <span class="d-none d-md-inline text-truncate" style="max-width: 100px;" th:text="${currentCustomer.name}">Khách hàng</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg py-2 mt-2" 
+              aria-labelledby="customerDropdown"
+              style="min-width: 230px; border-radius: 14px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(0, 0, 0, 0.08); font-size: 13px;">
+            <li class="px-3 py-2 border-bottom mb-1">
+              <div class="fw-semibold text-dark text-truncate" th:text="${currentCustomer.name}">Tên Khách Hàng</div>
+              <div class="text-muted small text-truncate" th:text="${currentCustomer.email}">email@example.com</div>
+            </li>
+            <li>
+              <a class="dropdown-item py-2 d-flex align-items-center gap-2" th:href="@{/bag}">
+                <i class="bi bi-bag text-primary"></i>
+                <span>Túi hàng của tôi</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item py-2 d-flex align-items-center gap-2 text-muted" href="javascript:void(0)" title="Tính năng sẽ sớm ra mắt">
+                <i class="bi bi-box-seam"></i>
+                <span>Đơn hàng của tôi (Sắp ra mắt)</span>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider my-1"></li>
+            <li>
+              <a class="dropdown-item py-2 text-danger d-flex align-items-center gap-2" th:href="@{/logout}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Đăng xuất</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
 
     </div>

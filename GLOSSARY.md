@@ -1,4 +1,4 @@
-# IUH Store
+﻿# IUH Store
 
 Hệ thống thương mại điện tử chuyên kinh doanh thiết bị công nghệ cao cấp, bao gồm hai phân hệ Storefront (Khách hàng) và Admin Console (Quản trị).
 
@@ -36,9 +36,9 @@ _Avoid_: Tình trạng trả tiền, trạng thái ví
 Vòng đời xử lý đơn hàng từ lúc đặt đến lúc hoàn tất, gồm: PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED.
 _Avoid_: Tình trạng giao, tiến độ đơn
 
-**Guest Token**:
-Mã định danh duy nhất (UUID) lưu trong cookie của trình duyệt để gắn kết Túi hàng trong cơ sở dữ liệu với khách hàng chưa đăng nhập.
-_Avoid_: Session token, visitor id, cookie id
+**Authenticated Bag Ownership**:
+Nguyên tắc túi hàng gắn liền trực tiếp và duy nhất với tài khoản Customer đã đăng nhập. Hệ thống không lưu trữ túi hàng vãng lai.
+_Avoid_: Guest cart, Anonymous bag, Guest token
 
 **Order Summary (Tóm tắt đơn hàng)**:
 Bảng tổng hợp chi phí trong Bag và Checkout bao gồm tạm tính, phí vận chuyển dự kiến, giảm giá (nếu có) và tổng số tiền thanh toán cuối cùng.
@@ -87,3 +87,12 @@ _Avoid_: Employee, clerk, moderator
 **Admin**:
 Quản trị viên cấp cao nhất của hệ thống IUH Store, có toàn quyền cấu hình, quản trị sản phẩm, phân quyền và giám sát hoạt động.
 _Avoid_: Superuser, root, boss
+
+
+**Storefront**:
+Phân hệ giao diện công khai dành cho khách hàng tìm kiếm, xem sản phẩm, quản lý Túi hàng và thực hiện đơn hàng.
+_Avoid_: Client, Shop front, Web store
+
+**Mandatory Authentication for Bag**:
+Quy tắc yêu cầu người dùng phải đăng nhập tài khoản Customer trước khi có thể thêm sản phẩm vào Túi hàng hoặc truy cập xem Túi hàng (/bag).
+_Avoid_: Khách vãng lai mua hàng, Guest checkout

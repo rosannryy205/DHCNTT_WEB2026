@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{client/layout}">
 <head>
@@ -16,6 +16,8 @@
     <script th:inline="javascript">
       /*<![CDATA[*/
       window.PRODUCT_VARIANTS_DATA = /*[[${variants}]]*/ [];
+      window.PRODUCT_NAME = /*[[${productName}]]*/ '';
+      const variants = window.PRODUCT_VARIANTS_DATA;
       /*]]>*/
     </script>
 
@@ -180,7 +182,7 @@
           <div>
             <span class="apple-badge-category">Phụ kiện gợi ý</span>
             <h2 class="apple-display-lg mb-1">Phụ kiện tương thích.</h2>
-            <p class="text-secondary mb-0">Thiết kế hoàn hảo cho iPhone 16 Pro của bạn.</p>
+            <p class="text-secondary mb-0" th:text="'Thiết kế hoàn hảo cho ' + ${productName} + ' của bạn.'">Thiết kế hoàn hảo cho thiết bị của bạn.</p>
           </div>
           <a th:href="@{/}" class="apple-link mt-2 mt-md-0 fs-6">Xem tất cả phụ kiện <i class="bi bi-chevron-right fs-6"></i></a>
         </div>

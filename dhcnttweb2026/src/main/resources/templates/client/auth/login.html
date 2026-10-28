@@ -28,15 +28,35 @@
         Nhập tài khoản để quản lý túi hàng, lịch sử đơn hàng và thiết bị công nghệ tại IUH Store.
       </p>
 
+      <!-- Warning / Redirection Alert -->
+      <div th:if="${warningMessage}" class="alert alert-warning border-0 d-flex align-items-center gap-2 mb-3 py-2 px-3 rounded-3 text-start" style="background-color: #fff9e6; color: #b25e00; font-size: 13px;">
+        <i class="bi bi-shield-lock-fill fs-6 flex-shrink-0"></i>
+        <span th:text="${warningMessage}">Vui lòng đăng nhập để tiếp tục.</span>
+      </div>
+
+      <!-- Success Flash Alert -->
+      <div th:if="${successMessage}" class="alert alert-success border-0 d-flex align-items-center gap-2 mb-3 py-2 px-3 rounded-3 text-start" style="background-color: #eafaf1; color: #1e7e34; font-size: 13px;">
+        <i class="bi bi-check-circle-fill fs-6 flex-shrink-0"></i>
+        <span th:text="${successMessage}">Thao tác thành công.</span>
+      </div>
+
+      <!-- Error Alert -->
+      <div th:if="${errorMessage}" class="alert alert-danger border-0 d-flex align-items-center gap-2 mb-3 py-2 px-3 rounded-3 text-start" style="background-color: #fdf2f2; color: #dc3545; font-size: 13px;">
+        <i class="bi bi-exclamation-triangle-fill fs-6 flex-shrink-0"></i>
+        <span th:text="${errorMessage}">Đăng nhập thất bại.</span>
+      </div>
+
       <form th:action="@{/login}" method="post">
+        <input type="hidden" name="returnUrl" th:value="${returnUrl}">
         
-        <div class="auth-form-group">
-          <label class="auth-label" for="email">Email hoặc Số điện thoại</label>
+        <div class="auth-form-group text-start">
+          <label class="auth-label" for="email">Email</label>
           <input type="text" id="email" name="username" class="auth-input" 
+                 th:value="${loginDto != null ? loginDto.email : ''}"
                  placeholder="name@example.com" required autofocus autocomplete="username">
         </div>
 
-        <div class="auth-form-group">
+        <div class="auth-form-group text-start">
           <label class="auth-label" for="password">Mật khẩu</label>
           <input type="password" id="password" name="password" class="auth-input" 
                  placeholder="Nhập mật khẩu" required autocomplete="current-password">
@@ -47,7 +67,7 @@
             <input type="checkbox" name="rememberMe" checked>
             <span>Ghi nhớ đăng nhập</span>
           </label>
-          <a th:href="@{/}" class="auth-link">Quên mật khẩu?</a>
+          <a href="javascript:void(0)" class="auth-link" title="Chức năng đang phát triển">Quên mật khẩu?</a>
         </div>
 
         <button type="submit" class="btn-apple-auth">
@@ -60,7 +80,7 @@
 
       <p class="auth-footer-prompt">
         Bạn chưa có tài khoản IUH Store? 
-        <a th:href="@{/register}" class="auth-link auth-link-strong ms-1">Tạo tài khoản ID ngay</a>
+        <a th:href="@{/register(returnUrl=${returnUrl})}" class="auth-link auth-link-strong ms-1">Tạo tài khoản ID ngay</a>
       </p>
 
     </div>

@@ -73,7 +73,9 @@ class ClientHomeControllerTest {
 
     @Test
     void testCustomerLoginSubmitRedirectsToHome() throws Exception {
-        mockMvc.perform(post("/login"))
+        mockMvc.perform(post("/login")
+                        .param("email", "quan.nguyen@gmail.com")
+                        .param("password", "123456"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
     }
@@ -89,7 +91,13 @@ class ClientHomeControllerTest {
 
     @Test
     void testCustomerRegisterSubmitRedirectsToHome() throws Exception {
-        mockMvc.perform(post("/register"))
+        String testEmail = "test_home_reg_" + System.currentTimeMillis() + "@gmail.com";
+        mockMvc.perform(post("/register")
+                        .param("name", "Nguyễn Minh Test")
+                        .param("email", testEmail)
+                        .param("password", "Apple2026@")
+                        .param("confirmPassword", "Apple2026@")
+                        .param("phone", "0987654321"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
     }

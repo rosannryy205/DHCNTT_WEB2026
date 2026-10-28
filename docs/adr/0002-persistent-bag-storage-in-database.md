@@ -1,6 +1,6 @@
-# 0002. Lưu trữ Túi hàng (Bag) bền vững trong Cơ sở dữ liệu
+﻿# 0002. Lưu trữ Túi hàng (Bag) bền vững trong Cơ sở dữ liệu
 
-**Trạng thái**: Đã lên kế hoạch (Phần Database Schema & JPA sẽ được triển khai ở Giai đoạn sau; Giai đoạn hiện tại tập trung hoàn thiện Giao diện UI/UX và Mock/Session Controller).
+**Trạng thái**: Đã sửa đổi (Một phần cơ chế Guest bị thay thế bởi ADR-0004) (Phần Database Schema & JPA sẽ được triển khai ở Giai đoạn sau; Giai đoạn hiện tại tập trung hoàn thiện Giao diện UI/UX và Mock/Session Controller).
 
 ## Ngữ cảnh
 Ban đầu, cơ chế lưu trữ Túi hàng (Bag) được cân nhắc sử dụng `HttpSession` tạm thời trên server hoặc `LocalStorage` trên trình duyệt. Tuy nhiên, khách hàng có nhu cầu bảo lưu trạng thái túi hàng xuyên suốt nhiều phiên duyệt web, không bị mất giỏ hàng khi đóng trình duyệt hoặc khi chuyển đổi giữa khách vãng lai (Guest) và tài khoản đã đăng nhập (Authenticated User).
