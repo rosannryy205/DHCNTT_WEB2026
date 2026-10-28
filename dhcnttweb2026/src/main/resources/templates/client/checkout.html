@@ -51,13 +51,30 @@
         </p>
       </div>
 
-      <!-- Banner gợi ý đăng nhập nhanh -->
-      <div class="checkout-login-hint">
+      <!-- Flash alerts -->
+      <div th:if="${errorMessage}" class="alert alert-danger rounded-4 mb-4 d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-triangle-fill fs-5 text-danger"></i>
+        <span th:text="${errorMessage}"></span>
+      </div>
+      <div th:if="${warningMessage}" class="alert alert-warning rounded-4 mb-4 d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-circle-fill fs-5 text-warning"></i>
+        <span th:text="${warningMessage}"></span>
+      </div>
+
+      <!-- Banner thông tin tài khoản -->
+      <div class="checkout-login-hint" th:if="${currentCustomer == null}">
         <div class="d-flex align-items-center gap-2">
           <i class="bi bi-person-circle fs-5 text-primary"></i>
-          <span>Bạn đã có tài khoản IUH Store? <a th:href="@{/login}">Đăng nhập ngay</a> để tự động điền địa chỉ và đồng bộ đơn hàng.</span>
+          <span>Bạn đã có tài khoản IUH Store? <a th:href="@{/login(returnUrl='/checkout')}">Đăng nhập ngay</a> để tự động điền địa chỉ và đồng bộ đơn hàng.</span>
         </div>
         <span class="d-none d-md-inline text-muted small">Mua sắm an toàn &amp; bảo mật</span>
+      </div>
+      <div class="checkout-login-hint" th:if="${currentCustomer != null}">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-check-circle-fill fs-5 text-success"></i>
+          <span>Đang thanh toán với tài khoản khách hàng: <strong th:text="${currentCustomer.name}">Khách hàng</strong> (<span th:text="${currentCustomer.email}">email</span>).</span>
+        </div>
+        <span class="text-muted small">Tự động điền dữ liệu</span>
       </div>
 
       <!-- 2 Columns Checkout Layout (Col-lg-7 : Col-lg-5) -->

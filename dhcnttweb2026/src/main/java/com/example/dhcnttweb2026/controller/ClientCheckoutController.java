@@ -1,102 +1,128 @@
 package com.example.dhcnttweb2026.controller;
 
+import com.example.dhcnttweb2026.config.CustomerAuthInterceptor;
+import com.example.dhcnttweb2026.dto.CustomerSessionDto;
+import com.example.dhcnttweb2026.entity.Order;
+import com.example.dhcnttweb2026.entity.User;
 import com.example.dhcnttweb2026.model.CheckoutFormDto;
 import com.example.dhcnttweb2026.model.CheckoutItemDto;
 import com.example.dhcnttweb2026.model.CheckoutSummaryDto;
+import com.example.dhcnttweb2026.model.OrderDetailDto;
+import com.example.dhcnttweb2026.repository.UserRepository;
+import com.example.dhcnttweb2026.service.BagService;
+import com.example.dhcnttweb2026.service.ClientStorefrontService;
+import com.example.dhcnttweb2026.service.OrderService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
+import java.util.UUID;
 
 @Controller
+@SuppressWarnings("null")
 public class ClientCheckoutController {
 
+    private final OrderService orderService;
+    private final BagService bagService;
+    private final UserRepository userRepository;
+
+    public ClientCheckoutController(OrderService orderService,
+                                    BagService bagService,
+                                    UserRepository userRepository) {
+        this.orderService = orderService;
+        this.bagService = bagService;
+        this.userRepository = userRepository;
+    }
+
     @GetMapping("/checkout")
-    public String showCheckoutPage(Model model) {
-        // 1. Chuẩn bị danh sách sản phẩm mẫu đồng bộ từ túi hàng (Bag)
-        List<CheckoutItemDto> checkoutItems = new ArrayList<>();
+    public String showCheckoutPage(HttpServletRequest request,
+                                   HttpServletResponse response,
+                                   Model model,
+                                   RedirectAttributes ra) {
+        String guestToken = resolveGuestToken(request, response);
+        Long userId = resolveUserId(request);
 
-        long price1 = 31990000L;
-        int qty1 = 1;
-        checkoutItems.add(new CheckoutItemDto(
-                "item-1",
-                "IP16P-256GB-TITANSAMAC",
-                "iPhone 16 Pro 256GB",
-                "Titan Sa Mạc",
-                "#c5b6a7",
-                "256GB",
-                "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-16-pro-model-unselect-gallery-2-202409?wid=800&hei=600&fmt=jpeg&qlt=90",
-                price1,
-                formatVND(price1),
-                qty1,
-                price1 * qty1,
-                formatVND(price1 * qty1),
-                "/product/iphone-16-pro"
-        ));
+        // 1. Lấy giỏ hàng thực tế từ BagService
+        BagService.BagViewDto bagView = bagService.getBagView(guestToken, userId);
 
-        long price2 = 1429000L;
-        int qty2 = 1;
-        checkoutItems.add(new CheckoutItemDto(
-                "item-2",
-                "ACC-CASE-IP16P-SILICONE",
-                "Ốp lưng Silicon MagSafe cho iPhone 16 Pro",
-                "Xanh Denim",
-                "#4a5e6d",
-                "Tiêu chuẩn",
-                "https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/MA7E4?wid=400&hei=400&fmt=jpeg&qlt=90",
-                price2,
-                formatVND(price2),
-                qty2,
-                price2 * qty2,
-                formatVND(price2 * qty2),
-                "/product/iphone-16-pro-silicone-case"
-        ));
-
-        // 2. Tính toán tổng tiền
-        long subtotal = 0;
-        int totalItemsCount = 0;
-        for (CheckoutItemDto item : checkoutItems) {
-            subtotal += item.lineTotal();
-            totalItemsCount += item.quantity();
+        // Nếu giỏ hàng trống, điều hướng về /bag với thông báo
+        if (bagView == null || bagView.isBagEmpty() || bagView.items() == null || bagView.items().isEmpty()) {
+            ra.addFlashAttribute("warningMessage", "Túi hàng của bạn đang trống. Vui lòng chọn sản phẩm trước khi thanh toán.");
+            return "redirect:/bag";
         }
 
-        long shippingFee = 0; // Miễn phí giao hàng tiêu chuẩn chuẩn Apple
-        long discount = 0;
-        long total = subtotal + shippingFee - discount;
+        // 2. Lấy danh sách CheckoutItemDto thực tế từ OrderService
+        List<CheckoutItemDto> checkoutItems = orderService.getCheckoutItems(guestToken, userId);
+        if (checkoutItems.isEmpty()) {
+            ra.addFlashAttribute("warningMessage", "Túi hàng của bạn đang trống. Vui lòng chọn sản phẩm trước khi thanh toán.");
+            return "redirect:/bag";
+        }
+
+        // 3. Chuẩn bị thông tin tóm tắt đơn hàng
+        long shippingFee = 0L; // Miễn phí giao hàng tiêu chuẩn Apple
+        long discount = 0L;
+        long total = bagView.subtotal() + shippingFee - discount;
 
         CheckoutSummaryDto summary = new CheckoutSummaryDto(
-                subtotal,
-                formatVND(subtotal),
+                bagView.subtotal(),
+                bagView.formattedSubtotal(),
                 shippingFee,
                 "Miễn phí",
                 discount,
                 "0đ",
                 total,
-                formatVND(total),
-                totalItemsCount
+                ClientStorefrontService.formatVND(total),
+                bagView.totalItemsCount()
         );
 
-        // 3. Khởi tạo CheckoutFormDto với dữ liệu mặc định gợi ý
+        // 4. Khởi tạo CheckoutFormDto tự động điền từ thông tin tài khoản người dùng đăng nhập
         CheckoutFormDto form = new CheckoutFormDto();
-        form.setRecipientName("Nguyễn Minh Quân");
-        form.setEmail("quan.nguyen@gmail.com");
-        form.setShippingPhone("0987654321");
-        form.setProvince("Thành phố Hà Nội");
-        form.setDistrict("Quận Hoàn Kiếm");
-        form.setWard("Phường Tràng Tiền");
-        form.setStreetAddress("Số 15 Lê Duẩn");
-        form.setShippingAddress("Số 15 Lê Duẩn, Phường Tràng Tiền, Quận Hoàn Kiếm, Thành phố Hà Nội");
         form.setPaymentMethod("cod");
-        form.setNote("Giao giờ hành chính, gọi trước khi giao 15 phút.");
+        form.setShippingMethod("standard");
         form.setTotalAmount(total);
 
-        // 4. Truyền vào View
+        if (userId != null) {
+            Optional<User> userOpt = userRepository.findById(userId);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                if (user.getName() != null && !user.getName().isBlank()) {
+                    form.setRecipientName(user.getName());
+                }
+                if (user.getEmail() != null && !user.getEmail().isBlank()) {
+                    form.setEmail(user.getEmail());
+                }
+                if (user.getPhone() != null && !user.getPhone().isBlank()) {
+                    form.setShippingPhone(user.getPhone());
+                }
+                if (user.getAddress() != null && !user.getAddress().isBlank()) {
+                    form.setShippingAddress(user.getAddress());
+                    form.setStreetAddress(user.getAddress());
+                }
+            }
+        }
+
+        // Giá trị địa chỉ mặc định nếu người dùng chưa có
+        if (form.getProvince() == null || form.getProvince().isBlank()) {
+            form.setProvince("Thành phố Hà Nội");
+        }
+        if (form.getDistrict() == null || form.getDistrict().isBlank()) {
+            form.setDistrict("Quận Hoàn Kiếm");
+        }
+        if (form.getWard() == null || form.getWard().isBlank()) {
+            form.setWard("Phường Tràng Tiền");
+        }
+
+        // 5. Đưa dữ liệu thực vào Model
         model.addAttribute("pageTitle", "Thanh toán an toàn - IUH Store");
         model.addAttribute("checkoutItems", checkoutItems);
         model.addAttribute("summary", summary);
@@ -106,28 +132,96 @@ public class ClientCheckoutController {
     }
 
     @PostMapping("/checkout")
-    public String processCheckout(@ModelAttribute("checkoutForm") CheckoutFormDto form) {
-        // Mô phỏng tạo mã đơn hàng chuẩn database IUH Store: ORD-YYYYMMDD-XXXX
-        String generatedOrderCode = "ORD-20261027-" + (1000 + (int)(Math.random() * 9000));
-        return "redirect:/checkout/success?orderCode=" + generatedOrderCode;
+    public String processCheckout(@ModelAttribute("checkoutForm") CheckoutFormDto form,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response,
+                                  RedirectAttributes ra) {
+        String guestToken = resolveGuestToken(request, response);
+        Long userId = resolveUserId(request);
+
+        try {
+            // Thực hiện lưu đơn hàng và các order_items vào CSDL
+            Order order = orderService.placeOrder(userId, guestToken, form);
+
+            // Điều hướng người dùng về đúng trang hoàn thành với mã đơn hàng
+            return "redirect:/checkout/success?orderCode=" + order.getOrderCode();
+        } catch (IllegalStateException ex) {
+            ra.addFlashAttribute("errorMessage", ex.getMessage());
+            return "redirect:/bag";
+        } catch (Exception ex) {
+            ra.addFlashAttribute("errorMessage", "Đã có lỗi xảy ra trong quá trình thanh toán: " + ex.getMessage());
+            return "redirect:/checkout";
+        }
     }
 
     @GetMapping("/checkout/success")
-    public String showCheckoutSuccess(@RequestParam(value = "orderCode", defaultValue = "ORD-20261027-9045") String orderCode,
+    public String showCheckoutSuccess(@RequestParam(value = "orderCode", required = false) String orderCode,
+                                      HttpServletRequest request,
                                       Model model) {
+        if (orderCode == null || orderCode.isBlank()) {
+            return "redirect:/";
+        }
+
+        // 1. Tìm đơn hàng thực tế trong CSDL thông qua DTO an toàn không lo LazyInitializationException
+        Optional<OrderDetailDto> detailOpt = orderService.getOrderDetailByCode(orderCode);
+        if (detailOpt.isEmpty()) {
+            return "redirect:/";
+        }
+
+        OrderDetailDto detail = detailOpt.get();
+
+        // 2. Truyền toàn bộ dữ liệu chính xác sang trang hoàn tất
         model.addAttribute("pageTitle", "Đặt hàng thành công - IUH Store");
-        model.addAttribute("orderCode", orderCode);
-        model.addAttribute("estimatedDeliveryDate", "30 Tháng 10, 2026");
-        model.addAttribute("recipientName", "Nguyễn Minh Quân");
-        model.addAttribute("shippingPhone", "0987654321");
-        model.addAttribute("shippingAddress", "Số 15 Lê Duẩn, Phường Tràng Tiền, Quận Hoàn Kiếm, Hà Nội");
-        model.addAttribute("paymentMethodName", "Thanh toán khi nhận hàng (COD)");
-        model.addAttribute("formattedTotal", "33.419.000đ");
+        model.addAttribute("orderDetail", detail);
+        model.addAttribute("orderCode", detail.orderCode());
+        model.addAttribute("orderDate", detail.orderDate());
+        model.addAttribute("estimatedDeliveryDate", detail.estimatedDeliveryDate());
+        model.addAttribute("recipientName", detail.recipientName());
+        model.addAttribute("shippingPhone", detail.shippingPhone());
+        model.addAttribute("shippingAddress", detail.shippingAddress());
+        model.addAttribute("note", detail.note());
+        model.addAttribute("paymentMethodName", detail.paymentMethodName());
+        model.addAttribute("paymentStatus", detail.paymentStatus());
+        model.addAttribute("orderStatus", detail.orderStatus());
+        model.addAttribute("formattedTotal", detail.formattedTotal());
+        model.addAttribute("orderItems", detail.items());
+
         return "client/checkout-success";
     }
 
-    private String formatVND(long amount) {
-        return String.format(Locale.GERMAN, "%,d", amount) + "đ";
+    private String resolveGuestToken(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if ("guest_token".equals(c.getName()) && c.getValue() != null && !c.getValue().isBlank()) {
+                    return c.getValue();
+                }
+            }
+        }
+        String newToken = UUID.randomUUID().toString();
+        Cookie cookie = new Cookie("guest_token", newToken);
+        cookie.setPath("/");
+        cookie.setMaxAge(30 * 24 * 3600);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+        return newToken;
+    }
+
+    private Long resolveUserId(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Object userObj = session.getAttribute(CustomerAuthInterceptor.CUSTOMER_SESSION_KEY);
+            if (userObj instanceof CustomerSessionDto dto) {
+                return dto.getId();
+            }
+            if (userObj instanceof User u) {
+                return u.getId();
+            }
+            Object userId = session.getAttribute("userId");
+            if (userId instanceof Long l) {
+                return l;
+            }
+        }
+        return null;
     }
 }
-

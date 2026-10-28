@@ -1,10 +1,11 @@
 package com.example.dhcnttweb2026.model;
 
 /**
- * DTO đại diện cho một sản phẩm trong giỏ/túi hàng hiển thị tại trang thanh toán (Checkout).
+ * DTO đại diện cho một sản phẩm trong giỏ/túi hàng hiển thị tại trang thanh toán (Checkout)
+ * và trang xác nhận đơn hàng thành công (Checkout Success).
  */
 public record CheckoutItemDto(
-        String id,
+        Long id,
         String sku,
         String productName,
         String colorName,
@@ -18,4 +19,3 @@ public record CheckoutItemDto(
         String formattedLineTotal,
         String productDetailUrl
 ) {}
-

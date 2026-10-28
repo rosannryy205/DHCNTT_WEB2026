@@ -42,7 +42,7 @@
 
     <!-- Success Container -->
     <div class="container-xl py-5">
-      <div class="success-card">
+      <div class="success-card" style="max-width: 820px;">
 
         <!-- Icon thành công -->
         <div class="success-icon-wrap">
@@ -50,8 +50,8 @@
         </div>
 
         <h1 class="apple-hero-display" style="font-size: 34px; margin-bottom: 12px;">Cảm ơn bạn đã đặt hàng!</h1>
-        <p class="text-muted" style="font-size: 16px; max-width: 540px; margin: 0 auto;">
-          Đơn hàng của bạn đã được hệ thống ghi nhận thành công và đang được chuẩn bị để đóng gói an toàn theo quy chuẩn Apple.
+        <p class="text-muted" style="font-size: 16px; max-width: 580px; margin: 0 auto;">
+          Đơn hàng của bạn đã được ghi nhận thành công và đang được chuẩn bị để đóng gói nguyên seal theo đúng tiêu chuẩn Apple.
         </p>
 
         <!-- Mã đơn hàng -->
@@ -59,6 +59,41 @@
           <span class="success-order-code-badge">
             Mã đơn hàng: <strong class="text-primary" th:text="${orderCode}">ORD-20261027-9045</strong>
           </span>
+        </div>
+
+        <!-- Chi tiết sản phẩm thực tế trong đơn hàng (ĐÚNG SẢN PHẨM) -->
+        <div class="success-order-items-wrapper text-start mt-4 mb-4">
+          <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+            <h3 class="fs-6 fw-semibold text-dark text-uppercase tracking-wider mb-0">
+              <i class="bi bi-bag-check me-2 text-primary"></i>Sản phẩm trong đơn hàng (<span th:text="${orderItems != null ? orderItems.size() : 0}">0</span>)
+            </h3>
+            <span class="badge bg-light text-secondary border fw-normal" th:text="'Ngày đặt: ' + ${orderDate}">Ngày đặt: 28/10/2026</span>
+          </div>
+
+          <div class="success-items-list">
+            <div th:each="item : ${orderItems}" class="success-item-row d-flex align-items-center justify-content-between py-3 border-bottom">
+              <div class="d-flex align-items-center gap-3">
+                <div class="checkout-item-img-wrap" style="width: 64px; height: 64px;">
+                  <img th:src="${item.imageUrl()}" th:alt="${item.productName()}" class="checkout-item-img" style="max-height: 54px;">
+                  <span class="checkout-item-qty-badge" th:text="${item.quantity()}">1</span>
+                </div>
+                <div>
+                  <a th:href="@{${item.productDetailUrl()}}" class="text-dark fw-semibold text-decoration-none fs-6 d-block" th:text="${item.productName()}">
+                    iPhone 16 Pro 256GB
+                  </a>
+                  <span class="text-muted small">
+                    <span th:if="${item.colorName() != null}" th:text="${item.colorName()}">Titan Sa Mạc</span>
+                    <span th:if="${item.storageCapacity() != null and item.storageCapacity() != 'Tiêu chuẩn'}" th:text="' • ' + ${item.storageCapacity()}"> • 256GB</span>
+                    <span class="d-none d-sm-inline" th:text="' • Mã SKU: ' + ${item.sku()}"> • Mã SKU: IP16P-256</span>
+                  </span>
+                </div>
+              </div>
+              <div class="text-end ps-3">
+                <div class="fw-semibold text-dark fs-6" th:text="${item.formattedLineTotal()}">31.990.000đ</div>
+                <div class="text-muted small" th:text="${item.quantity()} + ' x ' + ${item.formattedUnitPrice()}">1 x 31.990.000đ</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Chi tiết tóm tắt đơn hàng đã đặt -->
@@ -79,13 +114,25 @@
             <span class="success-detail-label">Địa chỉ nhận hàng</span>
             <span class="success-detail-val" th:text="${shippingAddress}">Số 15 Lê Duẩn, Phường Tràng Tiền, Quận Hoàn Kiếm, Hà Nội</span>
           </div>
+          <div class="success-detail-row" th:if="${note != null and !note.isBlank()}">
+            <span class="success-detail-label">Ghi chú đơn hàng</span>
+            <span class="success-detail-val text-muted fst-italic" th:text="${note}">Giao giờ hành chính</span>
+          </div>
           <div class="success-detail-row">
             <span class="success-detail-label">Hình thức thanh toán</span>
             <span class="success-detail-val" th:text="${paymentMethodName}">Thanh toán khi nhận hàng (COD)</span>
           </div>
           <div class="success-detail-row">
-            <span class="success-detail-label">Tổng tiền thanh toán</span>
-            <span class="success-detail-val fs-6 text-dark" th:text="${formattedTotal}">33.419.000đ</span>
+            <span class="success-detail-label">Trạng thái thanh toán</span>
+            <span class="success-detail-val text-primary fw-medium" th:text="${paymentStatus}">PENDING</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label">Phí vận chuyển</span>
+            <span class="success-detail-val text-success">Miễn phí</span>
+          </div>
+          <div class="success-detail-row">
+            <span class="success-detail-label fw-semibold text-dark fs-6">Tổng tiền thanh toán</span>
+            <span class="success-detail-val fs-5 text-dark fw-bold" th:text="${formattedTotal}">33.419.000đ</span>
           </div>
         </div>
 
@@ -95,12 +142,12 @@
             <i class="bi bi-arrow-left me-1"></i> Tiếp tục mua sắm
           </a>
           <a th:href="@{/}" class="btn-apple-secondary px-4 py-2 text-decoration-none">
-            <i class="bi bi-house me-1"></i> Trang chủ
+            <i class="bi bi-house me-1"></i> Về trang chủ
           </a>
         </div>
 
         <!-- Hỗ trợ sau bán hàng -->
-        <div class="mt-4 pt-3 text-muted small">
+        <div class="mt-4 pt-3 text-muted small border-top">
           <p class="mb-1">Cần hỗ trợ thêm về đơn hàng? Gọi ngay tổng đài miễn cước: <strong class="text-dark">1800 1122</strong> (08:00 - 21:00 hàng ngày).</p>
           <p class="mb-0">Hóa đơn điện tử VAT và thông tin bảo hành điện tử chính hãng Apple sẽ được gửi tới email của quý khách.</p>
         </div>
@@ -111,4 +158,3 @@
   </div>
 </body>
 </html>
-

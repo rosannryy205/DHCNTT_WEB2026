@@ -334,16 +334,18 @@ function initFormValidation() {
       clearError(streetInput);
     }
 
-    // Ensure full shipping address is assembled
+    // Luôn ghép đầy đủ địa chỉ hành chính trước khi submit để lưu chính xác vào orders.shipping_address
     const fullAddressInput = document.getElementById("shippingAddress");
-    if (fullAddressInput && !fullAddressInput.value.trim()) {
-      const parts = [
-        streetInput.value.trim(),
-        document.getElementById("wardSelect").value,
-        document.getElementById("districtSelect").value,
-        document.getElementById("provinceSelect").value
-      ].filter(Boolean);
-      fullAddressInput.value = parts.join(", ");
+    if (fullAddressInput) {
+      const wardVal = document.getElementById("wardSelect") ? document.getElementById("wardSelect").value : "";
+      const distVal = document.getElementById("districtSelect") ? document.getElementById("districtSelect").value : "";
+      const provVal = document.getElementById("provinceSelect") ? document.getElementById("provinceSelect").value : "";
+      const streetVal = streetInput.value.trim();
+
+      const parts = [streetVal, wardVal, distVal, provVal].filter(Boolean);
+      if (parts.length > 0) {
+        fullAddressInput.value = parts.join(", ");
+      }
     }
 
     if (!isValid) {

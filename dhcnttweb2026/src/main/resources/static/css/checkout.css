@@ -944,6 +944,21 @@
   flex-wrap: wrap;
 }
 
+.success-order-items-wrapper {
+  background-color: var(--apple-canvas);
+  border: 1px solid var(--apple-hairline);
+  border-radius: var(--apple-radius-md);
+  padding: 20px 24px;
+}
+
+.success-item-row {
+  transition: background-color 0.15s ease;
+}
+
+.success-item-row:last-child {
+  border-bottom: none !important;
+}
+
 /* ==========================================================================
    9. RESPONSIVE BREAKPOINTS (Per DESIGN.md: <= 834px tablet/mobile)
    ========================================================================== */

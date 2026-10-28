@@ -23,6 +23,16 @@
     <!-- Main Container -->
     <div class="container-xl py-4">
 
+      <!-- Thông báo flash messages -->
+      <div th:if="${warningMessage != null and !#strings.isEmpty(warningMessage)}" class="alert alert-warning rounded-4 mb-4 d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-circle-fill fs-5 text-warning"></i>
+        <span th:text="${warningMessage}"></span>
+      </div>
+      <div th:if="${errorMessage != null and !#strings.isEmpty(errorMessage)}" class="alert alert-danger rounded-4 mb-4 d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-triangle-fill fs-5 text-danger"></i>
+        <span th:text="${errorMessage}"></span>
+      </div>
+
       <!-- 2. Trạng thái có sản phẩm (Active View) -->
       <div id="bagActiveView" th:classappend="${isBagEmpty} ? 'd-none' : ''">
 
