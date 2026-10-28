@@ -2,6 +2,7 @@ package com.example.dhcnttweb2026.service;
 
 import com.example.dhcnttweb2026.entity.Order;
 import com.example.dhcnttweb2026.repository.OrderRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class OrderService {
         return orderRepository.findByOrderCode(orderCode);
     }
 
-    public Optional<Order> findById(Long id) {
+    public Optional<Order> findById(@NonNull Long id) {
         return orderRepository.findById(id);
     }
 }
