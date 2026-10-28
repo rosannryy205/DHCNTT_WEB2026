@@ -18,4 +18,10 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
            "JOIN FETCH pv.product p " +
            "WHERE oi.order.id = :orderId")
     List<OrderItem> findByOrderIdWithDetails(@Param("orderId") Long orderId);
+
+    @Query("SELECT CASE WHEN COUNT(oi) > 0 THEN true ELSE false END FROM OrderItem oi WHERE oi.productVariant.product.id = :productId")
+    boolean existsByProductId(@Param("productId") Long productId);
+
+    @Query("SELECT CASE WHEN COUNT(oi) > 0 THEN true ELSE false END FROM OrderItem oi WHERE oi.productVariant.id = :variantId")
+    boolean existsByProductVariantId(@Param("variantId") Long variantId);
 }

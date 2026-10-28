@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{fragments/header :: head('Thêm danh mục mới')}"></head>
+<body>
+<div class="admin-shell">
+    <aside th:replace="~{fragments/sidebar :: sidebar(${activeMenu})}"></aside>
+    <div class="admin-main">
+        <header th:replace="~{fragments/header :: topbar(${pageTitle}, ${subtitle})}"></header>
+        <section class="tile-light">
+            <div class="container-admin">
+                <div style="margin-bottom:20px;">
+                    <a th:href="@{/admin/categories}" class="text-link" style="display:inline-flex;align-items:center;gap:6px;font-weight:500;">
+                        <span>‹ Quay lại danh sách danh mục</span>
+                    </a>
+                </div>
+
+                <!-- Thông báo lỗi nếu có -->
+                <div th:if="${errorMessage}" style="background:#fee2e2;padding:12px 20px;border-radius:var(--rounded-pill);margin-bottom:20px;border:1px solid #f87171;">
+                    <span class="t-caption-strong" style="color:#b91c1c;" th:text="${errorMessage}"></span>
+                </div>
+
+                <form th:action="@{/admin/categories/add}" th:object="${category}" method="post">
+                    <div class="form-grid">
+                        <div class="store-utility-card">
+                            <h3 class="t-body-strong" style="margin-bottom:16px;border-bottom:1px solid var(--color-hairline);padding-bottom:8px;">
+                                Thông tin danh mục (Bảng categories trong Database)
+                            </h3>
+
+                            <div class="form-group">
+                                <label class="form-label">Tên danh mục *</label>
+                                <input type="text" id="categoryName" th:field="*{name}" class="form-control" placeholder="VD: iPhone, MacBook Pro, iPad Air..." required/>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <label class="form-label">Đường dẫn Slug (URL)</label>
+                                    <input type="text" id="categorySlug" th:field="*{slug}" class="form-control" placeholder="Tự động sinh nếu để trống (VD: iphone, macbook-pro)"/>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Danh mục cha (parent_id)</label>
+                                    <select th:field="*{parentId}" class="form-control">
+                                        <option value="">— Là danh mục gốc (None) —</option>
+                                        <option th:each="rc : ${rootCategories}" th:value="${rc.id}" th:text="${rc.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Đường dẫn hình ảnh đại diện (image)</label>
+                                <input type="text" th:field="*{image}" class="form-control" placeholder="VD: https://store.storeimages.cdn-apple.com/.../iphone-16.png"/>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Trạng thái hiển thị (is_active) *</label>
+                                <select th:field="*{isActive}" class="form-control">
+                                    <option th:value="true">Hoạt động (Hiển thị cho khách hàng)</option>
+                                    <option th:value="false">Tạm ẩn (Vô hiệu hóa)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="store-utility-card" style="display:flex;flex-direction:column;justify-content:space-between;">
+                            <div>
+                                <h3 class="t-body-strong" style="margin-bottom:16px;border-bottom:1px solid var(--color-hairline);padding-bottom:8px;">
+                                    Nguyên tắc toàn vẹn dữ liệu
+                                </h3>
+                                <ul style="color:var(--color-ink-muted-48);font-size:14px;line-height:1.7;padding-left:18px;">
+                                    <li><strong>Khóa chính:</strong> Cột <code>id</code> tự động tăng theo cơ chế <code>AUTO_INCREMENT</code> của CSDL.</li>
+                                    <li><strong>Tên và Slug:</strong> Phải là duy nhất để tránh trùng lặp URL điều hướng.</li>
+                                    <li><strong>Ràng buộc quan hệ:</strong> Danh mục cha phải tồn tại trong CSDL hoặc để trống nếu là danh mục cấp 1.</li>
+                                </ul>
+                            </div>
+
+                            <div style="margin-top:24px;display:flex;gap:12px;justify-content:flex-end;">
+                                <a th:href="@{/admin/categories}" class="btn-secondary-pill" style="text-decoration:none;">Hủy bỏ</a>
+                                <button type="submit" class="btn-primary">Lưu danh mục</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>
+

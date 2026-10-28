@@ -8,9 +8,15 @@
         <header th:replace="~{fragments/header :: topbar(${pageTitle}, ${subtitle})}"></header>
         <section class="tile-light" style="padding-bottom:36px;">
             <div class="container-admin">
+                <!-- Thông báo thành công -->
                 <div th:if="${successMessage}" style="background:var(--color-canvas-parchment);padding:12px 20px;border-radius:var(--rounded-pill);margin-bottom:20px;border:1px solid var(--color-hairline);">
                     <span class="t-caption-strong" style="color:var(--color-primary);" th:text="${successMessage}"></span>
                 </div>
+                <!-- Thông báo lỗi -->
+                <div th:if="${errorMessage}" style="background:#fee2e2;padding:12px 20px;border-radius:var(--rounded-pill);margin-bottom:20px;border:1px solid #f87171;">
+                    <span class="t-caption-strong" style="color:#b91c1c;" th:text="${errorMessage}"></span>
+                </div>
+
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
                     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
                         <form th:action="@{/admin/products}" method="get" style="display:flex;gap:12px;">
@@ -23,15 +29,17 @@
                         </a>
                     </div>
                     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                        <a th:href="@{/admin/products(category='ALL', keyword=${keyword})}" class="configurator-option-chip" th:classappend="${selectedCategory == 'ALL'} ? 'selected'">Tất cả</a>
-                        <a th:href="@{/admin/products(category='iPhone', keyword=${keyword})}" class="configurator-option-chip" th:classappend="${selectedCategory == 'iPhone'} ? 'selected'">iPhone</a>
-                        <a th:href="@{/admin/products(category='Mac', keyword=${keyword})}" class="configurator-option-chip" th:classappend="${selectedCategory == 'Mac'} ? 'selected'">Mac</a>
-                        <a th:href="@{/admin/products(category='iPad', keyword=${keyword})}" class="configurator-option-chip" th:classappend="${selectedCategory == 'iPad'} ? 'selected'">iPad</a>
-                        <a th:href="@{/admin/products(category='Phụ kiện', keyword=${keyword})}" class="configurator-option-chip" th:classappend="${selectedCategory == 'Phụ kiện'} ? 'selected'">Phụ kiện</a>
+                        <a th:href="@{/admin/products(category='ALL', keyword=${keyword})}" class="configurator-option-chip" th:classappend="${selectedCategory == 'ALL' or selectedCategory == ''} ? 'selected'">Tất cả</a>
+                        <a th:each="cat : ${categoryOptions}" 
+                           th:href="@{/admin/products(category=${cat.name}, keyword=${keyword})}" 
+                           class="configurator-option-chip" 
+                           th:classappend="${selectedCategory == cat.name} ? 'selected'"
+                           th:text="${cat.name}">iPhone</a>
                     </div>
                 </div>
             </div>
         </section>
+
         <section class="tile-parchment" style="padding-top:36px;">
             <div class="container-admin">
                 <div class="product-gallery-grid">
@@ -55,7 +63,8 @@
                         </div>
                     </article>
                 </div>
-                <h3 class="t-tagline" style="margin:48px 0 16px;">Bảng thông số tồn kho & quy cách</h3>
+
+                <h3 class="t-tagline" style="margin:48px 0 16px;">Bảng thông số tồn kho & quy cách CSDL</h3>
                 <div class="spec-table-container">
                     <table class="spec-table">
                         <thead>
@@ -67,10 +76,16 @@
                                 <th>Màu & Bộ nhớ</th>
                                 <th>Giá bán</th>
                                 <th>Tồn kho</th>
+                                <th>Trạng thái</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <tr th:if="${products == null or products.isEmpty()}">
+                                <td colspan="9" style="text-align:center;padding:32px;color:var(--color-ink-muted-48);">
+                                    Không tìm thấy sản phẩm nào trong CSDL.
+                                </td>
+                            </tr>
                             <tr th:each="p : ${products}">
                                 <td class="numeric" th:text="${p.id}"></td>
                                 <td>
@@ -85,10 +100,14 @@
                                     <div th:if="${p.originalPrice > p.price}" class="t-fine-print" style="text-decoration:line-through;color:var(--color-ink-muted-48);" th:text="${#numbers.formatDecimal(p.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></div>
                                 </td>
                                 <td class="numeric" th:text="${p.stock}"></td>
+                                <td>
+                                    <span th:if="${p.status == 'Đang bán'}" style="color:#16a34a;font-weight:600;font-size:13px;">● Đang bán</span>
+                                    <span th:unless="${p.status == 'Đang bán'}" style="color:#dc2626;font-weight:600;font-size:13px;" th:text="${p.status}">Ngừng kinh doanh</span>
+                                </td>
                                 <td style="display:flex;gap:14px;align-items:center;">
                                     <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="text-link" style="font-weight:600;">Chỉnh sửa</a>
                                     <form th:action="@{/admin/products/delete/{id}(id=${p.id})}" method="post" style="display:inline;">
-                                        <button type="submit" class="text-link" style="color:var(--color-ink-muted-48);" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này khỏi kho?');">Xóa</button>
+                                        <button type="submit" class="text-link" style="color:#dc2626;" onclick="return confirm('Bạn có chắc muốn xóa hoặc ngừng kinh doanh sản phẩm này?');">Xóa</button>
                                     </form>
                                 </td>
                             </tr>

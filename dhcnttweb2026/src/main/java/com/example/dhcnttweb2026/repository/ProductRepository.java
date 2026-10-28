@@ -14,6 +14,11 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findBySlug(String slug);
     Optional<Product> findBySlugAndIsActiveTrue(String slug);
+    boolean existsBySlug(String slug);
+    boolean existsBySlugAndIdNot(String slug, Long id);
+
+    long countByCategoryId(Long categoryId);
+    List<Product> findByCategoryId(Long categoryId);
     List<Product> findByIsActiveTrue();
     List<Product> findByCategoryIdAndIsActiveTrue(Long categoryId);
     List<Product> findByBrandIdAndIsActiveTrue(Long brandId);
@@ -23,4 +28,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT DISTINCT p FROM Product p LEFT JOIN FETCH p.variants LEFT JOIN FETCH p.category WHERE p.isActive = true")
     List<Product> findAllActiveWithDetails();
+
+    @Query("SELECT DISTINCT p FROM Product p LEFT JOIN FETCH p.category LEFT JOIN FETCH p.brand LEFT JOIN FETCH p.variants ORDER BY p.id DESC")
+    List<Product> findAllWithCategoryBrandAndVariants();
+
+    @Query("SELECT DISTINCT p FROM Product p LEFT JOIN FETCH p.category LEFT JOIN FETCH p.brand LEFT JOIN FETCH p.variants WHERE p.id = :id")
+    Optional<Product> findByIdWithDetails(@Param("id") Long id);
 }

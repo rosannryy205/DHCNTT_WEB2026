@@ -2,10 +2,16 @@ package com.example.dhcnttweb2026.model;
 
 /**
  * DTO đại diện cho biểu mẫu quản trị và hiển thị sản phẩm trong Admin Console.
- * Tổng hợp thông tin cơ bản của Product và cấu hình mặc định của ProductVariant.
+ * Ánh xạ đầy đủ các trường của bảng `products` và `product_variants` trong CSDL:
+ * - products: id, category_id, brand_id, name, slug, description, is_active
+ * - product_variants: id, product_id, sku, color, storage, ram, original_price, price, stock, image
  */
 public class AdminProductDto {
     private Long id;
+    private Long categoryId;
+    private Long brandId;
+    private Long variantId;
+
     private String name;
     private String slug;
     private String sku;
@@ -64,6 +70,16 @@ public class AdminProductDto {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+
+    public Long getBrandId() { return brandId; }
+    public void setBrandId(Long brandId) { this.brandId = brandId; }
+
+    public Long getVariantId() { return variantId; }
+    public void setVariantId(Long variantId) { this.variantId = variantId; }
+
     public String getName() { return name; }
     public void setName(String name) { 
         this.name = name;
@@ -97,4 +113,7 @@ public class AdminProductDto {
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public String getTagline() { return tagline; }
     public void setTagline(String tagline) { this.tagline = tagline; }
+
+    public String getDescription() { return tagline; }
+    public void setDescription(String description) { this.tagline = description; }
 }

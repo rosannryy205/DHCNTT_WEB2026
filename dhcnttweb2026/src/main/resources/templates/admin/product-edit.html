@@ -12,9 +12,14 @@
                     <a th:href="@{/admin/products}" class="text-link" style="display:inline-flex;align-items:center;gap:6px;font-weight:500;">
                         <span>‹ Quay lại danh sách sản phẩm</span>
                     </a>
-                    <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi hệ thống?');">
+                    <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa hoặc ngừng kinh doanh sản phẩm này?');">
                         <button type="submit" class="btn-dark-utility">Xóa sản phẩm này</button>
                     </form>
+                </div>
+
+                <!-- Thông báo lỗi nếu có -->
+                <div th:if="${errorMessage}" style="background:#fee2e2;padding:12px 20px;border-radius:var(--rounded-pill);margin-bottom:20px;border:1px solid #f87171;">
+                    <span class="t-caption-strong" style="color:#b91c1c;" th:text="${errorMessage}"></span>
                 </div>
 
                 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;">
@@ -26,28 +31,32 @@
                 </div>
 
                 <form th:action="@{/admin/products/edit/{id}(id=${product.id})}" th:object="${product}" method="post">
+                    <input type="hidden" th:field="*{id}"/>
+                    <input type="hidden" id="categoryIdInput" th:field="*{categoryId}"/>
+                    <input type="hidden" id="brandIdInput" th:field="*{brandId}"/>
+                    <input type="hidden" th:field="*{variantId}"/>
+
                     <div class="form-grid">
                         <div class="store-utility-card">
                             <h3 class="t-body-strong" style="margin-bottom:16px;border-bottom:1px solid var(--color-hairline);padding-bottom:8px;">
-                                1. Thông tin dòng sản phẩm (Bảng Products)
+                                1. Thông tin dòng sản phẩm (Bảng Products - ID: <span th:text="${product.id}"></span>)
                             </h3>
 
                             <div class="form-group">
                                 <label class="form-label">Tên sản phẩm *</label>
-                                <input type="text" id="productName" th:field="*{name}" class="form-control" required/>
+                                <input type="text" id="productName" name="name" th:field="*{name}" class="form-control" required/>
                             </div>
 
                             <div class="form-row-2">
                                 <div class="form-group">
                                     <label class="form-label">Đường dẫn Slug (URL) *</label>
-                                    <input type="text" th:field="*{slug}" class="form-control"/>
+                                    <input type="text" id="productSlug" name="slug" th:field="*{slug}" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Thương hiệu (Brand) *</label>
-                                    <select th:field="*{brand}" class="form-control">
-                                        <option value="Apple">Apple</option>
-                                        <option value="Beats">Beats</option>
-                                        <option value="Khác">Khác</option>
+                                    <select id="brandSelect" name="brand" th:field="*{brand}" class="form-control">
+                                        <option th:each="b : ${brands}" th:value="${b.name}" th:text="${b.name}" th:data-id="${b.id}">Apple</option>
+                                        <option th:if="${brands == null or brands.isEmpty()}" value="Apple">Apple</option>
                                     </select>
                                 </div>
                             </div>
@@ -55,26 +64,25 @@
                             <div class="form-row-2">
                                 <div class="form-group">
                                     <label class="form-label">Danh mục (Category) *</label>
-                                    <select th:field="*{category}" class="form-control">
-                                        <option value="iPhone">iPhone</option>
-                                        <option value="Mac">Mac</option>
-                                        <option value="iPad">iPad</option>
-                                        <option value="Phụ kiện">Phụ kiện</option>
+                                    <select id="categorySelect" name="category" th:field="*{category}" class="form-control">
+                                        <option th:each="c : ${categories}" th:value="${c.name}" th:text="${c.name}" th:data-id="${c.id}">iPhone</option>
+                                        <option th:if="${categories == null or categories.isEmpty()}" value="iPhone">iPhone</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Trạng thái (is_active) *</label>
-                                    <select th:field="*{status}" class="form-control">
+                                    <select name="status" th:field="*{status}" class="form-control">
                                         <option value="Đang bán">Đang bán (Active)</option>
                                         <option value="Sắp ra mắt">Sắp ra mắt</option>
                                         <option value="Tạm hết hàng">Tạm hết hàng</option>
+                                        <option value="Ngừng kinh doanh">Ngừng kinh doanh</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Mô tả sản phẩm (Description / Tagline)</label>
-                                <textarea th:field="*{tagline}" class="form-control" rows="2"></textarea>
+                                <textarea name="tagline" th:field="*{tagline}" class="form-control" rows="2"></textarea>
                             </div>
 
                             <h3 class="t-body-strong" style="margin:24px 0 16px;border-bottom:1px solid var(--color-hairline);padding-bottom:8px;">
@@ -84,64 +92,63 @@
                             <div class="form-row-2">
                                 <div class="form-group">
                                     <label class="form-label">Mã SKU phiên bản *</label>
-                                    <input type="text" th:field="*{sku}" class="form-control numeric" required/>
+                                    <input type="text" name="sku" th:field="*{sku}" class="form-control numeric" required/>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Màu sắc (Color)</label>
-                                    <input type="text" th:field="*{color}" class="form-control"/>
+                                    <input type="text" name="color" th:field="*{color}" class="form-control"/>
                                 </div>
                             </div>
 
                             <div class="form-row-2">
                                 <div class="form-group">
                                     <label class="form-label">Dung lượng lưu trữ (Storage)</label>
-                                    <input type="text" th:field="*{storage}" class="form-control"/>
+                                    <input type="text" name="storage" th:field="*{storage}" class="form-control"/>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Bộ nhớ RAM (RAM)</label>
-                                    <input type="text" th:field="*{ram}" class="form-control"/>
+                                    <input type="text" name="ram" th:field="*{ram}" class="form-control"/>
                                 </div>
                             </div>
 
                             <div class="form-row-2">
                                 <div class="form-group">
                                     <label class="form-label">Giá gốc niêm yết (VNĐ)</label>
-                                    <input type="number" th:field="*{originalPrice}" class="form-control numeric" min="0" step="10000"/>
+                                    <input type="number" name="originalPrice" th:field="*{originalPrice}" class="form-control numeric" min="0" step="10000"/>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Giá bán thực tế (VNĐ) *</label>
-                                    <input type="number" th:field="*{price}" class="form-control numeric" min="0" step="10000" required/>
+                                    <input type="number" name="price" th:field="*{price}" class="form-control numeric" min="0" step="10000" required/>
                                 </div>
                             </div>
 
                             <div class="form-row-2">
                                 <div class="form-group">
                                     <label class="form-label">Số lượng tồn kho (Stock) *</label>
-                                    <input type="number" th:field="*{stock}" class="form-control numeric" min="0" required/>
+                                    <input type="number" name="stock" th:field="*{stock}" class="form-control numeric" min="0" required/>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">URL Ảnh Render (Image)</label>
-                                    <input type="url" id="productImgInput" th:field="*{imageUrl}" class="form-control"/>
+                                    <input type="url" id="productImgInput" name="imageUrl" th:field="*{imageUrl}" class="form-control"/>
                                 </div>
                             </div>
                         </div>
 
                         <div class="store-utility-card" style="background:var(--color-surface-pearl);text-align:center;align-self:start;">
-                            <span class="t-fine-print" style="color:var(--color-primary);text-transform:uppercase;font-weight:600;">Đang chỉnh sửa</span>
+                            <span class="t-fine-print" style="color:var(--color-primary);text-transform:uppercase;font-weight:600;">Xem trước thẻ trưng bày</span>
                             <div style="margin:20px 0;">
-                                <img id="productPreviewImg" class="product-render-img" th:src="${product.imageUrl}" th:alt="${product.name}"/>
+                                <img id="productPreviewImg" class="product-render-img" th:src="${product.imageUrl != null and !product.imageUrl.isBlank() ? product.imageUrl : 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-16-pro-model-unselect-gallery-2-202409?wid=800&hei=600&fmt=jpeg&qlt=90'}" alt="Preview"/>
                             </div>
-                            <h4 id="previewName" class="t-body-strong" style="margin-top:8px;" th:text="${product.name}"></h4>
-                            <p class="t-caption" style="color:var(--color-ink-muted-48);margin-top:4px;" 
-                               th:text="${(product.color != null ? product.color : '') + ' • ' + (product.storage != null ? product.storage : '')}"></p>
-                            <p class="numeric t-body-strong" style="margin-top:8px;" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></p>
+                            <h4 id="previewName" class="t-body-strong" style="margin-top:8px;" th:text="${product.name}">iPhone 17 Pro Max</h4>
+                            <p id="previewSpecs" class="t-caption" style="color:var(--color-ink-muted-48);margin-top:4px;" th:text="${(product.color != null ? product.color : '') + ' • ' + (product.storage != null ? product.storage : '')}">Titan Tự Nhiên • 256GB</p>
+                            <p class="t-caption" style="color:var(--color-ink-muted-48);margin-top:12px;font-size:12px;">Dữ liệu được cập nhật trực tiếp vào cơ sở dữ liệu MySQL.</p>
                         </div>
                     </div>
 
                     <div class="floating-sticky-bar">
-                        <span class="t-body-strong" th:text="'Đang sửa: ' + ${product.name}"></span>
+                        <span class="t-body-strong" th:text="'Chỉnh sửa: ' + ${product.name}">Chỉnh sửa sản phẩm</span>
                         <div style="display:flex;gap:12px;">
-                            <a th:href="@{/admin/products}" class="btn-secondary-pill">Hủy thay đổi</a>
+                            <a th:href="@{/admin/products}" class="btn-secondary-pill">Hủy bỏ</a>
                             <button type="submit" class="btn-primary">Cập nhật sản phẩm</button>
                         </div>
                     </div>
@@ -151,8 +158,40 @@
     </div>
 </div>
 <script>
+    const nameInput = document.getElementById('productName');
+    const slugInput = document.getElementById('productSlug');
     const imgInput = document.getElementById('productImgInput');
     const previewImg = document.getElementById('productPreviewImg');
+    const previewName = document.getElementById('previewName');
+    const catSelect = document.getElementById('categorySelect');
+    const catIdInput = document.getElementById('categoryIdInput');
+    const brandSelect = document.getElementById('brandSelect');
+    const brandIdInput = document.getElementById('brandIdInput');
+
+    function syncCategoryAndBrandIds() {
+        if (catSelect && catIdInput) {
+            const opt = catSelect.options[catSelect.selectedIndex];
+            if (opt && opt.dataset.id) {
+                catIdInput.value = opt.dataset.id;
+            }
+        }
+        if (brandSelect && brandIdInput) {
+            const opt = brandSelect.options[brandSelect.selectedIndex];
+            if (opt && opt.dataset.id) {
+                brandIdInput.value = opt.dataset.id;
+            }
+        }
+    }
+
+    if (catSelect) catSelect.addEventListener('change', syncCategoryAndBrandIds);
+    if (brandSelect) brandSelect.addEventListener('change', syncCategoryAndBrandIds);
+    syncCategoryAndBrandIds();
+
+    if (nameInput) {
+        nameInput.addEventListener('input', function() {
+            if (previewName) previewName.textContent = this.value || 'Tên sản phẩm';
+        });
+    }
     if (imgInput && previewImg) {
         imgInput.addEventListener('input', function() {
             if (this.value) previewImg.src = this.value;
