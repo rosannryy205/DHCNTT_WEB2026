@@ -8,21 +8,21 @@
   <div layout:fragment="content">
     
     <!-- 1. Hero Product Tile: Light Canvas (#ffffff) -->
-    <section class="apple-tile apple-tile-light text-center">
+    <section class="apple-tile apple-tile-light text-center" th:if="${heroProduct != null}">
       <div class="container-xl">
-        <h1 class="apple-hero-display mb-1">iPhone 16 Pro</h1>
-        <p class="apple-lead text-secondary mb-3">Titanium. Vô cùng mạnh mẽ. Vô cùng nhẹ.</p>
+        <h1 class="apple-hero-display mb-1" th:text="${heroProduct.name}">iPhone 16 Pro</h1>
+        <p class="apple-lead text-secondary mb-3" th:text="${heroProduct.tagline}">Titanium. Vô cùng mạnh mẽ. Vô cùng nhẹ.</p>
         
         <!-- Two Pill Buttons: Primary + Ghost Secondary -->
         <div class="d-flex justify-content-center align-items-center gap-3 mb-5">
-          <a th:href="@{/product/iphone-16-pro}" class="btn-apple-primary">Mua ngay</a>
-          <a th:href="@{/product/iphone-16-pro}" class="btn-apple-secondary">Tìm hiểu thêm</a>
+          <a th:href="@{'/product/' + ${heroProduct.slug}}" class="btn-apple-primary">Mua ngay</a>
+          <a th:href="@{'/product/' + ${heroProduct.slug}}" class="btn-apple-secondary">Tìm hiểu thêm</a>
         </div>
 
         <!-- Product Image resting on surface with Apple system drop-shadow -->
         <div class="d-flex justify-content-center">
-          <img src="https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-16-pro-model-unselect-gallery-2-202409?wid=800&hei=600&fmt=jpeg&qlt=90" 
-               alt="iPhone 16 Pro" 
+          <img th:src="${heroProduct.imageUrl}" 
+               th:alt="${heroProduct.name}" 
                class="img-fluid apple-product-shadow rounded-4" 
                style="max-height: 480px; object-fit: contain;">
         </div>
@@ -30,19 +30,19 @@
     </section>
 
     <!-- 2. Dark Product Tile: Near-Black (#272729) -->
-    <section id="macbook-tile" class="apple-tile apple-tile-dark text-center">
+    <section id="macbook-tile" class="apple-tile apple-tile-dark text-center" th:if="${darkProduct != null}">
       <div class="container-xl">
-        <h2 class="apple-hero-display mb-1 text-white">MacBook Pro</h2>
-        <p class="apple-lead text-muted-dark mb-3">Trang bị chip M4, M4 Pro và M4 Max. Vượt xa mọi giới hạn.</p>
+        <h2 class="apple-hero-display mb-1 text-white" th:text="${darkProduct.name}">MacBook Pro</h2>
+        <p class="apple-lead text-muted-dark mb-3" th:text="${darkProduct.tagline}">Trang bị chip M4, M4 Pro và M4 Max. Vượt xa mọi giới hạn.</p>
         
         <div class="d-flex justify-content-center align-items-center gap-3 mb-5">
-          <a href="#shop-section" class="btn-apple-primary">Mua ngay</a>
-          <a href="#" class="apple-link-on-dark fs-5">Xem thông số kỹ thuật <i class="bi bi-chevron-right fs-6"></i></a>
+          <a th:href="@{'/product/' + ${darkProduct.slug}}" class="btn-apple-primary">Mua ngay</a>
+          <a th:href="@{'/product/' + ${darkProduct.slug}}" class="apple-link-on-dark fs-5">Xem thông số kỹ thuật <i class="bi bi-chevron-right fs-6"></i></a>
         </div>
 
         <div class="d-flex justify-content-center">
-          <img src="https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/mbp14-spaceblack-select-202410?wid=800&hei=500&fmt=jpeg&qlt=90" 
-               alt="MacBook Pro M4" 
+          <img th:src="${darkProduct.imageUrl}" 
+               th:alt="${darkProduct.name}" 
                class="img-fluid rounded-4" 
                style="max-height: 420px; object-fit: contain;">
         </div>
@@ -50,20 +50,20 @@
     </section>
 
     <!-- 3. Parchment Product Tile: Alternating Light Tone (#f5f5f7) -->
-    <section class="apple-tile apple-tile-parchment text-center">
+    <section class="apple-tile apple-tile-parchment text-center" th:if="${parchmentProduct != null}">
       <div class="container-xl">
-        <span class="apple-badge-category">Mới ra mắt</span>
-        <h2 class="apple-display-lg mb-1">Apple Watch Series 10</h2>
-        <p class="apple-lead text-secondary mb-3">Mỏng hơn bao giờ hết. Màn hình lớn nhất từng có.</p>
+        <span class="apple-badge-category" th:text="${parchmentProduct.badge}">Mới ra mắt</span>
+        <h2 class="apple-display-lg mb-1" th:text="${parchmentProduct.name}">Apple Watch Series 10</h2>
+        <p class="apple-lead text-secondary mb-3" th:text="${parchmentProduct.tagline}">Mỏng hơn bao giờ hết. Màn hình lớn nhất từng có.</p>
         
         <div class="d-flex justify-content-center align-items-center gap-3 mb-5">
-          <a href="#shop-section" class="btn-apple-primary">Mua ngay</a>
-          <a href="#" class="apple-link fs-5">Khám phá tính năng <i class="bi bi-chevron-right fs-6"></i></a>
+          <a th:href="@{'/product/' + ${parchmentProduct.slug}}" class="btn-apple-primary">Mua ngay</a>
+          <a th:href="@{'/product/' + ${parchmentProduct.slug}}" class="apple-link fs-5">Khám phá tính năng <i class="bi bi-chevron-right fs-6"></i></a>
         </div>
 
         <div class="d-flex justify-content-center">
-          <img src="https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/s10-case-unselect-gallery-1-202409?wid=800&hei=500&fmt=jpeg&qlt=90" 
-               alt="Apple Watch Series 10" 
+          <img th:src="${parchmentProduct.imageUrl}" 
+               th:alt="${parchmentProduct.name}" 
                class="img-fluid" 
                style="max-height: 380px; object-fit: contain;">
         </div>
@@ -87,84 +87,23 @@
         </div>
 
         <!-- 4-Column Utility Card Grid -->
-        <div class="row g-4">
-          
-          <!-- Card 1 -->
-          <div class="col-12 col-sm-6 col-lg-3">
+        <div class="row g-4" th:if="${featuredProducts != null and !featuredProducts.isEmpty()}">
+          <div class="col-12 col-sm-6 col-lg-3" th:each="prod : ${featuredProducts}">
             <div class="apple-product-card">
               <div class="apple-product-img-wrap">
-                <img src="https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/iphone-16-finish-select-202409-6-1inch-ultramarine?wid=400&hei=400&fmt=jpeg&qlt=90" 
-                     alt="iPhone 16" class="img-fluid">
+                <img th:src="${prod.imageUrl}" th:alt="${prod.name}" class="img-fluid">
               </div>
               <div>
-                <span class="apple-badge-category">iPhone</span>
-                <h5 class="fw-semibold text-dark mb-1" style="font-size: 17px;">iPhone 16 128GB</h5>
-                <p class="text-secondary small mb-3">Camera điều khiển hoàn toàn mới</p>
+                <span class="apple-badge-category" th:text="${prod.categoryName}">iPhone</span>
+                <h5 class="fw-semibold text-dark mb-1" style="font-size: 17px;" th:text="${prod.name}">iPhone 16 128GB</h5>
+                <p class="text-secondary small mb-3" th:text="${prod.description}">Camera điều khiển hoàn toàn mới</p>
               </div>
               <div class="pt-2 border-top">
-                <div class="fw-semibold text-dark mb-2" style="font-size: 17px;">Từ 22.999.000đ</div>
-                <a href="#" class="btn-apple-primary btn-apple-sm-pill w-100">Mua ngay</a>
+                <div class="fw-semibold text-dark mb-2" style="font-size: 17px;" th:text="${prod.startingPriceFormatted}">Từ 22.999.000đ</div>
+                <a th:href="@{${prod.detailUrl}}" class="btn-apple-primary btn-apple-sm-pill w-100">Mua ngay</a>
               </div>
             </div>
           </div>
-
-          <!-- Card 2 -->
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="apple-product-card">
-              <div class="apple-product-img-wrap">
-                <img src="https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/airpods-4-anc-select-202409?wid=400&hei=400&fmt=jpeg&qlt=90" 
-                     alt="AirPods 4" class="img-fluid">
-              </div>
-              <div>
-                <span class="apple-badge-category">Âm thanh</span>
-                <h5 class="fw-semibold text-dark mb-1" style="font-size: 17px;">AirPods 4 Chống Ồn</h5>
-                <p class="text-secondary small mb-3">Âm thanh Không Gian cá nhân hóa</p>
-              </div>
-              <div class="pt-2 border-top">
-                <div class="fw-semibold text-dark mb-2" style="font-size: 17px;">4.799.000đ</div>
-                <a href="#" class="btn-apple-primary btn-apple-sm-pill w-100">Mua ngay</a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="apple-product-card">
-              <div class="apple-product-img-wrap">
-                <img src="https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/ipad-air-storage-select-202405-11inch-spacegray?wid=400&hei=400&fmt=jpeg&qlt=90" 
-                     alt="iPad Air M2" class="img-fluid">
-              </div>
-              <div>
-                <span class="apple-badge-category">iPad</span>
-                <h5 class="fw-semibold text-dark mb-1" style="font-size: 17px;">iPad Air 11" M2</h5>
-                <p class="text-secondary small mb-3">Sức mạnh đột phá chip M2</p>
-              </div>
-              <div class="pt-2 border-top">
-                <div class="fw-semibold text-dark mb-2" style="font-size: 17px;">Từ 16.999.000đ</div>
-                <a href="#" class="btn-apple-primary btn-apple-sm-pill w-100">Mua ngay</a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="col-12 col-sm-6 col-lg-3">
-            <div class="apple-product-card">
-              <div class="apple-product-img-wrap">
-                <img src="https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/apple-watch-ultra2-select-202409-49mm-titanium-black?wid=400&hei=400&fmt=jpeg&qlt=90" 
-                     alt="Apple Watch Ultra 2" class="img-fluid">
-              </div>
-              <div>
-                <span class="apple-badge-category">Apple Watch</span>
-                <h5 class="fw-semibold text-dark mb-1" style="font-size: 17px;">Watch Ultra 2 Black</h5>
-                <p class="text-secondary small mb-3">Titanium đen siêu bền bỉ</p>
-              </div>
-              <div class="pt-2 border-top">
-                <div class="fw-semibold text-dark mb-2" style="font-size: 17px;">21.999.000đ</div>
-                <a href="#" class="btn-apple-primary btn-apple-sm-pill w-100">Mua ngay</a>
-              </div>
-            </div>
-          </div>
-
         </div>
 
       </div>

@@ -19,4 +19,18 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+
+  // Load and update Bag Count on Global Nav
+  const navBagBadge = document.getElementById('globalNavBagBadge') || document.querySelector('.apple-global-nav .bi-bag + .badge');
+  if (navBagBadge) {
+    fetch('/api/bag/count')
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data.count === 'number') {
+          navBagBadge.textContent = data.count;
+          navBagBadge.style.display = data.count > 0 ? 'inline-block' : 'none';
+        }
+      })
+      .catch(err => console.debug('Bag count fetch skipped', err));
+  }
 });
