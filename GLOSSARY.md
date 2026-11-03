@@ -1,4 +1,4 @@
-﻿# IUH Store
+# IUH Store
 
 Hệ thống thương mại điện tử chuyên kinh doanh thiết bị công nghệ cao cấp, bao gồm hai phân hệ Storefront (Khách hàng) và Admin Console (Quản trị).
 
@@ -31,6 +31,10 @@ _Avoid_: Món hàng, dòng hàng
 **Payment Status (Trạng thái thanh toán)**:
 Tình trạng xử lý dòng tiền của một đơn hàng, gồm 4 trạng thái chuẩn: PENDING (chờ thanh toán), PAID (đã thanh toán thành công), FAILED (thanh toán thất bại), và REFUNDED (đã hoàn tiền).
 _Avoid_: Tình trạng trả tiền, trạng thái ví
+
+**Order Status Approval (Duyệt trạng thái đơn hàng)**:
+Thao tác của Admin hoặc Staff xác nhận đơn hàng chuyển sang bước kế tiếp trong tiến trình Chờ xác nhận → Đang xử lý → Đang giao → Đã giao, không nhảy bước hoặc chuyển ngược.
+_Avoid_: Duyệt thanh toán, sửa trạng thái tùy ý
 
 **Order Status (Trạng thái đơn hàng)**:
 Vòng đời xử lý đơn hàng từ lúc đặt đến lúc hoàn tất, gồm: PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED.
@@ -96,3 +100,11 @@ _Avoid_: Client, Shop front, Web store
 **Mandatory Authentication for Bag**:
 Quy tắc yêu cầu người dùng phải đăng nhập tài khoản Customer trước khi có thể thêm sản phẩm vào Túi hàng hoặc truy cập xem Túi hàng (/bag).
 _Avoid_: Khách vãng lai mua hàng, Guest checkout
+
+**Customer Profile (Hồ sơ khách hàng)**:
+Không gian quản lý thông tin cá nhân và tài khoản của Customer trên Storefront, bao gồm họ tên, email, số điện thoại và địa chỉ giao hàng mặc định.
+_Avoid_: Trang cá nhân, Quản lý tài khoản, User profile, Trang người dùng
+
+**Order History (Lịch sử đơn hàng)**:
+Danh sách và tiến trình xử lý toàn bộ các đơn hàng đã đặt của Customer trên Storefront, hỗ trợ tra cứu chi tiết và thực hiện thao tác tự hủy đơn khi đủ điều kiện.
+_Avoid_: Lịch sử mua hàng, Bảng đơn hàng, Danh sách bill, My purchases

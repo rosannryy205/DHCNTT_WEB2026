@@ -1,4 +1,4 @@
-package com.example.dhcnttweb2026.model;
+package com.example.dhcnttweb2026.dto;
 
 /**
  * DTO đại diện cho khối Tóm tắt đơn hàng (Order Summary) trên trang Checkout.
@@ -14,4 +14,5 @@ public record CheckoutSummaryDto(
         String formattedTotal,
         int totalItemsCount
 ) {}
+
 

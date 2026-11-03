@@ -1,4 +1,4 @@
-package com.example.dhcnttweb2026.model;
+package com.example.dhcnttweb2026.dto;
 
 /**
  * DTO đại diện cho biểu mẫu quản trị và hiển thị sản phẩm trong Admin Console.
@@ -117,3 +117,4 @@ public class AdminProductDto {
     public String getDescription() { return tagline; }
     public void setDescription(String description) { this.tagline = description; }
 }
+

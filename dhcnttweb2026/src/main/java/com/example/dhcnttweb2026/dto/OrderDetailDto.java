@@ -1,4 +1,4 @@
-package com.example.dhcnttweb2026.model;
+package com.example.dhcnttweb2026.dto;
 
 import java.util.List;
 
@@ -25,4 +25,5 @@ public record OrderDetailDto(
         String formattedTotal,
         List<CheckoutItemDto> items
 ) {}
+
 

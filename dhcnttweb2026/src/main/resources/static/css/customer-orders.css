@@ -1,0 +1,458 @@
+/* ==========================================================================
+   Apple Design System - Customer Profile & Order History Styles
+   ========================================================================== */
+
+/* Sub-nav / Breadcrumb bar */
+.apple-account-header {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 18px 0;
+  margin-bottom: 32px;
+}
+
+.apple-account-title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #1d1d1f;
+  margin: 0;
+}
+
+.apple-account-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.apple-account-nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: #515154;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.apple-account-nav-link:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: #1d1d1f;
+}
+
+.apple-account-nav-link.active {
+  background: #1d1d1f;
+  color: #ffffff;
+}
+
+/* Apple Card Container */
+.apple-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  padding: 28px;
+  margin-bottom: 24px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.apple-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.apple-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Avatar Circle */
+.apple-avatar-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0071e3 0%, #42a5f5 100%);
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.25);
+}
+
+/* Form Styles */
+.apple-form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #515154;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.apple-form-control {
+  border-radius: 12px;
+  border: 1px solid #d2d2d7;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #1d1d1f;
+  background-color: #fafafc;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.apple-form-control:focus {
+  border-color: #0071e3;
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+  background-color: #ffffff;
+  outline: none;
+}
+
+.apple-form-control:disabled,
+.apple-form-control[readonly] {
+  background-color: #f5f5f7;
+  color: #86868b;
+  cursor: not-allowed;
+}
+
+/* Order Filters */
+.apple-filter-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  margin-bottom: 24px;
+}
+
+.apple-filter-tab {
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: #6e6e73;
+  background: #f5f5f7;
+  border: 1px solid transparent;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.apple-filter-tab:hover {
+  background: #e8e8ed;
+  color: #1d1d1f;
+}
+
+.apple-filter-tab.active {
+  background: #0071e3;
+  color: #ffffff;
+}
+
+/* Order Status Badges */
+.apple-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.apple-status-badge.status-pending {
+  background-color: #fff8e6;
+  color: #b78103;
+  border: 1px solid #ffe8a3;
+}
+
+.apple-status-badge.status-processing {
+  background-color: #e8f4fd;
+  color: #0071e3;
+  border: 1px solid #b3d9fc;
+}
+
+.apple-status-badge.status-shipped {
+  background-color: #ede7f6;
+  color: #5e35b1;
+  border: 1px solid #d1c4e9;
+}
+
+.apple-status-badge.status-delivered {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.apple-status-badge.status-cancelled {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
+
+.apple-payment-badge {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 12px;
+  background-color: #f5f5f7;
+  color: #515154;
+  border: 1px solid #e5e5ea;
+}
+
+/* Order Items Thumbnail in Card */
+.order-item-thumb {
+  width: 56px;
+  height: 56px;
+  background: #fbfbfd;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.order-item-thumb img {
+  max-width: 44px;
+  max-height: 44px;
+  object-fit: contain;
+}
+
+.order-item-qty {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #1d1d1f;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Apple Order Progress Stepper */
+.apple-stepper-wrapper {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 32px 24px;
+  margin-bottom: 24px;
+}
+
+.apple-stepper {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.apple-stepper::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  right: 30px;
+  height: 3px;
+  background: #e5e5ea;
+  z-index: 1;
+}
+
+.apple-step-item {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  flex: 1;
+}
+
+.apple-step-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #f5f5f7;
+  border: 2px solid #d2d2d7;
+  color: #86868b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 auto 10px;
+  transition: all 0.3s ease;
+}
+
+.apple-step-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #86868b;
+  margin-bottom: 4px;
+}
+
+.apple-step-desc {
+  font-size: 11.5px;
+  color: #a1a1a6;
+}
+
+/* Completed & Active step state */
+.apple-step-item.completed .apple-step-circle {
+  background: #0071e3;
+  border-color: #0071e3;
+  color: #ffffff;
+}
+
+.apple-step-item.completed .apple-step-label {
+  color: #1d1d1f;
+}
+
+.apple-step-item.active .apple-step-circle {
+  background: #ffffff;
+  border-color: #0071e3;
+  color: #0071e3;
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.2);
+}
+
+.apple-step-item.active .apple-step-label {
+  color: #0071e3;
+}
+
+/* Cancelled Banner */
+.apple-cancelled-banner {
+  background: #fff5f5;
+  border: 1px solid #ffd8d8;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.apple-cancelled-banner i {
+  font-size: 24px;
+  color: #e53935;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Buttons */
+.btn-apple-primary {
+  background: #0071e3;
+  color: #ffffff;
+  border: none;
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-apple-primary:hover {
+  background: #0077ed;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-apple-secondary {
+  background: #f5f5f7;
+  color: #1d1d1f;
+  border: 1px solid #d2d2d7;
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-apple-secondary:hover {
+  background: #e8e8ed;
+  color: #1d1d1f;
+}
+
+.btn-apple-danger {
+  background: #fff0f0;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
+  border-radius: 22px;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 7px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-apple-danger:hover {
+  background: #d32f2f;
+  color: #ffffff;
+  border-color: #d32f2f;
+}
+
+/* Empty State */
+.apple-empty-state {
+  text-align: center;
+  padding: 64px 20px;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px dashed #d2d2d7;
+  margin: 20px 0;
+}
+
+.apple-empty-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #f5f5f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  color: #86868b;
+  margin: 0 auto 20px;
+}
+
+@media (max-width: 768px) {
+  .apple-stepper {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .apple-stepper::before {
+    display: none;
+  }
+  .apple-step-item {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 14px;
+  }
+  .apple-step-circle {
+    margin: 0;
+    flex-shrink: 0;
+  }
+}

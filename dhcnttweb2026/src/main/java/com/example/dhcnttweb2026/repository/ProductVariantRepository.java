@@ -14,6 +14,10 @@ import java.util.Optional;
 
 @Repository
 public interface ProductVariantRepository extends JpaRepository<ProductVariant, Long> {
+    @Modifying
+    @Query("UPDATE ProductVariant v SET v.stock = v.stock + :quantity WHERE v.id = :id")
+    int restoreStock(@Param("id") Long id, @Param("quantity") int quantity);
+
     Optional<ProductVariant> findBySku(String sku);
     boolean existsBySku(String sku);
     boolean existsBySkuAndIdNot(String sku, Long id);

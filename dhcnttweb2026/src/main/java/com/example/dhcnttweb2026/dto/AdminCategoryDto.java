@@ -1,4 +1,4 @@
-package com.example.dhcnttweb2026.model;
+package com.example.dhcnttweb2026.dto;
 
 /**
  * DTO đại diện cho biểu mẫu quản trị và hiển thị danh mục trong Admin Console.
@@ -118,3 +118,4 @@ public class AdminCategoryDto {
         this.productCount = productCount;
     }
 }
+

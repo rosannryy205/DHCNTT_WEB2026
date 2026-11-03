@@ -1,9 +1,9 @@
 package com.example.dhcnttweb2026.service;
 
 import com.example.dhcnttweb2026.entity.*;
-import com.example.dhcnttweb2026.model.AdminCategoryDto;
-import com.example.dhcnttweb2026.model.AdminProductDto;
-import com.example.dhcnttweb2026.model.OrderRecord;
+import com.example.dhcnttweb2026.dto.AdminCategoryDto;
+import com.example.dhcnttweb2026.dto.AdminProductDto;
+import com.example.dhcnttweb2026.dto.OrderRecord;
 import com.example.dhcnttweb2026.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

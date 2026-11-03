@@ -1,8 +1,9 @@
 package com.example.dhcnttweb2026.controller;
 
 import com.example.dhcnttweb2026.entity.Product;
-import com.example.dhcnttweb2026.model.AdminCategoryDto;
-import com.example.dhcnttweb2026.model.AdminProductDto;
+import com.example.dhcnttweb2026.dto.AdminCategoryDto;
+import com.example.dhcnttweb2026.service.AdminOrderService;
+import com.example.dhcnttweb2026.dto.AdminProductDto;
 import com.example.dhcnttweb2026.repository.BrandRepository;
 import com.example.dhcnttweb2026.repository.ProductRepository;
 import com.example.dhcnttweb2026.service.CategoryService;
@@ -23,14 +24,18 @@ public class AdminController {
     private final BrandRepository brandRepository;
     private final ProductRepository productRepository;
 
+    private final AdminOrderService adminOrderService;
+
     public AdminController(ProductService productService,
                            CategoryService categoryService,
                            BrandRepository brandRepository,
-                           ProductRepository productRepository) {
+                           ProductRepository productRepository,
+                           AdminOrderService adminOrderService) {
         this.productService = productService;
         this.categoryService = categoryService;
         this.brandRepository = brandRepository;
         this.productRepository = productRepository;
+        this.adminOrderService = adminOrderService;
     }
 
     // =========================================================================
@@ -49,6 +54,23 @@ public class AdminController {
         model.addAttribute("featuredProduct", all.isEmpty() ? null : all.get(0));
         model.addAttribute("recentOrders", productService.getRecentOrders());
         return "admin/dashboard";
+    }
+
+    @GetMapping({"/admin/orders", "/admin/orders/"})
+    public String orderList(Model model, jakarta.servlet.http.HttpSession session,
+                            @SessionAttribute(name = "ADMIN_USER", required = false) Object adminUser) {
+        if (adminUser == null) {
+            return "redirect:/admin/login";
+        }
+        if (session.getAttribute("ORDER_CSRF") == null) {
+            session.setAttribute("ORDER_CSRF", java.util.UUID.randomUUID().toString());
+        }
+        model.addAttribute("orderCsrf", session.getAttribute("ORDER_CSRF"));
+        model.addAttribute("orders", adminOrderService.findAll());
+        model.addAttribute("activeMenu", "orders");
+        model.addAttribute("pageTitle", "Quản lý đơn hàng");
+        model.addAttribute("subtitle", "Theo dõi và quản lý đơn hàng tại một nơi");
+        return "admin/order-list";
     }
 
     // =========================================================================

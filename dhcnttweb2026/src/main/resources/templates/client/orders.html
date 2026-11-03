@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{client/layout}">
+<head>
+  <title th:text="${pageTitle}">Đơn hàng của tôi - IUH Store</title>
+
+  <th:block layout:fragment="styles">
+    <link rel="stylesheet" th:href="@{/css/customer-orders.css}">
+  </th:block>
+</head>
+<body>
+  <div layout:fragment="content" class="pb-5">
+
+    <!-- Account Navigation Bar -->
+    <div class="apple-account-header">
+      <div class="container-xl d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <div>
+          <h1 class="apple-account-title">Lịch sử đơn hàng</h1>
+          <p class="text-muted small mb-0">Theo dõi trạng thái và tiến trình giao nhận các thiết bị Apple đã đặt</p>
+        </div>
+        <div class="apple-account-nav">
+          <a th:href="@{/profile}" class="apple-account-nav-link">
+            <i class="bi bi-person me-1"></i> Hồ sơ
+          </a>
+          <a th:href="@{/orders}" class="apple-account-nav-link active">
+            <i class="bi bi-box-seam me-1"></i> Đơn hàng
+          </a>
+          <a th:href="@{/bag}" class="apple-account-nav-link">
+            <i class="bi bi-bag me-1"></i> Túi hàng
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-xl">
+      <!-- Flash Messages -->
+      <div th:if="${successMessage != null}" class="alert alert-success alert-dismissible fade show rounded-4 mb-4" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+      </div>
+
+      <div th:if="${errorMessage != null}" class="alert alert-danger alert-dismissible fade show rounded-4 mb-4" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="apple-filter-tabs">
+        <a th:href="@{/orders(status='all')}" 
+           th:classappend="${currentFilter == 'all' ? 'active' : ''}" 
+           class="apple-filter-tab">
+          Tất cả đơn hàng
+        </a>
+        <a th:href="@{/orders(status='processing')}" 
+           th:classappend="${currentFilter == 'processing' ? 'active' : ''}" 
+           class="apple-filter-tab">
+          Đang xử lý
+        </a>
+        <a th:href="@{/orders(status='shipped')}" 
+           th:classappend="${currentFilter == 'shipped' ? 'active' : ''}" 
+           class="apple-filter-tab">
+          Đang vận chuyển
+        </a>
+        <a th:href="@{/orders(status='delivered')}" 
+           th:classappend="${currentFilter == 'delivered' ? 'active' : ''}" 
+           class="apple-filter-tab">
+          Đã giao hàng
+        </a>
+        <a th:href="@{/orders(status='cancelled')}" 
+           th:classappend="${currentFilter == 'cancelled' ? 'active' : ''}" 
+           class="apple-filter-tab">
+          Đã hủy
+        </a>
+      </div>
+
+      <!-- Empty State -->
+      <div th:if="${orders == null or orders.isEmpty()}" class="apple-empty-state">
+        <div class="apple-empty-icon">
+          <i class="bi bi-bag-x"></i>
+        </div>
+        <h3 class="fs-4 fw-bold text-dark mb-2">Chưa có đơn hàng nào</h3>
+        <p class="text-muted mb-4" style="max-width: 440px; margin: 0 auto;">
+          <span th:if="${currentFilter == 'all'}">Bạn chưa đặt mua thiết bị nào tại IUH Store. Hãy khám phá ngay các sản phẩm Apple mới nhất.</span>
+          <span th:if="${currentFilter != 'all'}">Không có đơn hàng nào trong trạng thái đã chọn. Bạn có thể chọn xem tất cả đơn hàng.</span>
+        </p>
+        <div class="d-flex justify-content-center gap-2">
+          <a th:href="@{/products}" class="btn-apple-primary px-4 py-2">
+            <i class="bi bi-shop me-1"></i> Khám phá sản phẩm
+          </a>
+          <a th:if="${currentFilter != 'all'}" th:href="@{/orders(status='all')}" class="btn-apple-secondary px-4 py-2">
+            Xem tất cả đơn hàng
+          </a>
+        </div>
+      </div>
+
+      <!-- Orders List -->
+      <div th:if="${orders != null and !orders.isEmpty()}" class="d-flex flex-column gap-3">
+        <div th:each="order : ${orders}" class="apple-card mb-0">
+          <!-- Card Header: Code, Date & Badges -->
+          <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2 pb-3 border-bottom">
+            <div>
+              <span class="fw-bold text-dark fs-6" th:text="'Mã đơn: ' + ${order.orderCode}">ORD-20261028-1234</span>
+              <span class="text-muted small ms-2" th:text="'Đặt lúc: ' + ${order.orderDate}">28/10/2026 14:30</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="apple-payment-badge" th:text="${order.paymentMethodName}">COD</span>
+              <span class="apple-payment-badge" th:text="${order.paymentStatusName}">Chờ thanh toán</span>
+
+              <!-- Status Badge -->
+              <span class="apple-status-badge"
+                    th:classappend="${order.orderStatusCode == 'Pending' ? 'status-pending' : (order.orderStatusCode == 'Processing' ? 'status-processing' : (order.orderStatusCode == 'Shipped' ? 'status-shipped' : (order.orderStatusCode == 'Delivered' ? 'status-delivered' : 'status-cancelled')))}">
+                <i th:class="${order.orderStatusCode == 'Delivered' ? 'bi bi-check-circle-fill' : (order.orderStatusCode == 'Cancelled' ? 'bi bi-x-circle-fill' : 'bi bi-clock-fill')}"></i>
+                <span th:text="${order.orderStatusName}">Đang xử lý</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Items Preview Row -->
+          <div class="py-3 border-bottom">
+            <div class="d-flex flex-column gap-2">
+              <div th:each="item : ${order.items}" class="d-flex align-items-center justify-content-between gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="order-item-thumb">
+                    <img th:src="${item.imageUrl}" th:alt="${item.productName}">
+                    <span class="order-item-qty" th:text="${item.quantity}">1</span>
+                  </div>
+                  <div>
+                    <a th:href="@{${item.productDetailUrl}}" class="text-dark fw-semibold text-decoration-none small d-block">
+                      <span th:text="${item.productName}">iPhone 16 Pro</span>
+                    </a>
+                    <div class="text-muted" style="font-size: 12px;">
+                      <span th:if="${item.colorName != null and !item.colorName.isBlank()}" th:text="${item.colorName}">Titan Sa Mạc</span>
+                      <span th:if="${item.storageCapacity != null and item.storageCapacity != 'Tiêu chuẩn'}" th:text="' • ' + ${item.storageCapacity}"> • 256GB</span>
+                      <span th:text="' • SKU: ' + ${item.sku}"> • SKU: IP16P-256</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-end ps-3">
+                  <div class="fw-semibold text-dark small" th:text="${item.formattedLineTotal}">31.990.000đ</div>
+                  <div class="text-muted" style="font-size: 11px;" th:text="${item.quantity} + ' x ' + ${item.formattedUnitPrice}">1 x 31.990.000đ</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cancellation note if cancelled -->
+          <div th:if="${order.cancellationReason != null and !order.cancellationReason.isBlank()}" class="mt-2 py-2 px-3 rounded-3 bg-danger bg-opacity-10 text-danger small">
+            <i class="bi bi-info-circle me-1"></i>
+            <span>Lý do hủy: </span><strong th:text="${order.cancellationReason}"></strong>
+          </div>
+
+          <!-- Card Footer: Total & Actions -->
+          <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 pt-3">
+            <div>
+              <span class="text-muted small">Tổng thanh toán (<span th:text="${order.totalItems}">1</span> sản phẩm): </span>
+              <span class="fs-5 fw-bold text-dark" th:text="${order.formattedTotal}">31.990.000đ</span>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+              <!-- Cancel Button if canCancel -->
+              <button th:if="${order.canCancel}"
+                      type="button" 
+                      class="btn-apple-danger"
+                      data-bs-toggle="modal" 
+                      data-bs-target="#cancelOrderModal"
+                      th:data-order-code="${order.orderCode}">
+                <i class="bi bi-x-circle me-1"></i> Hủy đơn
+              </button>
+
+              <!-- View Detail CTA -->
+              <a th:href="@{'/orders/' + ${order.orderCode}}" class="btn-apple-primary">
+                <span>Xem chi tiết</span>
+                <i class="bi bi-chevron-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Hủy đơn hàng chuẩn Apple -->
+    <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+          <div class="modal-header border-bottom-0 pb-0">
+            <h5 class="modal-title fw-bold text-dark" id="cancelOrderModalLabel">
+              <i class="bi bi-exclamation-circle text-danger me-2"></i>Xác nhận hủy đơn hàng
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+          </div>
+          <form id="cancelOrderForm" method="post" action="">
+            <input type="hidden" name="redirectSource" value="list">
+            <div class="modal-body py-3">
+              <p class="text-muted small mb-3">
+                Bạn đang yêu cầu hủy đơn hàng <strong id="modalOrderCodeDisplay" class="text-dark"></strong>.
+                Sau khi hủy, số lượng sản phẩm sẽ được tự động hoàn lại vào kho hàng.
+              </p>
+
+              <div class="mb-3">
+                <label class="apple-form-label">Chọn lý do hủy đơn <span class="text-danger">*</span></label>
+                <select name="cancellationReasonSelect" id="cancellationReasonSelect" class="form-select apple-form-control" required onchange="handleReasonChange(this)">
+                  <option value="Đổi ý, không muốn mua nữa">Đổi ý, không muốn mua nữa</option>
+                  <option value="Muốn thay đổi địa chỉ nhận hàng">Muốn thay đổi địa chỉ nhận hàng</option>
+                  <option value="Muốn thay đổi màu sắc hoặc dung lượng sản phẩm">Muốn thay đổi màu sắc hoặc dung lượng sản phẩm</option>
+                  <option value="Đặt nhầm số lượng sản phẩm">Đặt nhầm số lượng sản phẩm</option>
+                  <option value="Tìm thấy mức giá tốt hơn ở nơi khác">Tìm thấy mức giá tốt hơn ở nơi khác</option>
+                  <option value="OTHER">Lý do khác...</option>
+                </select>
+              </div>
+
+              <div class="mb-2" id="customReasonWrapper" style="display: none;">
+                <label class="apple-form-label">Chi tiết lý do</label>
+                <textarea id="customReasonInput" class="form-control apple-form-control" rows="2" placeholder="Vui lòng nhập lý do cụ thể..."></textarea>
+              </div>
+
+              <input type="hidden" name="cancellationReason" id="finalCancellationReason">
+            </div>
+            <div class="modal-footer border-top-0 pt-0">
+              <button type="button" class="btn-apple-secondary px-3" data-bs-dismiss="modal">Giữ lại đơn hàng</button>
+              <button type="submit" class="btn btn-danger rounded-pill px-4" onclick="prepareCancelSubmit()">Xác nhận hủy</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <th:block layout:fragment="scripts">
+    <script>
+      const cancelModal = document.getElementById('cancelOrderModal');
+      if (cancelModal) {
+        cancelModal.addEventListener('show.bs.modal', function (event) {
+          const button = event.relatedTarget;
+          const orderCode = button.getAttribute('data-order-code');
+          document.getElementById('modalOrderCodeDisplay').textContent = orderCode;
+          document.getElementById('cancelOrderForm').action = '/orders/' + orderCode + '/cancel';
+        });
+      }
+
+      function handleReasonChange(select) {
+        const wrapper = document.getElementById('customReasonWrapper');
+        if (select.value === 'OTHER') {
+          wrapper.style.display = 'block';
+          document.getElementById('customReasonInput').focus();
+        } else {
+          wrapper.style.display = 'none';
+        }
+      }
+
+      function prepareCancelSubmit() {
+        const select = document.getElementById('cancellationReasonSelect');
+        const customInput = document.getElementById('customReasonInput');
+        const finalInput = document.getElementById('finalCancellationReason');
+
+        if (select.value === 'OTHER') {
+          finalInput.value = customInput.value.trim() ? customInput.value.trim() : 'Khách hàng có lý do khác';
+        } else {
+          finalInput.value = select.value;
+        }
+      }
+    </script>
+  </th:block>
+</body>
+</html>

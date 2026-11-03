@@ -1,6 +1,6 @@
 package com.example.dhcnttweb2026.service;
 
-import com.example.dhcnttweb2026.controller.ClientProductController.*;
+import com.example.dhcnttweb2026.dto.*;
 import com.example.dhcnttweb2026.entity.Category;
 import com.example.dhcnttweb2026.entity.Product;
 import com.example.dhcnttweb2026.entity.ProductVariant;

@@ -1,4 +1,4 @@
--- ==============================================================================
+﻿-- ==============================================================================
 -- FILE DỮ LIỆU MẪU (SEED DATA) CHO CƠ SỞ DỮ LIỆU DH STORE (dhcntt_web2026)
 -- Thoả mãn đầy đủ cấu trúc bảng, kiểu dữ liệu, quan hệ khoá ngoại (Foreign Keys)
 -- và các ràng buộc ENUM, NOT NULL, UNIQUE, BIT(1) trong database.
@@ -59,7 +59,13 @@ INSERT INTO `categories` (`id`, `name`, `slug`, `image`, `is_active`, `parent_id
 (9, 'MacBook Pro', 'macbook-pro', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/mbp14-spaceblack-select-202310?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 2, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000'),
 (10, 'MacBook Air', 'macbook-air', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/mba13-midnight-select-202402?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 2, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000'),
 (11, 'iPad Pro', 'ipad-pro', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/ipad-pro-finish-unselect-gallery-1-202405?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 3, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000'),
-(12, 'iPad Air', 'ipad-air', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/ipad-air-finish-unselect-gallery-1-202405?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 3, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000');
+(12, 'iPad Air', 'ipad-air', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/ipad-air-finish-unselect-gallery-1-202405?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 3, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000'),
+(13, 'Apple Watch Ultra 2', 'apple-watch-ultra-2', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/ultra-case-unselect-gallery-1-202409?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 4, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000'),
+(14, 'Apple Watch Series 10', 'apple-watch-series-10', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/s10-case-unselect-gallery-1-202409?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 4, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000'),
+(15, 'AirPods Pro (Gen 2)', 'airpods-pro-2', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/airpods-pro-2-hero-select-202409?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 5, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000'),
+(16, 'AirPods Max', 'airpods-max-usbc', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/airpods-max-select-202409-midnight?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 5, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000'),
+(17, 'Sạc & Cáp Nhanh', 'cu-sac-nhanh-apple-30w-usb-c', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/MU7T2_GEO_VN?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 6, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000'),
+(18, 'Ốp lưng & Bao da', 'op-lung-silicone-magsafe-iphone-16-pro', 'https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/MC8K4?wid=800&hei=600&fmt=jpeg&qlt=90', 1, 6, '2026-10-01 08:00:00.000000', '2026-10-01 08:00:00.000000');
 
 -- ==============================================================================
 -- 3. BẢNG `category_brand` (Liên kết Danh mục & Thương hiệu)

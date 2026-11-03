@@ -2,90 +2,232 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
   <!-- 1. Apple Global Nav (44px, Pure Black #000000) -->
-  <nav th:fragment="global-nav" class="navbar navbar-expand-lg apple-global-nav p-0">
-    <div class="container-xl d-flex align-items-center justify-content-between h-100">
-      
-      <!-- IUH Store Brand Logo -->
-      <div th:replace="~{fragments/brand-logo :: client-logo}"></div>
+  <header th:fragment="global-nav" class="apple-header-wrapper position-sticky top-0">
+    <nav class="apple-global-nav p-0 position-relative">
+      <div class="container-xl d-flex align-items-center justify-content-between h-100">
+        
+        <!-- IUH Store Brand Logo -->
+        <div th:replace="~{fragments/brand-logo :: client-logo}"></div>
 
-      <!-- Desktop Links (Spaced evenly, 12px SF Pro) -->
-      <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center">
-        <a class="nav-link" th:href="@{/products}">Cửa hàng</a>
-        <a class="nav-link" th:href="@{/products(category='mac')}">Mac</a>
-        <a class="nav-link" th:href="@{/products(category='ipad')}">iPad</a>
-        <a class="nav-link" th:href="@{/products(category='iphone')}">iPhone</a>
-        <a class="nav-link" th:href="@{/products(category='watch')}">Watch</a>
-        <a class="nav-link" th:href="@{/products(category='airpods')}">AirPods</a>
-        <a class="nav-link" th:href="@{/products(category='phu-kien')}">Phụ kiện</a>
-        <a class="nav-link" th:href="@{/}">Hỗ trợ</a>
+        <!-- Desktop Links with Apple Mega Flyout on Hover -->
+        <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center apple-nav-menu">
+          
+          <!-- Cửa hàng Link -->
+          <div class="apple-nav-item">
+            <a class="nav-link" th:href="@{/products}">Cửa hàng</a>
+          </div>
+
+          <!-- Dynamic Category Items with Hover Flyout Subcategories -->
+          <th:block th:each="cat : ${navCategories}">
+            <div class="apple-nav-item">
+              <a class="nav-link" 
+                 th:href="@{/products(category=${cat.slug})}" 
+                 th:text="${cat.name}">iPhone</a>
+
+              <!-- Apple Mega Flyout Dropdown -->
+              <div class="apple-nav-flyout" th:if="${cat.hasSubCategories()}">
+                <div class="container-xl py-4">
+                  <div class="row gx-5 text-start">
+                    
+                    <!-- Cột 1: Danh mục con (Khám phá ...) -->
+                    <div class="col-md-5">
+                      <div class="apple-flyout-eyebrow" th:text="'Khám phá ' + ${cat.name}">Khám phá</div>
+                      <ul class="apple-flyout-list">
+                        <li th:each="sub : ${cat.subCategories}">
+                          <a th:href="@{/products(category=${sub.slug})}" class="apple-flyout-primary-link">
+                            <span th:text="${sub.name}">iPhone 16 Series</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <!-- Cột 2: Mua sắm & Tác vụ liên quan -->
+                    <div class="col-md-4">
+                      <div class="apple-flyout-eyebrow" th:text="'Mua sắm ' + ${cat.name}">Mua sắm</div>
+                      <ul class="apple-flyout-sublist">
+                        <li>
+                          <a th:href="@{/products(category=${cat.slug})}" class="apple-flyout-sublink">
+                            <i class="bi bi-arrow-right me-2 text-primary"></i>
+                            <span>Xem tất cả <span th:text="${cat.name}"></span></span>
+                          </a>
+                        </li>
+                        <li>
+                          <a th:href="@{/products(category='phu-kien')}" class="apple-flyout-sublink">
+                            <i class="bi bi-plug me-2 text-primary"></i>
+                            <span>Phụ kiện cho <span th:text="${cat.name}"></span></span>
+                          </a>
+                        </li>
+                        <li>
+                          <a th:href="@{/products(sort='newest')}" class="apple-flyout-sublink">
+                            <i class="bi bi-stars me-2 text-warning"></i>
+                            <span>Sản phẩm mới ra mắt</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <!-- Cột 3: Ảnh minh họa chuẩn Apple Ecosystem -->
+                    <div class="col-md-3 d-none d-md-block" th:if="${cat.image != null and !cat.image.isBlank()}">
+                      <div class="apple-flyout-eyebrow">Hệ sinh thái</div>
+                      <div class="apple-flyout-featured-card">
+                        <a th:href="@{/products(category=${cat.slug})}" class="text-decoration-none d-block text-center">
+                          <img th:src="${cat.image}" th:alt="${cat.name}" class="img-fluid rounded-3 mb-2" style="max-height: 105px; object-fit: contain;">
+                          <div class="small fw-semibold text-white-50" th:text="'Hệ sinh thái ' + ${cat.name}"></div>
+                        </a>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </th:block>
+
+          <!-- Hỗ trợ Link -->
+          <div class="apple-nav-item">
+            <a class="nav-link" th:href="@{/}">Hỗ trợ</a>
+          </div>
+
+        </div>
+
+        <!-- Right Utility Cluster: Search, Cart badge, Account & Mobile Hamburger -->
+        <div class="d-flex align-items-center gap-3">
+          <a th:href="@{/products}" class="text-white opacity-75 hover-opacity-100 text-decoration-none" title="Tìm kiếm">
+            <i class="bi bi-search fs-6"></i>
+          </a>
+
+          <!-- Túi hàng (Bag) -->
+          <a th:href="@{/bag}" class="text-white opacity-75 hover-opacity-100 text-decoration-none position-relative" title="Túi hàng">
+            <i class="bi bi-bag fs-6"></i>
+            <span id="globalNavBagBadge"
+                  th:text="${bagItemCount != null ? bagItemCount : 0}"
+                  th:style="${(bagItemCount != null and bagItemCount > 0) ? 'font-size: 10px; padding: 2px 5px;' : 'font-size: 10px; padding: 2px 5px; display: none;'}"
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+            </span>
+          </a>
+
+          <!-- Khi chưa đăng nhập: Icon người dẫn đến trang login -->
+          <a th:if="${currentCustomer == null}" 
+             th:href="@{/login}" 
+             class="text-white opacity-75 hover-opacity-100 text-decoration-none" 
+             title="Đăng nhập tài khoản">
+            <i class="bi bi-person fs-6"></i>
+          </a>
+
+          <!-- Khi đã đăng nhập: Dropdown menu kiểu Apple -->
+          <div th:if="${currentCustomer != null}" class="dropdown">
+            <button class="btn btn-link text-white opacity-85 hover-opacity-100 text-decoration-none p-0 d-flex align-items-center gap-1 dropdown-toggle" 
+                    type="button" 
+                    id="customerDropdown" 
+                    data-bs-toggle="dropdown" 
+                    aria-expanded="false" 
+                    style="border: none; background: transparent; font-size: 13px;">
+              <i class="bi bi-person-circle fs-6 text-primary"></i>
+              <span class="d-none d-md-inline text-truncate" style="max-width: 100px;" th:text="${currentCustomer.name}">Khách hàng</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg py-2 mt-2" 
+                aria-labelledby="customerDropdown"
+                style="min-width: 230px; border-radius: 14px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(0, 0, 0, 0.08); font-size: 13px;">
+              <li class="px-3 py-2 border-bottom mb-1">
+                <div class="fw-semibold text-dark text-truncate" th:text="${currentCustomer.name}">Tên Khách Hàng</div>
+                <div class="text-muted small text-truncate" th:text="${currentCustomer.email}">email@example.com</div>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 d-flex align-items-center gap-2" th:href="@{/profile}">
+                  <i class="bi bi-person text-primary"></i>
+                  <span>Hồ sơ của tôi</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 d-flex align-items-center gap-2" th:href="@{/bag}">
+                  <i class="bi bi-bag text-primary"></i>
+                  <span>Túi hàng của tôi</span>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2 d-flex align-items-center gap-2" th:href="@{/orders}">
+                  <i class="bi bi-box-seam text-primary"></i>
+                  <span>Đơn hàng của tôi</span>
+                </a>
+              </li>
+              <li><hr class="dropdown-divider my-1"></li>
+              <li>
+                <a class="dropdown-item py-2 text-danger d-flex align-items-center gap-2" th:href="@{/logout}">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <span>Đăng xuất</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Mobile Hamburger Toggle (< 992px) -->
+          <button class="btn btn-link text-white d-lg-none p-0 border-0 ms-2" 
+                  type="button" 
+                  data-bs-toggle="offcanvas" 
+                  data-bs-target="#mobileNavDrawer" 
+                  aria-controls="mobileNavDrawer" 
+                  aria-label="Mở menu">
+            <i class="bi bi-list fs-5"></i>
+          </button>
+        </div>
+
       </div>
 
-      <!-- Right Utility Cluster: Search, Cart badge & Account -->
-      <div class="d-flex align-items-center gap-3">
-        <a th:href="@{/products}" class="text-white opacity-75 hover-opacity-100 text-decoration-none" title="Tìm kiếm">
-          <i class="bi bi-search fs-6"></i>
-        </a>
+      <!-- Apple Backdrop Blur Overlay khi di chuột vào danh mục -->
+      <div class="apple-nav-backdrop"></div>
+    </nav>
 
-        <!-- Túi hàng (Bag) -->
-        <a th:href="@{/bag}" class="text-white opacity-75 hover-opacity-100 text-decoration-none position-relative" title="Túi hàng">
-          <i class="bi bi-bag fs-6"></i>
-          <span id="globalNavBagBadge"
-                th:text="${bagItemCount != null ? bagItemCount : 0}"
-                th:style="${(bagItemCount != null and bagItemCount > 0) ? 'font-size: 10px; padding: 2px 5px;' : 'font-size: 10px; padding: 2px 5px; display: none;'}"
-                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
-          </span>
-        </a>
+    <!-- Mobile Offcanvas Navigation Drawer (Đặt ngoài nav để không bị Bootstrap navbar-expand can thiệp) -->
+    <div class="offcanvas offcanvas-top apple-mobile-drawer d-lg-none" tabindex="-1" id="mobileNavDrawer" style="height: 100vh;">
+      <div class="offcanvas-header border-bottom border-secondary border-opacity-25 px-4 py-3">
+        <div th:replace="~{fragments/brand-logo :: client-logo}"></div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
+      </div>
+      <div class="offcanvas-body px-4 py-3">
+        <div class="d-flex flex-column gap-2">
+          <!-- Khi đã đăng nhập trên Mobile -->
+          <div th:if="${currentCustomer != null}" class="p-3 mb-2 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25">
+            <div class="fw-semibold text-white text-truncate" th:text="${currentCustomer.name}">Khách hàng</div>
+            <div class="text-white-50 small text-truncate mb-2" th:text="${currentCustomer.email}">email@example.com</div>
+            <div class="d-flex flex-column gap-1">
+              <a th:href="@{/profile}" class="text-white-50 text-decoration-none py-1 small hover-text-white">
+                <i class="bi bi-person me-2 text-primary"></i>Hồ sơ của tôi
+              </a>
+              <a th:href="@{/orders}" class="text-white-50 text-decoration-none py-1 small hover-text-white">
+                <i class="bi bi-box-seam me-2 text-primary"></i>Đơn hàng của tôi
+              </a>
+              <a th:href="@{/logout}" class="text-danger text-decoration-none py-1 small">
+                <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+              </a>
+            </div>
+          </div>
 
-        <!-- Khi chưa đăng nhập: Icon người dẫn đến trang login -->
-        <a th:if="${currentCustomer == null}" 
-           th:href="@{/login}" 
-           class="text-white opacity-75 hover-opacity-100 text-decoration-none" 
-           title="Đăng nhập tài khoản">
-          <i class="bi bi-person fs-6"></i>
-        </a>
+          <a th:href="@{/products}" class="text-white text-decoration-none fs-5 fw-semibold py-2 border-bottom border-secondary border-opacity-25">Cửa hàng</a>
+          
+          <div class="accordion accordion-flush" id="mobileCategoriesAccordion">
+            <div class="accordion-item bg-transparent" th:each="cat : ${navCategories}">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed px-0" type="button" data-bs-toggle="collapse" th:attr="data-bs-target='#mcat-' + ${cat.id}">
+                  <span th:text="${cat.name}">iPhone</span>
+                </button>
+              </h2>
+              <div th:id="'mcat-' + ${cat.id}" class="accordion-collapse collapse" data-bs-parent="#mobileCategoriesAccordion">
+                <div class="accordion-body">
+                  <a th:href="@{/products(category=${cat.slug})}" class="apple-mobile-sublink fw-semibold text-white">
+                    Tất cả <span th:text="${cat.name}"></span> →
+                  </a>
+                  <th:block th:each="sub : ${cat.subCategories}">
+                    <a th:href="@{/products(category=${sub.slug})}" class="apple-mobile-sublink" th:text="${sub.name}">iPhone 16 Series</a>
+                  </th:block>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <!-- Khi đã đăng nhập: Dropdown menu kiểu Apple -->
-        <div th:if="${currentCustomer != null}" class="dropdown">
-          <button class="btn btn-link text-white opacity-85 hover-opacity-100 text-decoration-none p-0 d-flex align-items-center gap-1 dropdown-toggle" 
-                  type="button" 
-                  id="customerDropdown" 
-                  data-bs-toggle="dropdown" 
-                  aria-expanded="false" 
-                  style="border: none; background: transparent; font-size: 13px;">
-            <i class="bi bi-person-circle fs-6 text-primary"></i>
-            <span class="d-none d-md-inline text-truncate" style="max-width: 100px;" th:text="${currentCustomer.name}">Khách hàng</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow-lg py-2 mt-2" 
-              aria-labelledby="customerDropdown"
-              style="min-width: 230px; border-radius: 14px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(0, 0, 0, 0.08); font-size: 13px;">
-            <li class="px-3 py-2 border-bottom mb-1">
-              <div class="fw-semibold text-dark text-truncate" th:text="${currentCustomer.name}">Tên Khách Hàng</div>
-              <div class="text-muted small text-truncate" th:text="${currentCustomer.email}">email@example.com</div>
-            </li>
-            <li>
-              <a class="dropdown-item py-2 d-flex align-items-center gap-2" th:href="@{/bag}">
-                <i class="bi bi-bag text-primary"></i>
-                <span>Túi hàng của tôi</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item py-2 d-flex align-items-center gap-2 text-muted" href="javascript:void(0)" title="Tính năng sẽ sớm ra mắt">
-                <i class="bi bi-box-seam"></i>
-                <span>Đơn hàng của tôi (Sắp ra mắt)</span>
-              </a>
-            </li>
-            <li><hr class="dropdown-divider my-1"></li>
-            <li>
-              <a class="dropdown-item py-2 text-danger d-flex align-items-center gap-2" th:href="@{/logout}">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Đăng xuất</span>
-              </a>
-            </li>
-          </ul>
+          <a th:href="@{/}" class="text-white text-decoration-none fs-5 fw-semibold py-2">Hỗ trợ</a>
         </div>
       </div>
-
     </div>
-  </nav>
+  </header>
 </body>
 </html>

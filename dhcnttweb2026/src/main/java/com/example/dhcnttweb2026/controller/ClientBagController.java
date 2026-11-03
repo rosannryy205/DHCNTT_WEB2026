@@ -3,6 +3,8 @@ package com.example.dhcnttweb2026.controller;
 import com.example.dhcnttweb2026.config.CustomerAuthInterceptor;
 import com.example.dhcnttweb2026.dto.CustomerSessionDto;
 import com.example.dhcnttweb2026.entity.User;
+import com.example.dhcnttweb2026.dto.AccessoryUpsellDto;
+import com.example.dhcnttweb2026.dto.BagItemDto;
 import com.example.dhcnttweb2026.service.BagService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,33 +25,7 @@ public class ClientBagController {
         this.bagService = bagService;
     }
 
-    public record BagItemDto(
-            Long id,
-            String sku,
-            String productName,
-            String colorName,
-            String colorHex,
-            String storageCapacity,
-            String imageUrl,
-            long unitPrice,
-            String formattedUnitPrice,
-            int quantity,
-            int stockQuantity,
-            long lineTotal,
-            String formattedLineTotal,
-            String productDetailUrl
-    ) {}
 
-    public record AccessoryUpsellDto(
-            Long id,
-            String sku,
-            String name,
-            String category,
-            String imageUrl,
-            long price,
-            String formattedPrice,
-            String productDetailUrl
-    ) {}
 
     @GetMapping("/cart")
     public String cartRedirect() {
