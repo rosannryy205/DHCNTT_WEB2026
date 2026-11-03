@@ -54,7 +54,9 @@ class AdminControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(Objects.requireNonNull(webApplicationContext)).build();
+        mockMvc = MockMvcBuilders.webAppContextSetup(Objects.requireNonNull(webApplicationContext))
+                .defaultRequest(get("/").sessionAttr("ADMIN_USER", "Quản trị viên"))
+                .build();
     }
 
     // =========================================================================

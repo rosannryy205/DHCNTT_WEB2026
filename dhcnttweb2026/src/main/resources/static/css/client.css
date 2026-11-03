@@ -3,6 +3,13 @@
  * Following DESIGN.md specs for global-nav, sub-nav, product tiles, cards, and footer.
  */
 
+/* Header wrapper to establish top-level stacking context above sub-nav & content */
+.apple-header-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1060 !important;
+}
+
 /* 1. Global Navigation Bar (44px, pure black) */
 .apple-global-nav {
   height: 44px;
@@ -11,17 +18,18 @@
   font-size: 12px;
   font-weight: 400;
   letter-spacing: -0.12px;
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1050;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: nowrap !important;
 }
 
 .apple-global-nav .nav-link {
   color: #d6d6d6 !important;
   font-size: 12px;
-  padding: 0 14px !important;
+  padding: 0 12px !important;
   line-height: 44px;
+  white-space: nowrap;
   transition: color 0.2s ease;
 }
 
@@ -211,4 +219,245 @@
   margin-top: 32px;
   font-size: 12px;
   color: var(--apple-ink-muted-48);
+}
+
+
+/* ==========================================================================
+   6. Apple Mega Nav Flyout Dropdown & Subcategory System
+   ========================================================================== */
+.apple-nav-menu {
+  position: static;
+  flex-wrap: nowrap;
+}
+
+.apple-nav-item {
+  position: static;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+}
+
+@keyframes appleFlyoutFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.apple-nav-flyout {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: rgba(22, 22, 23, 0.98);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+  display: none;
+  z-index: 1055;
+  pointer-events: auto;
+}
+
+/* Invisible safe-bridge extending 16px upwards into navbar to prevent hover dropouts */
+.apple-nav-flyout::before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  left: 0;
+  right: 0;
+  height: 16px;
+  background: transparent;
+  pointer-events: auto;
+}
+
+.apple-nav-item:hover .apple-nav-flyout,
+.apple-nav-item.is-flyout-open .apple-nav-flyout,
+.apple-nav-flyout:hover {
+  display: block !important;
+  pointer-events: auto !important;
+  animation: appleFlyoutFadeIn 0.18s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.apple-flyout-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #86868b;
+  margin-bottom: 14px;
+}
+
+.apple-flyout-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.apple-flyout-list li {
+  margin-bottom: 8px;
+}
+
+.apple-flyout-primary-link {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #f5f5f7;
+  text-decoration: none;
+  display: inline-block;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.apple-flyout-primary-link:hover {
+  color: #2997ff !important;
+  transform: translateX(4px);
+}
+
+.apple-flyout-sublist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.apple-flyout-sublist li {
+  margin-bottom: 10px;
+}
+
+.apple-flyout-sublink {
+  font-size: 13px;
+  font-weight: 400;
+  color: #d2d2d7;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.15s ease;
+}
+
+.apple-flyout-sublink:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.apple-flyout-featured-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.apple-flyout-featured-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Page backdrop overlay on global-nav hover */
+.apple-nav-backdrop {
+  position: fixed;
+  top: 44px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 1045;
+}
+
+.apple-global-nav:has(.apple-nav-item:hover .apple-nav-flyout) .apple-nav-backdrop,
+.apple-global-nav:has(.apple-nav-item.is-flyout-open) .apple-nav-backdrop,
+.apple-global-nav:has(.apple-nav-flyout:hover) .apple-nav-backdrop {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Sub-nav sleek single-line category pills ribbon */
+.apple-subnav-pills {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.apple-subnav-pills::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.apple-subnav-pills .nav-link {
+  border-radius: var(--apple-radius-pill);
+  padding: 4px 10px !important;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.apple-subnav-pills .nav-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Subcategory filter in products sidebar */
+.subcategory-filter-list {
+  border-left: 2px solid rgba(0, 0, 0, 0.06);
+  margin-left: 10px;
+  margin-top: 4px;
+}
+
+.subcategory-filter-list .form-check:hover span {
+  color: var(--apple-primary) !important;
+}
+
+/* Mobile Nav Drawer Styles */
+.apple-mobile-drawer {
+  background-color: #161617 !important;
+  color: #f5f5f7 !important;
+}
+
+.apple-mobile-drawer .accordion-button {
+  background-color: transparent !important;
+  color: #f5f5f7 !important;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: none !important;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.apple-mobile-drawer .accordion-button:not(.collapsed) {
+  color: #2997ff !important;
+}
+
+.apple-mobile-drawer .accordion-button::after {
+  filter: invert(1);
+}
+
+.apple-mobile-drawer .accordion-body {
+  padding: 8px 0 16px 16px;
+}
+
+.apple-mobile-sublink {
+  color: #d2d2d7;
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  padding: 6px 0;
+  transition: color 0.15s ease;
+}
+
+.apple-mobile-sublink:hover {
+  color: #2997ff;
+}
+
+/* Ensure mobile drawer is strictly hidden on desktop screens */
+@media (min-width: 992px) {
+  .apple-mobile-drawer,
+  #mobileNavDrawer {
+    display: none !important;
+  }
 }

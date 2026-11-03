@@ -1,5 +1,6 @@
 package com.example.dhcnttweb2026.controller;
 
+import com.example.dhcnttweb2026.dto.*;
 import com.example.dhcnttweb2026.service.ClientStorefrontService;
 import com.example.dhcnttweb2026.service.ProductCatalogService;
 import org.springframework.stereotype.Controller;
@@ -21,50 +22,6 @@ public class ClientProductController {
         this.storefrontService = storefrontService;
     }
 
-    public record ProductVariantDto(
-            Long id,
-            String sku,
-            String colorName,
-            String colorHex,
-            String storageCapacity,
-            long price,
-            String formattedPrice,
-            long originalPrice,
-            String formattedOriginalPrice,
-            int stockQuantity,
-            List<String> images
-    ) {}
-
-    public record ProductColorDto(
-            String name,
-            String hex,
-            String previewImage
-    ) {}
-
-    public record ProductStorageDto(
-            String capacity,
-            long startingPrice,
-            String formattedStartingPrice
-    ) {}
-
-    public record InTheBoxItemDto(
-            String name,
-            String imageUrl,
-            String description
-    ) {}
-
-    public record TechSpecGroupDto(
-            String groupName,
-            Map<String, String> specs
-    ) {}
-
-    public record CardItemDto(
-            String name,
-            String category,
-            String imageUrl,
-            String priceText,
-            String linkUrl
-    ) {}
 
     @GetMapping("/category/{category}")
     public String categoryRedirect(@PathVariable("category") String category) {
@@ -86,7 +43,7 @@ public class ClientProductController {
                 categories, minPrice, maxPrice, storages, colors, sort, page, 12
         );
 
-        model.addAttribute("pageTitle", "Cửa hàng sản phẩm Apple - DH Store");
+        model.addAttribute("pageTitle", "Cá»­a hÃ ng sáº£n pháº©m Apple - DH Store");
         model.addAttribute("isProductsCatalogPage", true);
         model.addAttribute("filterOptions", catalogService.getFilterOptions());
         model.addAttribute("catalogResult", catalogResult);

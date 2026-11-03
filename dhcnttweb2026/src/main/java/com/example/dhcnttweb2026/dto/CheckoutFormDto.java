@@ -1,4 +1,4 @@
-package com.example.dhcnttweb2026.model;
+package com.example.dhcnttweb2026.dto;
 
 /**
  * Form DTO chứa toàn bộ dữ liệu người dùng nhập tại giao diện thanh toán (Checkout).
@@ -193,4 +193,5 @@ public class CheckoutFormDto {
         this.totalAmount = totalAmount;
     }
 }
+
 

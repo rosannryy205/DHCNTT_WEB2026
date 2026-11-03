@@ -137,12 +137,15 @@
         </div>
 
         <!-- Nút điều hướng -->
-        <div class="success-actions-row">
-          <a th:href="@{/products}" class="btn-apple-primary px-4 py-2 text-decoration-none">
-            <i class="bi bi-arrow-left me-1"></i> Tiếp tục mua sắm
+        <div class="success-actions-row d-flex flex-wrap justify-content-center gap-2">
+          <a th:href="@{'/orders/' + ${orderCode}}" class="btn-apple-primary px-4 py-2 text-decoration-none">
+            <i class="bi bi-box-seam me-1"></i> Theo dõi đơn hàng
           </a>
-          <a th:href="@{/}" class="btn-apple-secondary px-4 py-2 text-decoration-none">
-            <i class="bi bi-house me-1"></i> Về trang chủ
+          <a th:href="@{/orders}" class="btn-apple-secondary px-4 py-2 text-decoration-none">
+            <i class="bi bi-clock-history me-1"></i> Đơn hàng của tôi
+          </a>
+          <a th:href="@{/products}" class="btn-apple-secondary px-4 py-2 text-decoration-none">
+            <i class="bi bi-bag me-1"></i> Tiếp tục mua sắm
           </a>
         </div>
 

@@ -29,7 +29,7 @@
         
         <!-- Desktop Sidebar (Col 3, Sticky) -->
         <aside class="col-12 col-lg-3 d-none d-lg-block">
-          <div class="filter-sidebar p-4 bg-white rounded-4 border sticky-top" style="top: 80px; z-index: 10;">
+          <div class="filter-sidebar p-4 bg-white rounded-4 border sticky-top" style="top: 108px; z-index: 10;">
             
             <div class="sidebar-header d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
               <h5 class="fw-semibold text-dark mb-0 d-flex align-items-center gap-2">
@@ -50,18 +50,37 @@
                 </label>
                 <div class="d-flex flex-column gap-2">
                   <th:block th:each="cat : ${filterOptions.categories}">
-                    <label class="form-check d-flex align-items-center justify-content-between m-0 p-0 cursor-pointer">
-                      <span class="d-flex align-items-center gap-2">
-                        <input class="form-check-input filter-category-checkbox m-0"
-                               type="checkbox"
-                               name="category"
-                               th:value="${cat.code}"
-                               th:checked="${selectedCategories.contains(cat.code)}">
-                        <i class="bi text-secondary" th:classappend="${cat.iconClass}"></i>
-                        <span class="small text-dark" th:text="${cat.name}">iPhone</span>
-                      </span>
-                      <span class="badge rounded-pill bg-light text-secondary border small" th:text="${cat.count}">4</span>
-                    </label>
+                    <div class="category-filter-item">
+                      <label class="form-check d-flex align-items-center justify-content-between m-0 p-0 cursor-pointer">
+                        <span class="d-flex align-items-center gap-2">
+                          <input class="form-check-input filter-category-checkbox m-0"
+                                 type="checkbox"
+                                 name="category"
+                                 th:value="${cat.code}"
+                                 th:checked="${selectedCategories.contains(cat.code)}">
+                          <i class="bi text-secondary" th:classappend="${cat.iconClass}"></i>
+                          <span class="small text-dark fw-medium" th:text="${cat.name}">iPhone</span>
+                        </span>
+                        <span class="badge rounded-pill bg-light text-secondary border small" th:text="${cat.count}">4</span>
+                      </label>
+
+                      <!-- Danh mục con (Subcategories) của từng danh mục cha -->
+                      <div class="subcategory-filter-list ps-3 pt-1 pb-1 d-flex flex-column gap-1" th:if="${cat.hasSubCategories()}">
+                        <th:block th:each="sub : ${cat.subCategories}">
+                          <label class="form-check d-flex align-items-center justify-content-between m-0 p-0 cursor-pointer">
+                            <span class="d-flex align-items-center gap-2">
+                              <input class="form-check-input filter-category-checkbox subcategory-checkbox m-0"
+                                     type="checkbox"
+                                     name="category"
+                                     th:value="${sub.code}"
+                                     th:checked="${selectedCategories.contains(sub.code)}">
+                              <span class="text-secondary small" style="font-size: 12px;" th:text="${sub.name}">iPhone 16 Series</span>
+                            </span>
+                            <span class="text-muted" style="font-size: 11px;" th:text="${sub.count}">2</span>
+                          </label>
+                        </th:block>
+                      </div>
+                    </div>
                   </th:block>
                 </div>
               </div>

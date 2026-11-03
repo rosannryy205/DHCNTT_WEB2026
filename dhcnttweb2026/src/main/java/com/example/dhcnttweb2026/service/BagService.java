@@ -1,7 +1,7 @@
 package com.example.dhcnttweb2026.service;
 
-import com.example.dhcnttweb2026.controller.ClientBagController.AccessoryUpsellDto;
-import com.example.dhcnttweb2026.controller.ClientBagController.BagItemDto;
+import com.example.dhcnttweb2026.dto.AccessoryUpsellDto;
+import com.example.dhcnttweb2026.dto.BagItemDto;
 import com.example.dhcnttweb2026.entity.Cart;
 import com.example.dhcnttweb2026.entity.CartItem;
 import com.example.dhcnttweb2026.entity.Product;

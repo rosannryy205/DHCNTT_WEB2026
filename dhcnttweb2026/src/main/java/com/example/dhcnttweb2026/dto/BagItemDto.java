@@ -1,10 +1,6 @@
-package com.example.dhcnttweb2026.model;
+package com.example.dhcnttweb2026.dto;
 
-/**
- * DTO đại diện cho một sản phẩm trong giỏ/túi hàng hiển thị tại trang thanh toán (Checkout)
- * và trang xác nhận đơn hàng thành công (Checkout Success).
- */
-public record CheckoutItemDto(
+public record BagItemDto(
         Long id,
         String sku,
         String productName,
@@ -15,6 +11,7 @@ public record CheckoutItemDto(
         long unitPrice,
         String formattedUnitPrice,
         int quantity,
+        int stockQuantity,
         long lineTotal,
         String formattedLineTotal,
         String productDetailUrl

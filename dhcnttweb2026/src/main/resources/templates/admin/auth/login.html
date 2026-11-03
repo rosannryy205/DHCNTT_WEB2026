@@ -53,11 +53,13 @@
       </p>
 
       <form th:action="@{/admin/login}" method="post">
+        <p th:if="${errorMessage}" th:text="${errorMessage}" role="alert"
+           style="color:#b53737;margin-bottom:16px;">Đăng nhập không thành công.</p>
         
         <div class="auth-form-group">
-          <label class="auth-label" for="adminUser">Tên đăng nhập / Email nội bộ</label>
-          <input type="text" id="adminUser" name="username" class="auth-input" 
-                 placeholder="admin hoặc staff@dhstore.vn" required autofocus autocomplete="username">
+          <label class="auth-label" for="adminUser">Email quản trị</label>
+          <input type="email" id="adminUser" name="username" class="auth-input" th:value="${username}"
+                 placeholder="Email tài khoản Admin hoặc Staff" required autofocus autocomplete="username">
         </div>
 
         <div class="auth-form-group">
@@ -67,10 +69,6 @@
         </div>
 
         <div class="auth-options">
-          <label class="auth-checkbox-label">
-            <input type="checkbox" name="rememberMe" checked>
-            <span>Duy trì phiên làm việc</span>
-          </label>
           <span class="text-secondary" style="font-size: 12px;">Quyền hạn: Admin / Staff</span>
         </div>
 

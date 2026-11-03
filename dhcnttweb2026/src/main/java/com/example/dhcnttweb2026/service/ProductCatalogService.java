@@ -54,8 +54,17 @@ public class ProductCatalogService {
             String code,
             String name,
             String iconClass,
-            int count
-    ) {}
+            int count,
+            List<CategoryOptionDto> subCategories
+    ) {
+        public CategoryOptionDto(String code, String name, String iconClass, int count) {
+            this(code, name, iconClass, count, List.of());
+        }
+
+        public boolean hasSubCategories() {
+            return subCategories != null && !subCategories.isEmpty();
+        }
+    }
 
     public record PriceRangeOptionDto(
             String code,
@@ -521,7 +530,46 @@ public class ProductCatalogService {
         List<CategoryOptionDto> categories = new ArrayList<>();
         for (String catKey : List.of("iphone", "mac", "ipad", "watch", "airpods", "phu-kien")) {
             long count = allProducts.stream().filter(p -> p.category().equalsIgnoreCase(catKey)).count();
-            categories.add(new CategoryOptionDto(catKey, catNames.get(catKey), catIcons.get(catKey), (int) count));
+            List<CategoryOptionDto> subs = new ArrayList<>();
+            switch (catKey) {
+                case "iphone" -> {
+                    long c16 = allProducts.stream().filter(p -> p.slug().startsWith("iphone-16")).count();
+                    long c15 = allProducts.stream().filter(p -> p.slug().startsWith("iphone-15")).count();
+                    subs.add(new CategoryOptionDto("iphone-16-series", "iPhone 16 Series", "bi-phone", (int) c16));
+                    subs.add(new CategoryOptionDto("iphone-15-series", "iPhone 15 Series", "bi-phone", (int) c15));
+                }
+                case "mac" -> {
+                    long cPro = allProducts.stream().filter(p -> p.slug().contains("macbook-pro")).count();
+                    long cAir = allProducts.stream().filter(p -> p.slug().contains("macbook-air")).count();
+                    subs.add(new CategoryOptionDto("macbook-pro", "MacBook Pro", "bi-laptop", (int) cPro));
+                    subs.add(new CategoryOptionDto("macbook-air", "MacBook Air", "bi-laptop", (int) cAir));
+                }
+                case "ipad" -> {
+                    long cPro = allProducts.stream().filter(p -> p.slug().contains("ipad-pro")).count();
+                    long cAir = allProducts.stream().filter(p -> p.slug().contains("ipad-air")).count();
+                    subs.add(new CategoryOptionDto("ipad-pro", "iPad Pro", "bi-tablet", (int) cPro));
+                    subs.add(new CategoryOptionDto("ipad-air", "iPad Air", "bi-tablet", (int) cAir));
+                }
+                case "watch" -> {
+                    long cUltra = allProducts.stream().filter(p -> p.slug().contains("ultra")).count();
+                    long cS10 = allProducts.stream().filter(p -> p.slug().contains("series-10")).count();
+                    subs.add(new CategoryOptionDto("apple-watch-ultra-2", "Apple Watch Ultra 2", "bi-smartwatch", (int) cUltra));
+                    subs.add(new CategoryOptionDto("apple-watch-series-10", "Apple Watch Series 10", "bi-smartwatch", (int) cS10));
+                }
+                case "airpods" -> {
+                    long cPro = allProducts.stream().filter(p -> p.slug().contains("pro")).count();
+                    long cMax = allProducts.stream().filter(p -> p.slug().contains("max")).count();
+                    subs.add(new CategoryOptionDto("airpods-pro-2", "AirPods Pro (Gen 2)", "bi-headphones", (int) cPro));
+                    subs.add(new CategoryOptionDto("airpods-max-usbc", "AirPods Max", "bi-headphones", (int) cMax));
+                }
+                case "phu-kien" -> {
+                    long cSac = allProducts.stream().filter(p -> p.slug().contains("sac") || p.slug().contains("magsafe")).count();
+                    long cCase = allProducts.stream().filter(p -> p.slug().contains("op-lung")).count();
+                    subs.add(new CategoryOptionDto("cu-sac-nhanh-apple-30w-usb-c", "Sạc & Cáp Nhanh", "bi-plug", (int) cSac));
+                    subs.add(new CategoryOptionDto("op-lung-silicone-magsafe-iphone-16-pro", "Ốp lưng & Bao da", "bi-shield-check", (int) cCase));
+                }
+            }
+            categories.add(new CategoryOptionDto(catKey, catNames.get(catKey), catIcons.get(catKey), (int) count, subs));
         }
 
         // Khoảng giá
@@ -581,9 +629,27 @@ public class ProductCatalogService {
         // 1. Lọc Danh mục (OR trong nhóm)
         if (selectedCategories != null && !selectedCategories.isEmpty()) {
             Set<String> catSet = selectedCategories.stream()
-                    .map(cat -> cat.toLowerCase())
+                    .map(String::toLowerCase)
                     .collect(Collectors.toSet());
-            stream.removeIf(p -> !catSet.contains(p.category().toLowerCase()));
+            stream.removeIf(p -> {
+                String pCat = p.category().toLowerCase();
+                String pSlug = p.slug().toLowerCase();
+                return catSet.stream().noneMatch(c ->
+                    pCat.equals(c) ||
+                    pSlug.contains(c) ||
+                    (c.equals("iphone-16-series") && pSlug.startsWith("iphone-16")) ||
+                    (c.equals("iphone-15-series") && pSlug.startsWith("iphone-15")) ||
+                    (c.equals("macbook-pro") && pSlug.contains("macbook-pro")) ||
+                    (c.equals("macbook-air") && pSlug.contains("macbook-air")) ||
+                    (c.equals("ipad-pro") && pSlug.contains("ipad-pro")) ||
+                    (c.equals("ipad-air") && pSlug.contains("ipad-air")) ||
+                    (c.contains("watch") && (pCat.contains("watch") || pSlug.contains("watch"))) ||
+                    (c.contains("airpod") && (pCat.contains("airpod") || pSlug.contains("airpod"))) ||
+                    (c.contains("phu-kien") && (pCat.contains("phu-kien") || pSlug.contains("sac") || pSlug.contains("magsafe") || pSlug.contains("op-lung"))) ||
+                    (c.contains("sac") && (pSlug.contains("sac") || pSlug.contains("magsafe"))) ||
+                    (c.contains("op-lung") && pSlug.contains("op-lung"))
+                );
+            });
         }
 
         // 2. Lọc Khoảng giá
@@ -629,14 +695,25 @@ public class ProductCatalogService {
 
         // 6. Xây dựng danh sách Active Filter Chips
         List<ActiveFilterChipDto> activeChips = new ArrayList<>();
-        Map<String, String> catMap = Map.of(
-                "iphone", "iPhone",
-                "mac", "Mac",
-                "ipad", "iPad",
-                "watch", "Apple Watch",
-                "airpods", "AirPods",
-                "phu-kien", "Phụ kiện"
-        );
+        Map<String, String> catMap = new HashMap<>();
+        catMap.put("iphone", "iPhone");
+        catMap.put("mac", "Mac");
+        catMap.put("ipad", "iPad");
+        catMap.put("watch", "Apple Watch");
+        catMap.put("airpods", "AirPods");
+        catMap.put("phu-kien", "Phụ kiện");
+        catMap.put("iphone-16-series", "iPhone 16 Series");
+        catMap.put("iphone-15-series", "iPhone 15 Series");
+        catMap.put("macbook-pro", "MacBook Pro");
+        catMap.put("macbook-air", "MacBook Air");
+        catMap.put("ipad-pro", "iPad Pro");
+        catMap.put("ipad-air", "iPad Air");
+        catMap.put("apple-watch-ultra-2", "Apple Watch Ultra 2");
+        catMap.put("apple-watch-series-10", "Apple Watch Series 10");
+        catMap.put("airpods-pro-2", "AirPods Pro (Gen 2)");
+        catMap.put("airpods-max-usbc", "AirPods Max");
+        catMap.put("cu-sac-nhanh-apple-30w-usb-c", "Sạc & Cáp Nhanh");
+        catMap.put("op-lung-silicone-magsafe-iphone-16-pro", "Ốp lưng Silicone MagSafe");
         if (selectedCategories != null) {
             for (String cat : selectedCategories) {
                 activeChips.add(new ActiveFilterChipDto("category", catMap.getOrDefault(cat.toLowerCase(), cat), cat));

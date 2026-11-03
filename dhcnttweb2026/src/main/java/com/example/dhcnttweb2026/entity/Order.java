@@ -1,6 +1,7 @@
 package com.example.dhcnttweb2026.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,10 +25,15 @@ public class Order {
     }
 
     public enum OrderStatus {
+        @JsonProperty("PENDING")
         Pending,
+        @JsonProperty("PROCESSING")
         Processing,
+        @JsonProperty("SHIPPED")
         Shipped,
+        @JsonProperty("DELIVERED")
         Delivered,
+        @JsonProperty("CANCELLED")
         Cancelled
     }
 
@@ -65,6 +71,9 @@ public class Order {
 
     @Column(nullable = true, length = 255)
     private String note;
+
+    @Column(name = "cancellation_reason", length = 255)
+    private String cancellationReason;
 
     // Quan hệ 1 - n với bảng order_items
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -120,7 +129,54 @@ public class Order {
         this.updatedAt = LocalDateTime.now();
     }
 
+    private OrderStatus nextStatus() {
+        return switch (orderStatus) {
+            case Pending -> OrderStatus.Processing;
+            case Processing -> OrderStatus.Shipped;
+            case Shipped -> OrderStatus.Delivered;
+            default -> null;
+        };
+    }
+
+    public boolean canAdvance() {
+        boolean paymentAllowsApproval = paymentMethod != null && (paymentStatus == PaymentStatus.PAID
+                || (paymentMethod == PaymentMethod.cod && paymentStatus == PaymentStatus.PENDING));
+        return paymentAllowsApproval && nextStatus() != null;
+    }
+
+    public void advanceToNextStatus(OrderStatus target) {
+        if (!canAdvance() || target != nextStatus()) {
+            throw new IllegalStateException("Không thể duyệt đơn với trạng thái đơn hàng hoặc thanh toán hiện tại.");
+        }
+        orderStatus = target;
+    }
+
+    public boolean canCancel() {
+        return (orderStatus == OrderStatus.Pending || orderStatus == OrderStatus.Processing)
+                && paymentStatus == PaymentStatus.PENDING;
+    }
+
+    public void cancel(String reason) {
+        if (!canCancel()) {
+            throw new IllegalStateException("Chỉ được hủy đơn chưa thanh toán ở bước chờ xác nhận hoặc đang xử lý.");
+        }
+        String normalizedReason = reason == null ? "" : reason.strip();
+        if (normalizedReason.isBlank() || normalizedReason.length() > 255) {
+            throw new IllegalArgumentException("Lý do hủy phải có từ 1 đến 255 ký tự.");
+        }
+        cancellationReason = normalizedReason;
+        orderStatus = OrderStatus.Cancelled;
+    }
+
     // Getters and Setters
+    public String getCancellationReason() {
+        return cancellationReason;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
+    }
+
     public Long getId() {
         return id;
     }

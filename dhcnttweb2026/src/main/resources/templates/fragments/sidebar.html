@@ -16,6 +16,10 @@
             <span>❖</span>
             <span>Quản lý sản phẩm</span>
         </a>
+        <a th:href="@{/admin/orders}" class="sidebar-link" th:classappend="${activeMenu == 'orders'} ? 'active'">
+            <span aria-hidden="true">▤</span>
+            <span>Quản lý đơn hàng</span>
+        </a>
         <a th:href="@{/admin/categories}" class="sidebar-link" th:classappend="${activeMenu == 'categories'} ? 'active'">
             <span>🏷</span>
             <span>Quản lý danh mục</span>

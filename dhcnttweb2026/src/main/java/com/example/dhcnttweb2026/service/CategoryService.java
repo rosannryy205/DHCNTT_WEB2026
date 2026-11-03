@@ -1,7 +1,8 @@
 package com.example.dhcnttweb2026.service;
 
 import com.example.dhcnttweb2026.entity.Category;
-import com.example.dhcnttweb2026.model.AdminCategoryDto;
+import com.example.dhcnttweb2026.dto.AdminCategoryDto;
+import com.example.dhcnttweb2026.dto.NavCategoryDto;
 import com.example.dhcnttweb2026.repository.CategoryBrandRepository;
 import com.example.dhcnttweb2026.repository.CategoryRepository;
 import com.example.dhcnttweb2026.repository.ProductRepository;
@@ -95,6 +96,118 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<Category> findAllActive() {
         return categoryRepository.findByIsActiveTrue();
+    }
+
+    /**
+     * Lấy cây danh mục cha - con phục vụ hiển thị Menu điều hướng và Flyout Dropdown trên Client.
+     */
+    @Transactional(readOnly = true)
+    public List<NavCategoryDto> getNavCategories() {
+        List<Category> roots = categoryRepository.findByParentCategoryIsNullAndIsActiveTrueOrderByIdAsc();
+        List<NavCategoryDto> result = new ArrayList<>();
+
+        for (Category root : roots) {
+            List<Category> subs = categoryRepository.findByParentCategoryIdAndIsActiveTrueOrderByIdAsc(root.getId());
+            List<NavCategoryDto> subDtos = new ArrayList<>();
+            for (Category sub : subs) {
+                subDtos.add(new NavCategoryDto(
+                        sub.getId(),
+                        sub.getName(),
+                        sub.getSlug(),
+                        sub.getImage(),
+                        resolveIconClass(sub.getSlug()),
+                        List.of()
+                ));
+            }
+
+            // Nếu danh mục cha chưa có danh mục con trong CSDL, cung cấp danh mục con mặc định chuẩn Apple
+            if (subDtos.isEmpty()) {
+                subDtos = getDefaultSubCategories(root.getSlug());
+            }
+
+            result.add(new NavCategoryDto(
+                    root.getId(),
+                    root.getName(),
+                    root.getSlug(),
+                    root.getImage(),
+                    resolveIconClass(root.getSlug()),
+                    subDtos
+            ));
+        }
+
+        if (result.isEmpty()) {
+            return getDefaultNavTree();
+        }
+
+        return result;
+    }
+
+    public String resolveIconClass(String slug) {
+        if (slug == null) return "bi-tag";
+        String s = slug.toLowerCase();
+        if (s.contains("iphone") || s.contains("phone")) return "bi-phone";
+        if (s.contains("mac")) return "bi-laptop";
+        if (s.contains("ipad")) return "bi-tablet";
+        if (s.contains("watch")) return "bi-smartwatch";
+        if (s.contains("airpod") || s.contains("audio") || s.contains("headphone")) return "bi-headphones";
+        if (s.contains("phu-kien") || s.contains("sac") || s.contains("cable") || s.contains("case")) return "bi-plug";
+        return "bi-grid";
+    }
+
+    private List<NavCategoryDto> getDefaultSubCategories(String parentSlug) {
+        if (parentSlug == null) return List.of();
+        String s = parentSlug.toLowerCase();
+        if (s.contains("watch")) {
+            return List.of(
+                    new NavCategoryDto(101L, "Apple Watch Ultra 2", "apple-watch-ultra-2", "", "bi-smartwatch", List.of()),
+                    new NavCategoryDto(102L, "Apple Watch Series 10", "apple-watch-series-10", "", "bi-smartwatch", List.of()),
+                    new NavCategoryDto(103L, "Apple Watch SE", "apple-watch-se", "", "bi-smartwatch", List.of())
+            );
+        }
+        if (s.contains("airpod")) {
+            return List.of(
+                    new NavCategoryDto(104L, "AirPods Pro (Gen 2)", "airpods-pro-2", "", "bi-headphones", List.of()),
+                    new NavCategoryDto(105L, "AirPods 4", "airpods-4", "", "bi-headphones", List.of()),
+                    new NavCategoryDto(106L, "AirPods Max USB-C", "airpods-max-usbc", "", "bi-headphones", List.of())
+            );
+        }
+        if (s.contains("phu-kien")) {
+            return List.of(
+                    new NavCategoryDto(107L, "Sạc & Cáp Nhanh", "cu-sac-nhanh-apple-30w-usb-c", "", "bi-plug", List.of()),
+                    new NavCategoryDto(108L, "Ốp lưng Silicone MagSafe", "op-lung-silicone-magsafe-iphone-16-pro", "", "bi-shield-check", List.of()),
+                    new NavCategoryDto(109L, "Bộ sạc MagSafe 25W", "magsafe-charger", "", "bi-lightning-charge", List.of())
+            );
+        }
+        return List.of();
+    }
+
+    private List<NavCategoryDto> getDefaultNavTree() {
+        return List.of(
+                new NavCategoryDto(1L, "iPhone", "iphone", "", "bi-phone", List.of(
+                        new NavCategoryDto(7L, "iPhone 16 Series", "iphone-16-series", "", "bi-phone", List.of()),
+                        new NavCategoryDto(8L, "iPhone 15 Series", "iphone-15-series", "", "bi-phone", List.of())
+                )),
+                new NavCategoryDto(2L, "Mac", "mac", "", "bi-laptop", List.of(
+                        new NavCategoryDto(9L, "MacBook Pro", "macbook-pro", "", "bi-laptop", List.of()),
+                        new NavCategoryDto(10L, "MacBook Air", "macbook-air", "", "bi-laptop", List.of())
+                )),
+                new NavCategoryDto(3L, "iPad", "ipad", "", "bi-tablet", List.of(
+                        new NavCategoryDto(11L, "iPad Pro", "ipad-pro", "", "bi-tablet", List.of()),
+                        new NavCategoryDto(12L, "iPad Air", "ipad-air", "", "bi-tablet", List.of())
+                )),
+                new NavCategoryDto(4L, "Apple Watch", "watch", "", "bi-smartwatch", List.of(
+                        new NavCategoryDto(101L, "Apple Watch Ultra 2", "apple-watch-ultra-2", "", "bi-smartwatch", List.of()),
+                        new NavCategoryDto(102L, "Apple Watch Series 10", "apple-watch-series-10", "", "bi-smartwatch", List.of())
+                )),
+                new NavCategoryDto(5L, "AirPods", "airpods", "", "bi-headphones", List.of(
+                        new NavCategoryDto(104L, "AirPods Pro (Gen 2)", "airpods-pro-2", "", "bi-headphones", List.of()),
+                        new NavCategoryDto(106L, "AirPods Max USB-C", "airpods-max-usbc", "", "bi-headphones", List.of())
+                )),
+                new NavCategoryDto(6L, "Phụ Kiện", "phu-kien", "", "bi-plug", List.of(
+                        new NavCategoryDto(107L, "Sạc & Cáp Nhanh", "cu-sac-nhanh-apple-30w-usb-c", "", "bi-plug", List.of()),
+                        new NavCategoryDto(108L, "Ốp lưng Silicone MagSafe", "op-lung-silicone-magsafe-iphone-16-pro", "", "bi-shield-check", List.of())
+                ))
+        );
     }
 
     /**

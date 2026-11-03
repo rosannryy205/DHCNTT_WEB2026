@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Quản lý đơn hàng — IUH Console</title>
+    <link rel="stylesheet" href="/css/admin-apple.css" th:href="@{/css/admin-apple.css}"/>
+    <link rel="stylesheet" href="/css/admin-orders.css" th:href="@{/css/admin-orders.css(v=2)}"/>
+    <script th:inline="javascript">
+        window.adminOrders = /*[[${orders}]]*/ [];
+    </script>
+    <script src="/js/admin-orders.js" th:src="@{/js/admin-orders.js(v=2)}" defer></script>
+</head>
+<body class="orders-admin">
+<div class="admin-shell">
+    <aside th:replace="~{fragments/sidebar :: sidebar(${activeMenu})}"></aside>
+    <div class="admin-main">
+        <header th:replace="~{fragments/header :: topbar(${pageTitle}, ${subtitle})}"></header>
+        <main class="orders-page container-admin" id="ordersPage" th:attr="data-orders-url=@{/admin/orders},data-csrf=${orderCsrf}">
+            <div class="orders-heading">
+                <div>
+                    <p class="orders-eyebrow">IUH STORE / ĐƠN HÀNG</p>
+                    <h1>Quản lý đơn hàng<span>.</span></h1>
+                    <p class="orders-intro">Mỗi đơn hàng, một trải nghiệm chu đáo.</p>
+                </div>
+                <div class="orders-heading-actions">
+                    <span class="orders-preview-label"><span aria-hidden="true"></span>Xử lý đơn hàng</span>
+                    <button class="orders-button orders-button-primary" type="button" id="exportOrders">
+                        <svg class="orders-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M5 15v5h14v-5"/></svg>
+                        Xuất danh sách
+                    </button>
+                </div>
+            </div>
+
+            <section class="orders-metrics" aria-label="Tổng quan đơn hàng">
+                <article class="orders-metric">
+                    <div class="orders-metric-top"><h2>Tổng đơn hàng</h2><span class="orders-metric-icon" aria-hidden="true">▤</span></div>
+                    <p class="orders-metric-value numeric" id="metricTotal">—</p>
+                    <p class="orders-metric-note">Toàn bộ đơn hàng</p>
+                </article>
+                <article class="orders-metric">
+                    <div class="orders-metric-top"><h2>Chờ xác nhận</h2><span class="orders-metric-icon" aria-hidden="true">◷</span></div>
+                    <p class="orders-metric-value numeric" id="metricPending">—</p>
+                    <p class="orders-metric-note"><span class="orders-dot orders-dot-warning"></span>Cần được tiếp nhận</p>
+                </article>
+                <article class="orders-metric">
+                    <div class="orders-metric-top"><h2>Đang giao hàng</h2><svg class="orders-icon orders-metric-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h11v12H3zM14 9h4l3 4v4h-7"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></div>
+                    <p class="orders-metric-value numeric" id="metricShipped">—</p>
+                    <p class="orders-metric-note">Đang trên đường đến khách hàng</p>
+                </article>
+                <article class="orders-metric orders-metric-revenue">
+                    <div class="orders-metric-top"><h2>Đã thanh toán</h2><span class="orders-metric-icon" aria-hidden="true">₫</span></div>
+                    <p class="orders-metric-value orders-money numeric" id="metricRevenue">—</p>
+                    <p class="orders-metric-note">Tổng giá trị đơn đã thanh toán</p>
+                </article>
+            </section>
+
+            <section class="orders-workspace" aria-labelledby="orderListTitle">
+                <div class="orders-list-heading">
+                    <div><h2 id="orderListTitle">Danh sách đơn hàng</h2><span id="orderCount" class="orders-count numeric">12 đơn hàng</span></div>
+                    <span class="orders-list-hint">Chọn mã đơn để xem chi tiết <span aria-hidden="true">↗</span></span>
+                </div>
+                <div class="orders-status-filters" role="group" aria-label="Lọc theo trạng thái đơn hàng">
+                    <button type="button" class="orders-status-filter is-active" data-status="ALL" aria-pressed="true">Tất cả <span data-count="ALL">0</span></button>
+                    <button type="button" class="orders-status-filter" data-status="PENDING" aria-pressed="false">Chờ xác nhận <span data-count="PENDING">0</span></button>
+                    <button type="button" class="orders-status-filter" data-status="PROCESSING" aria-pressed="false">Đang xử lý <span data-count="PROCESSING">0</span></button>
+                    <button type="button" class="orders-status-filter" data-status="SHIPPED" aria-pressed="false">Đang giao <span data-count="SHIPPED">0</span></button>
+                    <button type="button" class="orders-status-filter" data-status="DELIVERED" aria-pressed="false">Đã giao <span data-count="DELIVERED">0</span></button>
+                    <button type="button" class="orders-status-filter" data-status="CANCELLED" aria-pressed="false">Đã hủy <span data-count="CANCELLED">0</span></button>
+                </div>
+                <div class="orders-toolbar">
+                    <div class="orders-search">
+                        <svg class="orders-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+                        <label class="orders-sr-only" for="orderSearch">Tìm mã đơn, tên khách hàng hoặc số điện thoại</label>
+                        <input type="search" id="orderSearch" placeholder="Tìm mã đơn, tên khách hàng, số điện thoại…" autocomplete="off"/>
+                        <kbd aria-hidden="true">/</kbd>
+                    </div>
+                    <label class="orders-select-wrap"><span class="orders-sr-only">Trạng thái thanh toán</span>
+                        <select id="paymentFilter">
+                            <option value="ALL">Tất cả thanh toán</option>
+                            <option value="PENDING">Chờ thanh toán</option>
+                            <option value="PAID">Đã thanh toán</option>
+                            <option value="FAILED">Thanh toán thất bại</option>
+                            <option value="REFUNDED">Đã hoàn tiền</option>
+                        </select>
+                    </label>
+                    <label class="orders-select-wrap"><span class="orders-sr-only">Sắp xếp đơn hàng</span>
+                        <select id="orderSort">
+                            <option value="newest">Mới nhất trước</option>
+                            <option value="oldest">Cũ nhất trước</option>
+                            <option value="highest">Giá trị cao nhất</option>
+                            <option value="lowest">Giá trị thấp nhất</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="orders-active-filters" id="activeFilters" hidden>
+                    <span id="filterSummary"></span>
+                    <button type="button" class="orders-text-button" id="clearFilters">Xóa bộ lọc <span aria-hidden="true">×</span></button>
+                </div>
+                <div class="orders-table-scroll" tabindex="0" role="region" aria-label="Bảng đơn hàng, cuộn ngang để xem đầy đủ">
+                    <table class="orders-table">
+                        <caption class="orders-sr-only">Danh sách đơn hàng của IUH Store</caption>
+                        <thead><tr>
+                            <th scope="col">Mã đơn / Ngày đặt</th><th scope="col">Khách hàng</th><th scope="col">Sản phẩm</th>
+                            <th scope="col" class="orders-align-right">Tổng tiền</th><th scope="col">Thanh toán</th><th scope="col">Trạng thái đơn</th>
+                            <th scope="col">Hành động</th>
+                            <th scope="col" class="orders-col-detail"><span class="orders-sr-only">Chi tiết</span></th>
+                        </tr></thead>
+                        <tbody id="ordersTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="orders-empty" id="ordersEmpty" hidden>
+                    <span class="orders-empty-icon" aria-hidden="true">⌕</span>
+                    <h3>Chưa tìm thấy đơn hàng</h3>
+                    <p>Thử một từ khóa khác hoặc xóa bộ lọc để xem tất cả đơn hàng.</p>
+                    <button type="button" class="orders-button" id="resetEmptyFilters">Xóa bộ lọc</button>
+                </div>
+                <div class="orders-pagination">
+                    <p id="pageSummary" role="status" aria-live="polite"></p>
+                    <div class="orders-pagination-actions">
+                        <label class="orders-page-size"><span>Số dòng</span><select id="pageSize" aria-label="Số đơn hàng mỗi trang"><option value="8">8</option><option value="12">12</option></select></label>
+                        <nav class="orders-page-buttons" aria-label="Phân trang đơn hàng" id="pageButtons"></nav>
+                    </div>
+                </div>
+            </section>
+            <footer class="orders-page-footer"><span>IUH Console</span><span>Dữ liệu đơn hàng từ hệ thống</span></footer>
+            <noscript><p class="orders-noscript">Vui lòng bật JavaScript để xem và tương tác với danh sách đơn hàng.</p></noscript>
+        </main>
+    </div>
+</div>
+<dialog class="orders-detail" id="orderDetail" aria-labelledby="detailTitle">
+    <div class="orders-detail-header">
+        <div><p class="orders-eyebrow">CHI TIẾT ĐƠN HÀNG</p><h2 id="detailTitle"></h2></div>
+        <button type="button" class="orders-icon-button" id="closeOrderDetail" aria-label="Đóng chi tiết đơn hàng" autofocus>×</button>
+    </div>
+    <div class="orders-detail-content" id="orderDetailContent"></div>
+    <div class="orders-detail-footer"><span class="orders-preview-label">Thông tin đơn hàng</span><button type="button" class="orders-button" id="doneOrderDetail">Đóng chi tiết</button></div>
+</dialog>
+<dialog class="orders-confirm" id="orderConfirm" aria-labelledby="confirmTitle" aria-describedby="confirmDescription"
+        style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); margin: 0; inset: auto;">
+    <form id="orderConfirmForm">
+        <h2 id="confirmTitle">Xác nhận cập nhật đơn hàng</h2>
+        <p id="confirmDescription"></p>
+        <div id="cancelReasonField" hidden>
+            <label for="cancelReason">Lý do hủy đơn (bắt buộc)</label>
+            <textarea id="cancelReason" rows="3" maxlength="255"></textarea>
+            <p>Hệ thống sẽ hoàn lại tồn kho cho đơn hàng này.</p>
+        </div>
+        <p id="orderActionError" role="alert" hidden></p>
+        <div class="orders-action-buttons">
+            <button type="button" class="orders-button" id="dismissOrderConfirm">Quay lại</button>
+            <button type="submit" class="orders-button orders-button-primary" id="submitOrderAction">Xác nhận</button>
+        </div>
+    </form>
+</dialog>
+<div class="orders-toast" id="ordersToast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

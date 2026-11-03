@@ -53,6 +53,25 @@ class ProductCatalogTest {
     }
 
     @Test
+    void testFilterAccessorySubCategoryDoesNotIncludeMainPhone() {
+        var result = catalogService.filterProducts(
+                List.of("op-lung-silicone-magsafe-iphone-16-pro"),
+                null,
+                null,
+                null,
+                null,
+                "newest",
+                1,
+                12
+        );
+
+        // Đảm bảo không bao gồm điện thoại iPhone 16 Pro trong danh sách phụ kiện ốp lưng
+        for (var prod : result.products()) {
+            assertThat(prod.slug()).isNotEqualTo("iphone-16-pro");
+        }
+    }
+
+    @Test
     void testControllerListProducts() {
         var model = new ExtendedModelMap();
         String view = productController.listProducts(
