@@ -165,6 +165,9 @@
     toast.hidden = false;
     window.clearTimeout(toastTimer);
     toastTimer = window.setTimeout(() => { toast.hidden = true; }, 3500);
+    if (window.AppleNotification) {
+      window.AppleNotification.success(`Đã xuất ${filtered.length} đơn hàng thành công sang tệp CSV.`, 'Xuất dữ liệu');
+    }
   }
 
   let toastTimer;
@@ -231,9 +234,16 @@
       get('ordersToast').hidden = false;
       window.clearTimeout(toastTimer);
       toastTimer = window.setTimeout(() => { get('ordersToast').hidden = true; }, 3500);
+      if (window.AppleNotification) {
+        window.AppleNotification.success(`Đã cập nhật đơn hàng #${action.order.code}: ${orderStatuses[result.status].label}.`, 'Thành công');
+      }
     } catch (error) {
-      get('orderActionError').textContent = error instanceof SyntaxError ? 'Không thể đọc phản hồi. Vui lòng tải lại trang.' : error.message;
+      const errMsg = error instanceof SyntaxError ? 'Không thể đọc phản hồi. Vui lòng tải lại trang.' : error.message;
+      get('orderActionError').textContent = errMsg;
       get('orderActionError').hidden = false;
+      if (window.AppleNotification) {
+        window.AppleNotification.error(errMsg, 'Cập nhật thất bại');
+      }
     } finally {
       saving = false;
       get('orderConfirmForm').removeAttribute('aria-busy');

@@ -12,8 +12,8 @@
                     <a th:href="@{/admin/products}" class="text-link" style="display:inline-flex;align-items:center;gap:6px;font-weight:500;">
                         <span>‹ Quay lại danh sách sản phẩm</span>
                     </a>
-                    <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa hoặc ngừng kinh doanh sản phẩm này?');">
-                        <button type="submit" class="btn-dark-utility">Xóa sản phẩm này</button>
+                    <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post">
+                        <button type="submit" class="btn-dark-utility" data-apple-confirm="Bạn có chắc chắn muốn xóa hoặc ngừng kinh doanh sản phẩm này?">Xóa sản phẩm này</button>
                     </form>
                 </div>
 

@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title th:text="${title} + ' — DHCNTT Web 2026 Admin'">Admin</title>
     <link rel="stylesheet" th:href="@{/css/admin-apple.css}"/>
+    <link rel="stylesheet" th:href="@{/css/apple-notification.css}"/>
+    <script th:src="@{/js/apple-notification.js}"></script>
 </head>
 <body>
 <header th:fragment="topbar(pageTitle, subtitle)" class="sub-nav-frosted">
+    <!-- Hidden flash hooks for Apple Notification Popup in Admin -->
+    <div id="appleFlashSuccess" th:data-message="${successMessage}" hidden></div>
+    <div id="appleFlashError" th:data-message="${errorMessage}" hidden></div>
     <div class="sub-nav-inner">
         <div style="display:flex;align-items:baseline;gap:12px;">
             <h2 class="t-tagline" th:text="${pageTitle}">Dashboard</h2>

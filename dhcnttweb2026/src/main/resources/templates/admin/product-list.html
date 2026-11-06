@@ -107,7 +107,7 @@
                                 <td style="display:flex;gap:14px;align-items:center;">
                                     <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="text-link" style="font-weight:600;">Chỉnh sửa</a>
                                     <form th:action="@{/admin/products/delete/{id}(id=${p.id})}" method="post" style="display:inline;">
-                                        <button type="submit" class="text-link" style="color:#dc2626;" onclick="return confirm('Bạn có chắc muốn xóa hoặc ngừng kinh doanh sản phẩm này?');">Xóa</button>
+                                        <button type="submit" class="text-link" style="color:#dc2626;" data-apple-confirm="Bạn có chắc muốn xóa hoặc ngừng kinh doanh sản phẩm này?">Xóa</button>
                                     </form>
                                 </td>
                             </tr>

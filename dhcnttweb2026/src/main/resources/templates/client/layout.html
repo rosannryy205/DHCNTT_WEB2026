@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
   <meta charset="UTF-8">
@@ -17,12 +17,23 @@
 
   <!-- Apple Design System Tokens & Client Styles -->
   <link rel="stylesheet" th:href="@{/css/apple-design-tokens.css}">
+  <link rel="stylesheet" th:href="@{/css/apple-notification.css}">
   <link rel="stylesheet" th:href="@{/css/client.css(v='2.2')}">
+
+  <!-- Apple Notification Popup JS (Loaded early for global availability) -->
+  <script th:src="@{/js/apple-notification.js}"></script>
 
   <!-- Page-specific styles hook -->
   <th:block layout:fragment="styles"></th:block>
 </head>
 <body>
+
+  <!-- Hidden hooks for Flash Messages handled by Apple Notification Popup -->
+  <div id="appleFlashSuccess" th:data-message="${successMessage}" hidden></div>
+  <div id="appleFlashError" th:data-message="${errorMessage}" hidden></div>
+  <div id="appleFlashWarning" th:data-message="${warningMessage}" hidden></div>
+  <div id="appleFlashPasswordSuccess" th:data-message="${passwordSuccessMessage}" hidden></div>
+  <div id="appleFlashPasswordError" th:data-message="${passwordErrorMessage}" hidden></div>
 
   <!-- 1. Apple Global Nav (44px pure black) -->
   <header th:replace="~{client/fragments/global-nav :: global-nav}"></header>

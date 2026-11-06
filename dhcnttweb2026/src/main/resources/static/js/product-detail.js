@@ -203,13 +203,23 @@ document.addEventListener('DOMContentLoaded', function () {
             bagToast.classList.remove('show');
           }, 5000);
         }
+
+        // Thông báo popup trạng thái thành công
+        if (window.AppleNotification) {
+          window.AppleNotification.success('Đã thêm sản phẩm vào túi hàng thành công!', 'Thành công');
+        }
       } else {
-        alert(data.message || 'Không thể thêm sản phẩm vào túi hàng.');
+        if (window.AppleNotification) {
+          window.AppleNotification.error(data.message || 'Không thể thêm sản phẩm vào túi hàng.', 'Thất bại');
+        }
       }
     })
     .catch(err => {
       if (addToBagBtn) {
         addToBagBtn.disabled = false;
+      }
+      if (window.AppleNotification) {
+        window.AppleNotification.error('Lỗi kết nối khi gửi yêu cầu. Vui lòng kiểm tra và thử lại.', 'Thất bại');
       }
       console.error('Lỗi khi gửi yêu cầu thêm vào túi hàng:', err);
     });

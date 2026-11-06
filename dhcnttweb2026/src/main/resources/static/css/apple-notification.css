@@ -1,0 +1,329 @@
+/**
+ * Apple Design System - Notification Popup & Dialog Tokens
+ * Conforms strictly to docs/DESIGN.md:
+ * - SF Pro / Inter typography with negative letter-spacing
+ * - 18px radius (rounded.lg) & 9999px pill radius
+ * - Apple Frosted glass (backdrop-filter: saturate(180%) blur(20px))
+ * - Action Blue (#0066cc), Apple Green (#34c759), Apple Red (#ff3b30)
+ * - Micro-interaction scale(0.95) on active press
+ */
+
+:root {
+  --apple-popup-bg: rgba(255, 255, 255, 0.92);
+  --apple-popup-bg-dark: rgba(29, 29, 31, 0.94);
+  --apple-popup-border: rgba(0, 0, 0, 0.08);
+  --apple-popup-border-dark: rgba(255, 255, 255, 0.14);
+  --apple-popup-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+  --apple-popup-shadow-dark: 0 16px 44px rgba(0, 0, 0, 0.38);
+  --apple-color-success: #34c759;
+  --apple-color-error: #ff3b30;
+  --apple-color-primary: #0066cc;
+  --apple-color-primary-focus: #0071e3;
+  --apple-color-ink: #1d1d1f;
+  --apple-color-muted: #6e6e73;
+}
+
+/* 1. Global Container */
+.apple-notification-container {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 90%;
+  max-width: 460px;
+  pointer-events: none;
+}
+
+/* 2. Notification Toast Card */
+.apple-notification-toast {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background-color: var(--apple-popup-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--apple-popup-border);
+  box-shadow: var(--apple-popup-shadow);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  color: var(--apple-color-ink);
+  opacity: 0;
+  transform: translateY(-16px) scale(0.96);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.apple-notification-toast.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.apple-notification-toast.hiding {
+  opacity: 0;
+  transform: translateY(-12px) scale(0.94);
+  pointer-events: none;
+}
+
+/* Dark variant (used in admin or high-contrast HUD) */
+.apple-notification-toast.apple-dark {
+  background-color: var(--apple-popup-bg-dark);
+  color: #ffffff;
+  border-color: var(--apple-popup-border-dark);
+  box-shadow: var(--apple-popup-shadow-dark);
+}
+
+.apple-notification-toast.apple-dark .apple-notification-title {
+  color: #ffffff;
+}
+
+.apple-notification-toast.apple-dark .apple-notification-message {
+  color: #a1a1a6;
+}
+
+.apple-notification-toast.apple-dark .apple-notification-close {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #d2d2d7;
+}
+
+.apple-notification-toast.apple-dark .apple-notification-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* 3. Icon Circle */
+.apple-notification-icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.apple-notification-toast.toast-success .apple-notification-icon {
+  background-color: var(--apple-color-success);
+}
+
+.apple-notification-toast.toast-error .apple-notification-icon {
+  background-color: var(--apple-color-error);
+}
+
+.apple-notification-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* 4. Content Area */
+.apple-notification-content {
+  flex: 1;
+  min-width: 0;
+  padding-top: 1px;
+}
+
+.apple-notification-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.28px;
+  margin: 0 0 4px 0;
+  color: var(--apple-color-ink);
+}
+
+.apple-notification-message {
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: -0.2px;
+  margin: 0;
+  color: var(--apple-color-muted);
+  word-break: break-word;
+}
+
+/* 5. Close Button (Circular Utility) */
+.apple-notification-close {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--apple-color-muted);
+  padding: 0;
+  margin-top: 2px;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.apple-notification-close:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--apple-color-ink);
+}
+
+.apple-notification-close:active {
+  transform: scale(0.92);
+}
+
+.apple-notification-close svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+/* 6. Apple Confirm Modal Dialog */
+.apple-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.apple-confirm-backdrop.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.apple-confirm-dialog {
+  width: 100%;
+  max-width: 420px;
+  background-color: rgba(255, 255, 255, 0.96);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border: 1px solid var(--apple-popup-border);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 24px;
+  transform: scale(0.92);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+  text-align: center;
+}
+
+.apple-confirm-backdrop.show .apple-confirm-dialog {
+  transform: scale(1);
+}
+
+.apple-confirm-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 9999px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 102, 204, 0.1);
+  color: var(--apple-color-primary);
+}
+
+.apple-confirm-icon-wrap.danger {
+  background-color: rgba(255, 59, 48, 0.1);
+  color: var(--apple-color-error);
+}
+
+.apple-confirm-icon-wrap svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+}
+
+.apple-confirm-title {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--apple-color-ink);
+  margin-bottom: 8px;
+}
+
+.apple-confirm-message {
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--apple-color-muted);
+  margin-bottom: 24px;
+}
+
+.apple-confirm-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.apple-confirm-btn {
+  flex: 1;
+  padding: 11px 20px;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apple-confirm-btn:active {
+  transform: scale(0.95);
+}
+
+.apple-confirm-btn-cancel {
+  background-color: #f5f5f7;
+  color: var(--apple-color-ink);
+  border: 1px solid #e0e0e0;
+}
+
+.apple-confirm-btn-cancel:hover {
+  background-color: #e8e8ed;
+}
+
+.apple-confirm-btn-primary {
+  background-color: var(--apple-color-primary);
+  color: #ffffff;
+}
+
+.apple-confirm-btn-primary:hover {
+  background-color: var(--apple-color-primary-focus);
+}
+
+.apple-confirm-btn-danger {
+  background-color: var(--apple-color-error);
+  color: #ffffff;
+}
+
+.apple-confirm-btn-danger:hover {
+  background-color: #d72c21;
+}
+
+@media (max-width: 480px) {
+  .apple-notification-container {
+    top: 16px;
+    width: calc(100% - 32px);
+  }
+  .apple-confirm-dialog {
+    padding: 20px 16px;
+  }
+}
