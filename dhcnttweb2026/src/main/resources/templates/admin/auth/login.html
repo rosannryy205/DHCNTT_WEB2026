@@ -17,9 +17,16 @@
 
   <!-- Apple Design Tokens & Auth CSS -->
   <link rel="stylesheet" th:href="@{/css/apple-design-tokens.css}">
+  <link rel="stylesheet" th:href="@{/css/apple-notification.css}">
   <link rel="stylesheet" th:href="@{/css/auth.css}">
+
+  <!-- Apple Notification Popup JS -->
+  <script th:src="@{/js/apple-notification.js}"></script>
 </head>
 <body class="auth-admin-canvas">
+
+  <div id="appleFlashSuccess" th:if="${successMessage != null}" th:data-message="${successMessage}" hidden></div>
+  <div id="appleFlashError" th:if="${errorMessage != null}" th:data-message="${errorMessage}" hidden></div>
 
   <!-- Minimal Black Top Bar per DESIGN.md global-nav -->
   <header class="auth-admin-header">

@@ -277,11 +277,17 @@ function initPromoCode() {
       promoInput.disabled = true;
       promoApplyBtn.textContent = "Đã áp dụng";
       promoApplyBtn.style.backgroundColor = "#34c759";
-      alert("Áp dụng mã ưu đãi APPLEVIP thành công! Giảm 500.000đ trực tiếp vào đơn hàng.");
+      if (window.AppleNotification) {
+        window.AppleNotification.success("Áp dụng mã ưu đãi APPLEVIP thành công! Giảm 500.000đ trực tiếp vào đơn hàng.", "Thành công");
+      }
     } else if (code === "") {
-      alert("Vui lòng nhập mã giảm giá.");
+      if (window.AppleNotification) {
+        window.AppleNotification.error("Vui lòng nhập mã giảm giá trước khi áp dụng.", "Thất bại");
+      }
     } else {
-      alert("Mã giảm giá không hợp lệ hoặc đã hết hạn. Bạn có thể thử mã: APPLEVIP");
+      if (window.AppleNotification) {
+        window.AppleNotification.error("Mã giảm giá không hợp lệ hoặc đã hết hạn. Bạn có thể thử mã: APPLEVIP", "Thất bại");
+      }
     }
   });
 }
@@ -350,6 +356,9 @@ function initFormValidation() {
 
     if (!isValid) {
       e.preventDefault();
+      if (window.AppleNotification) {
+        window.AppleNotification.error("Vui lòng kiểm tra và điền đầy đủ các thông tin giao hàng bắt buộc.", "Thất bại");
+      }
       // Scroll to the first error input
       const firstError = document.querySelector(".is-invalid");
       if (firstError) {

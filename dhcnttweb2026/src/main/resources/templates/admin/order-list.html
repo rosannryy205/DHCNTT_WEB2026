@@ -6,9 +6,11 @@
     <title>Quản lý đơn hàng — IUH Console</title>
     <link rel="stylesheet" href="/css/admin-apple.css" th:href="@{/css/admin-apple.css}"/>
     <link rel="stylesheet" href="/css/admin-orders.css" th:href="@{/css/admin-orders.css(v=2)}"/>
+    <link rel="stylesheet" href="/css/apple-notification.css" th:href="@{/css/apple-notification.css}"/>
     <script th:inline="javascript">
         window.adminOrders = /*[[${orders}]]*/ [];
     </script>
+    <script src="/js/apple-notification.js" th:src="@{/js/apple-notification.js}" defer></script>
     <script src="/js/admin-orders.js" th:src="@{/js/admin-orders.js(v=2)}" defer></script>
 </head>
 <body class="orders-admin">

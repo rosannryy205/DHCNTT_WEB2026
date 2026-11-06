@@ -316,6 +316,9 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .catch(error => {
         console.error('Error fetching filtered products:', error);
+        if (window.AppleNotification) {
+          window.AppleNotification.error('Không thể tải dữ liệu danh mục sản phẩm. Vui lòng kiểm tra và thử lại.', 'Thất bại');
+        }
       })
       .finally(() => {
         const updatedOverlay = document.getElementById('catalogLoadingOverlay');

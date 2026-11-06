@@ -76,7 +76,7 @@
                                     <a th:href="@{/admin/categories/edit/{id}(id=${c.id})}" class="text-link" style="font-weight:600;">Sửa</a>
                                     <form th:action="@{/admin/categories/delete/{id}(id=${c.id})}" method="post" style="display:inline;">
                                         <button type="submit" class="text-link" style="color:#dc2626;" 
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này? Hệ thống sẽ kiểm tra ràng buộc sản phẩm trước khi xóa.');">
+                                                data-apple-confirm="Bạn có chắc chắn muốn xóa danh mục này? Hệ thống sẽ kiểm tra ràng buộc sản phẩm trước khi xóa.">
                                             Xóa
                                         </button>
                                     </form>

@@ -76,6 +76,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function notifySuccess(msg, title) {
+    if (window.AppleNotification) {
+      window.AppleNotification.success(msg, title || 'Thành công');
+    } else {
+      showToast(msg);
+    }
+  }
+
+  function notifyError(msg, title) {
+    if (window.AppleNotification) {
+      window.AppleNotification.error(msg, title || 'Thất bại');
+    }
+  }
+
   // Gắn sự kiện cho từng dòng Bag Item (Gọi Backend API để lưu DB)
   function attachRowEvents(row) {
     const btnMinus = row.querySelector('.btn-qty-minus');
@@ -101,12 +115,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data.success) {
               qtyValEl.textContent = currentQty - 1;
               recalculateTotals();
+              notifySuccess('Đã cập nhật giảm số lượng sản phẩm.');
             } else {
-              alert(data.message || 'Không thể cập nhật số lượng.');
+              notifyError(data.message || 'Không thể cập nhật số lượng.');
             }
           })
           .catch(err => {
             btnMinus.disabled = false;
+            notifyError('Lỗi kết nối máy chủ khi cập nhật số lượng.');
             console.error(err);
           });
         } else {
@@ -132,12 +148,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data.success) {
               qtyValEl.textContent = currentQty + 1;
               recalculateTotals();
+              notifySuccess('Đã cập nhật tăng số lượng sản phẩm.');
             } else {
-              alert(data.message || 'Không thể tăng số lượng.');
+              notifyError(data.message || 'Không thể tăng số lượng.');
             }
           })
           .catch(err => {
             btnPlus.disabled = false;
+            notifyError('Lỗi kết nối máy chủ khi tăng số lượng.');
             console.error(err);
           });
         }
@@ -153,28 +171,44 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function removeRowWithApi(row, cartItemId) {
-    if (!confirm('Bạn có chắc muốn xóa sản phẩm này khỏi túi hàng?')) {
-      return;
+    const doRemove = () => {
+      fetch('/api/bag/remove', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cartItemId: cartItemId })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          row.classList.add('removing');
+          setTimeout(() => {
+            row.remove();
+            recalculateTotals();
+            notifySuccess('Đã xóa sản phẩm khỏi túi hàng thành công.');
+          }, 300);
+        } else {
+          notifyError(data.message || 'Không thể xóa sản phẩm khỏi túi hàng.');
+        }
+      })
+      .catch(err => {
+        notifyError('Lỗi kết nối máy chủ khi xóa sản phẩm.');
+        console.error(err);
+      });
+    };
+
+    if (window.AppleNotification && window.AppleNotification.confirm) {
+      window.AppleNotification.confirm({
+        title: 'Xóa sản phẩm',
+        message: 'Bạn có chắc muốn xóa sản phẩm này khỏi túi hàng?',
+        confirmText: 'Xóa sản phẩm',
+        cancelText: 'Giữ lại',
+        isDanger: true
+      }).then(confirmed => {
+        if (confirmed) doRemove();
+      });
+    } else {
+      doRemove();
     }
-    fetch('/api/bag/remove', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ cartItemId: cartItemId })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        row.classList.add('removing');
-        setTimeout(() => {
-          row.remove();
-          recalculateTotals();
-          showToast("Đã xóa sản phẩm khỏi túi hàng.");
-        }, 300);
-      } else {
-        alert(data.message || 'Không thể xóa sản phẩm.');
-      }
-    })
-    .catch(err => console.error(err));
   }
 
   // Khởi tạo sự kiện cho các item ban đầu
@@ -196,16 +230,19 @@ document.addEventListener('DOMContentLoaded', function () {
   if (promoApplyBtn && promoInput) {
     promoApplyBtn.addEventListener('click', function () {
       const code = promoInput.value.trim().toUpperCase();
-      if (!code) return;
+      if (!code) {
+        notifyError('Vui lòng nhập mã ưu đãi trước khi áp dụng.');
+        return;
+      }
 
       if (code === 'APPLEVIP' || code === 'DHSTORE') {
         discountAmount = 500000;
         if (discountRow) discountRow.classList.remove('d-none');
         if (discountValEl) discountValEl.textContent = '-' + formatVND(discountAmount);
         recalculateTotals();
-        showToast("Áp dụng mã ưu đãi thành công (-500.000đ)");
+        notifySuccess('Áp dụng mã ưu đãi thành công (-500.000đ)!');
       } else {
-        alert("Mã ưu đãi không hợp lệ. Hãy thử dùng mã: APPLEVIP");
+        notifyError('Mã ưu đãi không hợp lệ. Hãy thử dùng mã: APPLEVIP');
       }
     });
   }
@@ -239,24 +276,29 @@ document.addEventListener('DOMContentLoaded', function () {
         this.disabled = false;
         this.innerHTML = originalText;
         if (data.success) {
-          showToast(`Đã thêm ${name} vào túi hàng!`);
+          notifySuccess(`Đã thêm ${name} vào túi hàng!`);
           setTimeout(() => {
             window.location.reload();
           }, 800);
         } else {
-          alert(data.message || 'Không thể thêm phụ kiện vào túi hàng.');
+          notifyError(data.message || 'Không thể thêm phụ kiện vào túi hàng.');
         }
       })
       .catch(err => {
         this.disabled = false;
         this.innerHTML = originalText;
+        notifyError('Lỗi kết nối khi thêm phụ kiện vào túi hàng.');
         console.error(err);
       });
     });
   });
 
-  // Toast Notification helper
+  // Toast Notification helper (fallback for compatibility)
   function showToast(message) {
+    if (window.AppleNotification) {
+      window.AppleNotification.success(message);
+      return;
+    }
     let toast = document.getElementById('bagActionToast');
     if (!toast) {
       toast = document.createElement('div');
