@@ -77,7 +77,7 @@ Quy tắc thứ tự hiển thị danh sách sản phẩm trên lưới (ví d�
 _Avoid_: Kiểu xếp, thứ tự lọc
 
 **Admin Product Management (Quản lý sản phẩm)**:
-Không gian làm việc tập trung trong Admin Console cho phép quản trị viên xem danh mục sản phẩm, tìm kiếm, lọc theo thiết bị, và kích hoạt các hành động theo ngữ cảnh (Thêm sản phẩm mới qua nút CTA hoặc Chỉnh sửa cấu hình từng sản phẩm).
+Không gian làm việc tập trung trong Admin Console cho phép quản trị viên tra cứu, lọc và quản lý các dòng sản phẩm, bao gồm thêm mới, chỉnh sửa và xóa hoặc ngừng kinh doanh theo lịch sử đơn hàng.
 _Avoid_: Mục Thêm/Sửa đặt rời rạc trên sidebar điều hướng cấp cao.
 
 **Customer**:

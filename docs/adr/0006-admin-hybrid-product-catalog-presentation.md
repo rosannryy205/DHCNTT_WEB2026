@@ -1,5 +1,15 @@
 # 0006. Kiến trúc hiển thị Hybrid Danh mục Sản phẩm Quản trị (Admin Console)
 
+> **Cập nhật 2026-11-07:** Quyết định bố cục Hybrid bên dưới đã được thay thế theo yêu cầu thiết kế lại. Trang quản lý dùng một bảng duy nhất, bỏ gallery và bốn thẻ KPI để ưu tiên tra cứu. Phần đầu giữ tiêu đề, số kết quả, tìm kiếm, lọc danh mục và icon thêm mới.
+>
+> Bảng gồm 7 cột: Sản phẩm (ảnh, tên, ID), SKU, Danh mục & hãng, Màu & bộ nhớ, Giá bán, Tồn kho, Trạng thái & thao tác. Nội dung ô không xuống dòng hoặc bị cắt; độ rộng cột theo nội dung, cuộn ngang trong vùng bảng khi thiếu chỗ. Mỗi dòng vẫn là một Product với thông tin cấu hình đại diện, không phải danh sách đầy đủ Product Variant hay tổng tồn kho.
+>
+> Các thao tác thêm, tìm kiếm, đặt lại, sửa và xóa dùng icon với tooltip, nhãn truy cập, vùng bấm 44×44px và focus bàn phím. Giữ palette Action Blue, nền trắng/parchment, không bóng đổ UI theo DESIGN.md; CSS giới hạn trong trang danh sách.
+>
+> Giữ luồng toast và modal xác nhận. Backend hiện xóa Product chưa có lịch sử đơn hàng, bao gồm các biến thể; Product có lịch sử đơn hàng được ngừng kinh doanh. Hộp xác nhận phải giải thích cả hai kết quả. Không thay đổi backend, thêm phân trang, sắp xếp hoặc thao tác hàng loạt trong lần thiết kế này.
+
+## Quyết định ban đầu (được giữ để tham khảo)
+
 ## Ngữ cảnh
 Trong phân hệ Admin Console của IUH Store, quản trị viên cần vừa có góc nhìn trực quan về hình ảnh nhận diện thương hiệu sản phẩm (theo phong cách triển lãm bảo tàng của Apple Store), vừa cần một công cụ kiểm toán tồn kho CSDL chính xác theo từng mã SKU, mức giá và trạng thái phân phối. Các giải pháp như chỉ dùng bảng thuần túy sẽ làm mất đi trải nghiệm nhiếp ảnh sản phẩm của Apple, trong khi dùng bộ chuyển chế độ (Segmented Switcher) phía client lại phát sinh trạng thái lưu tạm và gây gián đoạn mạch kiểm toán dữ liệu.
 
