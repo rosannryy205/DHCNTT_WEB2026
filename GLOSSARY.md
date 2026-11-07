@@ -108,3 +108,11 @@ _Avoid_: Trang cá nhân, Quản lý tài khoản, User profile, Trang người 
 **Order History (Lịch sử đơn hàng)**:
 Danh sách và tiến trình xử lý toàn bộ các đơn hàng đã đặt của Customer trên Storefront, hỗ trợ tra cứu chi tiết và thực hiện thao tác tự hủy đơn khi đủ điều kiện.
 _Avoid_: Lịch sử mua hàng, Bảng đơn hàng, Danh sách bill, My purchases
+
+**Product Deactivation (Ngừng kinh doanh sản phẩm)**:
+Trạng thái một Product hoặc Product Variant được quản trị viên đánh dấu không còn phân phối (`is_active = false`), tự động ẩn khỏi Storefront nhưng duy trì toàn vẹn dữ liệu cho các đơn hàng và báo cáo tài chính lịch sử trong CSDL.
+_Avoid_: Xóa cứng, Drop item, Force delete
+
+**Store Utility Card (Thẻ trưng bày quản trị)**:
+Thẻ hiển thị trực quan thiết bị trong phân hệ Admin Console theo chuẩn Apple, bao gồm ảnh sản phẩm không viền mang bóng đổ Signature Drop-shadow, nhãn hiệu/danh mục, tên dòng máy, cấu hình, mã SKU, số lượng tồn kho và liên kết hành động.
+_Avoid_: Product box, Item card, Hộp sản phẩm

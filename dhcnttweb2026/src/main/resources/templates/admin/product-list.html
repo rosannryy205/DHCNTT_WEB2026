@@ -8,16 +8,16 @@
         <header th:replace="~{fragments/header :: topbar(${pageTitle}, ${subtitle})}"></header>
 
         <!-- SECTION 1: HERO & TOOLBAR (tile-light) -->
-        <section class="tile-light" style="padding-bottom:48px;">
+        <section class="tile-light">
             <div class="container-admin">
                 <!-- Eyebrow & Hero Header -->
-                <p class="t-caption-strong" style="color:var(--color-primary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">
+                <p class="t-caption-strong" style="color:var(--color-primary);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">
                     Kho Thiết Bị &amp; Phân Phối
                 </p>
                 <h1 class="t-display-lg" style="margin-bottom:8px;">
-                    Danh sách sản phẩm<span style="color:var(--color-primary);">.</span>
+                    Danh sách sản phẩm.
                 </h1>
-                <p class="t-lead" style="color:var(--color-ink-muted-48);font-size:19px;margin-bottom:32px;">
+                <p class="t-lead" style="color:var(--color-ink-muted-48);margin-bottom:32px;">
                     Toàn bộ thiết bị chính hãng, quy cách kỹ thuật CSDL và phiên bản tồn kho tại IUH Store.
                 </p>
 
@@ -40,7 +40,7 @@
                     </div>
                     <div class="store-utility-card">
                         <span class="t-caption" style="color:var(--color-ink-muted-48);">Bộ lọc hiện tại</span>
-                        <div class="t-body-strong" style="margin-top:8px;font-size:22px;color:var(--color-primary);" th:text="${selectedCategory != null and selectedCategory != '' and selectedCategory != 'ALL' ? selectedCategory : 'Tất cả danh mục'}">Tất cả</div>
+                        <div class="t-tagline" style="margin-top:8px;color:var(--color-primary);" th:text="${selectedCategory != null and selectedCategory != '' and selectedCategory != 'ALL' ? selectedCategory : 'Tất cả danh mục'}">Tất cả</div>
                         <span class="t-fine-print" style="color:var(--color-ink-muted-48);margin-top:10px;" th:text="${keyword != null and !keyword.isBlank() ? 'Khóa: &quot;' + keyword + '&quot;' : 'Không lọc từ khóa'}">Toàn bộ</span>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                             <a th:if="${(keyword != null and !keyword.isBlank()) or (selectedCategory != null and selectedCategory != 'ALL' and !selectedCategory.isBlank())}" 
                                th:href="@{/admin/products}" 
                                class="text-link" 
-                               style="font-size:14px;display:inline-flex;align-items:center;gap:4px;">
+                               style="display:inline-flex;align-items:center;gap:4px;">
                                 <span>Đặt lại bộ lọc</span>
                                 <span aria-hidden="true">×</span>
                             </a>
@@ -98,7 +98,7 @@
                         Bộ Sưu Tập Thiết Bị
                     </p>
                     <h2 class="t-display-md" style="margin-top:4px;">
-                        Trưng bày theo Store Utility Card<span style="color:var(--color-primary);">.</span>
+                        Trưng bày theo Store Utility Card.
                     </h2>
                     <p class="t-caption" style="color:var(--color-ink-muted-48);margin-top:4px;">
                         Thẻ sản phẩm trực quan với hình ảnh không viền và bóng đổ Signature Drop-shadow độc bản.
@@ -107,54 +107,54 @@
 
                 <!-- Cards Grid -->
                 <div th:if="${products != null and !products.isEmpty()}" class="product-gallery-grid">
-                    <article class="store-utility-card" th:each="p : ${products}">
+                    <article class="store-utility-card" th:each="product : ${products}">
                         <div>
                             <!-- Card Header: Eyebrow + Status Badge -->
                             <div style="display:flex;justify-content:space-between;align-items:center;">
-                                <span class="t-fine-print" style="color:var(--color-ink-muted-48);letter-spacing:0.2px;" th:text="${(p.brand != null ? p.brand : 'Apple') + ' • ' + p.category}"></span>
-                                <span th:if="${p.status == 'Đang bán'}" class="spec-status-badge status-active">
+                                <span class="t-fine-print" style="color:var(--color-ink-muted-48);letter-spacing:0.2px;" th:text="${(product.brand != null ? product.brand : 'Apple') + ' • ' + product.category}"></span>
+                                <span th:if="${product.status == 'Đang bán'}" class="spec-status-badge status-active">
                                     <svg class="spec-status-icon" viewBox="0 0 24 24" aria-hidden="true">
                                         <circle cx="12" cy="12" r="10"/>
                                         <path d="m9 12 2 2 4-4"/>
                                     </svg>
                                     <span>Đang bán</span>
                                 </span>
-                                <span th:unless="${p.status == 'Đang bán'}" class="spec-status-badge status-inactive">
+                                <span th:unless="${product.status == 'Đang bán'}" class="spec-status-badge status-inactive">
                                     <svg class="spec-status-icon" viewBox="0 0 24 24" aria-hidden="true">
                                         <circle cx="12" cy="12" r="10"/>
                                         <line x1="15" y1="9" x2="9" y2="15"/>
                                         <line x1="9" y1="9" x2="15" y2="15"/>
                                     </svg>
-                                    <span th:text="${p.status}">Ngừng kinh doanh</span>
+                                    <span th:text="${product.status}">Ngừng kinh doanh</span>
                                 </span>
                             </div>
 
                             <!-- Product Render with System Drop-Shadow -->
                             <div class="store-card-image-wrap">
-                                <img class="product-render-img" th:src="${p.imageUrl}" th:alt="${p.name}" loading="lazy"/>
+                                <img class="product-render-img" th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy"/>
                             </div>
 
                             <!-- Product Title & Specifications -->
-                            <h3 class="t-body-strong" th:text="${p.name}"></h3>
+                            <h3 class="t-body-strong" th:text="${product.name}"></h3>
                             <p class="t-caption" style="color:var(--color-ink-muted-48);margin-top:4px;" 
-                               th:text="${p.color != null ? p.color + ' • ' + (p.storage != null ? p.storage : '') : (p.tagline != null ? p.tagline : 'Chính hãng Apple')}"></p>
+                               th:text="${product.color != null ? product.color + ' • ' + (product.storage != null ? product.storage : '') : (product.tagline != null ? product.tagline : 'Chính hãng Apple')}"></p>
                             
                             <!-- SKU & Inventory Status -->
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
-                                <span class="t-fine-print numeric" style="color:var(--color-ink-muted-48);" th:text="'SKU: ' + ${p.sku}"></span>
+                                <span class="t-fine-print numeric" style="color:var(--color-ink-muted-48);" th:text="'SKU: ' + ${product.sku}"></span>
                                 <span class="t-fine-print numeric" 
-                                      th:style="${p.stock <= 5 ? 'color:#b45309;font-weight:600;' : 'color:var(--color-ink-muted-80);'}" 
-                                      th:text="'Tồn: ' + ${p.stock} + ' máy'"></span>
+                                      style="color:var(--color-ink-muted-80);" 
+                                      th:text="'Tồn: ' + ${product.stock} + ' máy'"></span>
                             </div>
                         </div>
 
-                        <!-- Card Footer: Pricing & Action Link -->
+                        <!-- Card Footer: Pricing (typography.body per DESIGN.md line 468) & Action Link -->
                         <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--color-divider-soft);display:flex;justify-content:space-between;align-items:center;">
                             <div>
-                                <span class="numeric t-body-strong" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
-                                <span th:if="${p.originalPrice > p.price}" class="numeric t-fine-print" style="text-decoration:line-through;color:var(--color-ink-muted-48);margin-left:6px;" th:text="${#numbers.formatDecimal(p.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+                                <span class="numeric" style="font-size:17px;line-height:1.47;letter-spacing:-0.374px;" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
+                                <span th:if="${product.originalPrice > product.price}" class="numeric t-fine-print" style="text-decoration:line-through;color:var(--color-ink-muted-48);margin-left:6px;" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></span>
                             </div>
-                            <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" class="text-link" style="font-weight:600;display:inline-flex;align-items:center;gap:4px;">
+                            <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="text-link" style="display:inline-flex;align-items:center;gap:4px;">
                                 <span>Chỉnh sửa</span>
                                 <span aria-hidden="true">›</span>
                             </a>
@@ -186,7 +186,7 @@
                         Quy Cách CSDL &amp; Tồn Kho
                     </p>
                     <h2 class="t-display-md" style="margin-top:4px;">
-                        Bảng thông số kỹ thuật chi tiết<span style="color:var(--color-primary);">.</span>
+                        Bảng thông số kỹ thuật chi tiết.
                     </h2>
                     <p class="t-caption" style="color:var(--color-ink-muted-48);margin-top:4px;">
                         Bảng quản trị hệ thống ánh xạ dữ liệu hai bảng products &amp; product_variants với đầy đủ SKU, phân loại và thao tác.
@@ -215,49 +215,47 @@
                                     <div class="t-caption">Thử tìm kiếm với từ khóa khác hoặc thiết lập lại bộ lọc danh mục.</div>
                                 </td>
                             </tr>
-                            <tr th:each="p : ${products}">
-                                <td class="numeric col-id" th:text="${p.id}"></td>
+                            <tr th:each="product : ${products}">
+                                <td class="numeric col-id" th:text="${product.id}"></td>
                                 <td>
                                     <div class="table-product-cell">
-                                        <img class="table-product-thumb" th:src="${p.imageUrl}" th:alt="${p.name}" loading="lazy"/>
+                                        <img class="table-product-thumb" th:src="${product.imageUrl}" th:alt="${product.name}" loading="lazy"/>
                                         <div>
-                                            <div class="t-body-strong" th:text="${p.name}"></div>
-                                            <div class="t-fine-print" style="color:var(--color-ink-muted-48);" th:text="'slug: ' + ${p.slug}"></div>
+                                            <div class="t-body-strong" th:text="${product.name}"></div>
+                                            <div class="t-fine-print" style="color:var(--color-ink-muted-48);" th:text="'slug: ' + ${product.slug}"></div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="numeric t-caption col-sku" th:text="${p.sku}"></td>
-                                <td th:text="${p.category + ' (' + (p.brand != null ? p.brand : 'Apple') + ')'}"></td>
-                                <td class="t-caption" th:text="${(p.color != null ? p.color : '-') + ' / ' + (p.storage != null ? p.storage : '-')}"></td>
+                                <td class="numeric t-caption col-sku" th:text="${product.sku}"></td>
+                                <td th:text="${product.category + ' (' + (product.brand != null ? product.brand : 'Apple') + ')'}"></td>
+                                <td class="t-caption" th:text="${(product.color != null ? product.color : '-') + ' / ' + (product.storage != null ? product.storage : '-')}"></td>
                                 <td class="numeric col-price">
-                                    <div class="t-body-strong" th:text="${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></div>
-                                    <div th:if="${p.originalPrice > p.price}" class="t-fine-print" style="text-decoration:line-through;color:var(--color-ink-muted-48);" th:text="${#numbers.formatDecimal(p.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></div>
+                                    <div class="t-body-strong" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></div>
+                                    <div th:if="${product.originalPrice > product.price}" class="t-fine-print" style="text-decoration:line-through;color:var(--color-ink-muted-48);" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'POINT', 0, 'COMMA')} + ' ₫'"></div>
                                 </td>
                                 <td class="numeric col-stock">
-                                    <span th:class="${p.stock <= 5 ? 't-body-strong' : ''}" 
-                                          th:style="${p.stock <= 5 ? 'color:#b45309;' : ''}" 
-                                          th:text="${p.stock}"></span>
+                                    <span th:text="${product.stock}"></span>
                                 </td>
                                 <td class="col-status">
-                                    <span th:if="${p.status == 'Đang bán'}" class="spec-status-badge status-active">
+                                    <span th:if="${product.status == 'Đang bán'}" class="spec-status-badge status-active">
                                         <svg class="spec-status-icon" viewBox="0 0 24 24" aria-hidden="true">
                                             <circle cx="12" cy="12" r="10"/>
                                             <path d="m9 12 2 2 4-4"/>
                                         </svg>
                                         <span>Đang bán</span>
                                     </span>
-                                    <span th:unless="${p.status == 'Đang bán'}" class="spec-status-badge status-inactive">
+                                    <span th:unless="${product.status == 'Đang bán'}" class="spec-status-badge status-inactive">
                                         <svg class="spec-status-icon" viewBox="0 0 24 24" aria-hidden="true">
                                             <circle cx="12" cy="12" r="10"/>
                                             <line x1="15" y1="9" x2="9" y2="15"/>
                                             <line x1="9" y1="9" x2="15" y2="15"/>
                                         </svg>
-                                        <span th:text="${p.status}">Ngừng kinh doanh</span>
+                                        <span th:text="${product.status}">Ngừng kinh doanh</span>
                                     </span>
                                 </td>
                                 <td class="col-actions">
                                     <div class="spec-actions">
-                                        <a th:href="@{/admin/products/edit/{id}(id=${p.id})}" 
+                                        <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" 
                                            class="spec-action-btn edit-btn" 
                                            title="Chỉnh sửa sản phẩm" 
                                            aria-label="Chỉnh sửa">
@@ -266,7 +264,7 @@
                                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                                             </svg>
                                         </a>
-                                        <form th:action="@{/admin/products/delete/{id}(id=${p.id})}" method="post" style="display:inline;margin:0;">
+                                        <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post" style="display:inline;margin:0;">
                                             <button type="submit" 
                                                     class="spec-action-btn delete-btn" 
                                                     title="Xóa sản phẩm" 
