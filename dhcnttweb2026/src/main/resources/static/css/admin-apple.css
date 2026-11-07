@@ -263,6 +263,79 @@ body {
   width: 100%; background-color: var(--color-canvas); color: var(--color-ink);
   font-size: 17px; border: 1px solid var(--color-hairline); border-radius: var(--rounded-md); padding: 12px 16px;
 }
+/* Product list: intrinsic column widths keep every cell on one line.
+   Overflow belongs to the table region rather than the page. */
+.admin-product-list .admin-main { min-width: 0; }
+.admin-product-list .product-list-heading { padding: 32px; }
+.admin-product-list .product-list-results { padding: 24px 32px 48px; }
+.admin-product-list .product-list-title-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.admin-product-list .product-list-count { margin-top: 8px; color: var(--color-ink-muted-48); }
+.admin-product-list .product-list-search {
+  display: flex; align-items: center; gap: 8px; margin-top: 24px; max-width: 640px;
+}
+.admin-product-list .product-list-search .search-input { flex: 1; min-width: 0; width: 100%; }
+.admin-product-list .product-list-categories {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 17px;
+}
+.admin-product-list .product-list-note { margin-bottom: 17px; color: var(--color-ink-muted-80); }
+.admin-product-list .spec-action-btn {
+  flex: 0 0 44px; color: var(--color-primary); width: 44px; height: 44px;
+}
+.admin-product-list .spec-action-btn:hover {
+  border-color: var(--color-primary); background: var(--color-canvas-parchment);
+}
+.admin-product-list .product-list-add,
+.admin-product-list .product-list-add:hover {
+  background: var(--color-primary); color: var(--color-on-primary);
+  border-color: var(--color-primary);
+}
+.admin-product-list .spec-action-btn:focus-visible,
+.admin-product-list .search-input:focus-visible,
+.admin-product-list .configurator-option-chip:focus-visible,
+.admin-product-list .spec-table-container:focus-visible {
+  outline: 2px solid var(--color-primary-focus); outline-offset: 2px;
+}
+.admin-product-list .configurator-option-chip:active { transform: scale(0.95); }
+.admin-product-list .spec-table-container { max-width: 100%; }
+.admin-product-list .product-list-table { table-layout: auto; }
+.admin-product-list .product-list-table th,
+.admin-product-list .product-list-table td {
+  padding: 12px; white-space: nowrap; overflow-wrap: normal; word-break: normal;
+}
+.admin-product-list .product-list-table thead th {
+  font-size: 14px; line-height: 1.43; letter-spacing: -0.224px; text-transform: none;
+  color: var(--color-ink-muted-80);
+}
+.admin-product-list .product-list-table tbody th {
+  font-size: 17px; font-weight: 400; letter-spacing: -0.374px;
+  text-transform: none; color: var(--color-ink); background: transparent;
+  border-bottom-color: var(--color-divider-soft);
+}
+.admin-product-list .product-list-table tbody tr:last-child > * { border-bottom: 0; }
+.admin-product-list .product-list-id,
+.admin-product-list .product-list-old-price { color: var(--color-ink-muted-48); }
+.admin-product-list .product-list-old-price { margin-left: 8px; }
+.admin-product-list .product-list-price { text-align: right; }
+.admin-product-list .product-list-row-actions {
+  display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: nowrap;
+}
+.admin-product-list .product-list-row-actions form { margin: 0; display: flex; }
+.admin-product-list .product-list-status { color: var(--color-ink-muted-80); margin-right: 4px; }
+.admin-product-list .product-list-empty { text-align: center; padding: 48px 24px; }
+.admin-product-list .product-list-empty p { margin: 8px 0 17px; color: var(--color-ink-muted-80); }
+.product-list-sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+@media (max-width: 767px) {
+  .admin-product-list .product-list-heading { padding: 24px 16px; }
+  .admin-product-list .product-list-results { padding: 24px 16px 32px; }
+  .admin-product-list .product-list-title-row { gap: 12px; }
+  .admin-product-list .product-list-title-row h1 { font-size: 28px; }
+}
+
 .spec-table-container { 
   background-color: var(--color-canvas); 
   border: 1px solid var(--color-hairline); 
